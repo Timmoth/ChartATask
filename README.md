@@ -1,6 +1,8 @@
 # ChartATask
 Log your time spent on tasks based on user defined triggers.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/120f83a3612544769ad4ec291d98a105)](https://www.codacy.com/manual/Timmoth/Chartatask?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Timmoth/Chartatask&amp;utm_campaign=Badge_Grade)
+
 ## Why
 
 I need a way to automate the logging and analysis of time spent working on different projects, and using off the shelf solutions are no way near as fun as paving your own way!
