@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/Timmoth/Chartatask/master/Logo.png)
+![alt text](https://raw.githubusercontent.com/Timmoth/ChartATask/master/Chartatask_512.png)
 
 # ChartATask
 Log your time spent on tasks based on user defined triggers.
