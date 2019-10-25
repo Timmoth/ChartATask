@@ -7,7 +7,7 @@
     <ProjectGuid>{09B540B0-7A56-4AAB-9563-676319C226AD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsInteractor</RootNamespace>
+    <RootNamespace>ChartATask.Interactors.Windows</RootNamespace>
     <AssemblyName>WindowsInteractor</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,13 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="WindowsInteractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Interactor\Interactor.csproj">
       <Project>{c844a7ce-47dc-4dfa-b6be-c32cbd2da84e}</Project>
       <Name>Interactor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Models\Models.csproj">
+      <Project>{778c2da8-8d76-4b19-8c0a-b9c378fbcec2}</Project>
+      <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

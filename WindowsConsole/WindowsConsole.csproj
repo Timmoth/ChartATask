@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>WindowsConsole</RootNamespace>
+    <RootNamespace>ChartATask.Presenters.Windows</RootNamespace>
     <AssemblyName>WindowsConsole</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -45,9 +45,32 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindowsConsolePresenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{4e2e8c03-2b0f-48e9-92f8-1a05dfbf47a3}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Interactor\Interactor.csproj">
+      <Project>{c844a7ce-47dc-4dfa-b6be-c32cbd2da84e}</Project>
+      <Name>Interactor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Persistence\Persistence.csproj">
+      <Project>{e4dbefff-3ffe-4d5e-abc8-9afb17b78751}</Project>
+      <Name>Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presenter\Presenter.csproj">
+      <Project>{A4D4F227-99F8-424E-AE4B-3D8B3E3117FD}</Project>
+      <Name>Presenter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Windows\WindowsInteractor\WindowsInteractor.csproj">
+      <Project>{09b540b0-7a56-4aab-9563-676319c226ad}</Project>
+      <Name>WindowsInteractor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

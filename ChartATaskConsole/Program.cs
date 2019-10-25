@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ChartATaskConsole
+﻿namespace ChartATask.Presenters.Console
 {
     class Program
     {

@@ -1,15 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using ChartATask.Core;
+using ChartATask.Interactors.Windows;
 
-namespace WindowsConsole
+namespace ChartATask.Presenters.Windows
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            Console.WriteLine("ChartATask Started");
+
+            var cancellationTokenSource = new CancellationTokenSource();
+
+            var engine = new Engine(new WindowsConsolePresenter(), new WindowsInteractor());
+
+            engine.Run(cancellationTokenSource).Wait();
+
+            Console.WriteLine("ChartATask Finished");
         }
     }
 }

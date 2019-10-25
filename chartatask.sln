@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartATaskConsole", "ChartATaskConsole\ChartATaskConsole.csproj", "{272E1012-ABC0-457D-97D3-A4C9867E6EDA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{4E2E8C03-2B0F-48E9-92F8-1A05DFBF47A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInteractor", "Windows\WindowsInteractor\WindowsInteractor.csproj", "{09B540B0-7A56-4AAB-9563-676319C226AD}"
@@ -19,16 +17,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsConsole", "WindowsConsole\WindowsConsole.csproj", "{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presenter", "Presenter\Presenter.csproj", "{A4D4F227-99F8-424E-AE4B-3D8B3E3117FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{778C2DA8-8D76-4B19-8C0A-B9C378FBCEC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{272E1012-ABC0-457D-97D3-A4C9867E6EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{272E1012-ABC0-457D-97D3-A4C9867E6EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{272E1012-ABC0-457D-97D3-A4C9867E6EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{272E1012-ABC0-457D-97D3-A4C9867E6EDA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E2E8C03-2B0F-48E9-92F8-1A05DFBF47A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E2E8C03-2B0F-48E9-92F8-1A05DFBF47A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E2E8C03-2B0F-48E9-92F8-1A05DFBF47A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,14 +47,23 @@ Global
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4D4F227-99F8-424E-AE4B-3D8B3E3117FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4D4F227-99F8-424E-AE4B-3D8B3E3117FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4D4F227-99F8-424E-AE4B-3D8B3E3117FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4D4F227-99F8-424E-AE4B-3D8B3E3117FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{778C2DA8-8D76-4B19-8C0A-B9C378FBCEC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{778C2DA8-8D76-4B19-8C0A-B9C378FBCEC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{778C2DA8-8D76-4B19-8C0A-B9C378FBCEC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{778C2DA8-8D76-4B19-8C0A-B9C378FBCEC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{272E1012-ABC0-457D-97D3-A4C9867E6EDA} = {D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}
 		{09B540B0-7A56-4AAB-9563-676319C226AD} = {9482FF2D-B934-4AFB-9E42-B6C54CAA3F4D}
+		{C844A7CE-47DC-4DFA-B6BE-C32CBD2DA84E} = {9482FF2D-B934-4AFB-9E42-B6C54CAA3F4D}
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7} = {D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}
+		{A4D4F227-99F8-424E-AE4B-3D8B3E3117FD} = {D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DEF6C01-9675-4D3E-AD99-99B4ABE26C45}
