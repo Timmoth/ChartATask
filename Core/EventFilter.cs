@@ -23,12 +23,14 @@ namespace ChartATask.Core
 
             foreach (var triggeredEvent in events)
             {
-                if (Actions.TryGetValue(triggeredEvent, out var actions))
+                if (!Actions.TryGetValue(triggeredEvent, out var actions))
                 {
-                    foreach (var triggeredAction in actions)
-                    {
-                        partiallyTriggeredActions.Add(triggeredAction);
-                    }
+                    continue;
+                }
+
+                foreach (var triggeredAction in actions)
+                {
+                    partiallyTriggeredActions.Add(triggeredAction);
                 }
             }
 

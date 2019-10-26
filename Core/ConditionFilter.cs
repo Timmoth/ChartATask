@@ -1,17 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ChartATask.Models;
 
 namespace ChartATask.Core
 {
+    public class WindowsConditionEvaluator : IConditionEvaluator
+    {
+    }
+
     internal class ConditionFilter
     {
+        private readonly WindowsConditionEvaluator evaluator;
+
+        public ConditionFilter()
+        {
+            evaluator = new WindowsConditionEvaluator();
+        }
+
         public List<CoreAction> Filter(List<CoreAction> triggeredActions)
         {
-            var passedActions = new List<CoreAction>();
-
-            //Check that all triggered actions conditions pass
-
-            return passedActions;
+            return triggeredActions.Where(triggeredAction =>
+                triggeredAction.Conditions.All(condition => condition.Passed(evaluator))).ToList();
         }
     }
 }

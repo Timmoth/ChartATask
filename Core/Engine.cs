@@ -60,12 +60,12 @@ namespace ChartATask.Core
                 {
                     var events = _interactor.GetEvents();
                     var triggeredActions = _eventFilter.Filter(events);
-                    foreach (var triggeredAction in triggeredActions)
+                    var acceptedActions = _conditionFilter.Filter(triggeredActions);
+
+                    foreach (var triggeredAction in acceptedActions)
                     {
                         Console.WriteLine(triggeredAction.ToString());
                     }
-
-                    var acceptedActions = _conditionFilter.Filter(triggeredActions);
 
                     //Execute accepted Actions
                     //Actions can either:

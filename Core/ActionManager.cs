@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ChartATask.Models;
 
 namespace ChartATask.Core
@@ -11,9 +12,11 @@ namespace ChartATask.Core
         {
             Actions = new List<CoreAction>
             {
-                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(65)}),
-                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(65)}),
-                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(66)})
+                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(65)},
+                    new List<ICondition> {new TimeCondition(DateTime.Now, ComparisonOperator.GreaterThen)}),
+
+                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(65)},
+                    new List<ICondition> {new TimeCondition(DateTime.Now, ComparisonOperator.LessThen)})
             };
         }
     }
