@@ -9,7 +9,12 @@ namespace ChartATask.Core
 
         public ActionManager()
         {
-            Actions = new List<CoreAction>();
+            Actions = new List<CoreAction>
+            {
+                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(65)}),
+                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(65)}),
+                new CoreAction(new List<IInteractionEvent> {new KeyPressedEvent(66)})
+            };
         }
     }
 }

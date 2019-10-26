@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using ChartATask.Core;
 using ChartATask.Interactors.Windows;
 
@@ -11,11 +10,15 @@ namespace ChartATask.Presenters.Windows
         {
             Console.WriteLine("ChartATask Started");
 
-            var cancellationTokenSource = new CancellationTokenSource();
-
             var engine = new Engine(new WindowsConsolePresenter(), new WindowsInteractor());
+            engine.Start();
 
-            engine.Run(cancellationTokenSource).Wait();
+            while (Console.ReadLine()?.ToLower() != "exit")
+            {
+            }
+
+            engine.Stop();
+            engine.Dispose();
 
             Console.WriteLine("ChartATask Finished");
         }

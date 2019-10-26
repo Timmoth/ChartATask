@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ChartATask.Models;
 
 namespace ChartATask.Interactors
 {
-    public interface IInteractionEvent
-    {
-    }
-
-    public interface IInteractor
+    public interface IInteractor : IDisposable
     {
         Queue<IInteractionEvent> GetEvents();
         void SetListeners(List<CoreAction> actionManagerActions);
+        void Start();
+        void Stop();
     }
 }

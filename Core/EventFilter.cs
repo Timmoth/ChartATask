@@ -1,24 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using ChartATask.Interactors;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ChartATask.Models;
 
 namespace ChartATask.Core
 {
     internal class EventFilter
     {
         private readonly ActionManager _actionManager;
+        public Dictionary<IInteractionEvent, List<CoreAction>> Actions;
 
         public EventFilter(ActionManager actionManager)
         {
             _actionManager = actionManager;
+
+            Actions = new Dictionary<IInteractionEvent, List<CoreAction>>();
+            LoadActions();
         }
 
-        public List<Action> Filter(Queue<IInteractionEvent> events)
+        public List<CoreAction> Filter(Queue<IInteractionEvent> events)
         {
-            var triggeredActions = new List<Action>();
-            //Find actions triggered by the given events
-            //Check that any triggered actions have all passing events
-            return triggeredActions;
+            var partiallyTriggeredActions = new HashSet<CoreAction>();
+
+            foreach (var triggeredEvent in events)
+            {
+                if (Actions.TryGetValue(triggeredEvent, out var actions))
+                {
+                    foreach (var triggeredAction in actions)
+                    {
+                        partiallyTriggeredActions.Add(triggeredAction);
+                    }
+                }
+            }
+
+            var fullyTriggeredActions = partiallyTriggeredActions
+                .Where(action => action.Triggers.All(events.Contains)).ToList();
+
+            return fullyTriggeredActions;
+        }
+
+        private void LoadActions()
+        {
+            foreach (var action in _actionManager.Actions)
+            {
+                foreach (var eventTrigger in action.Triggers)
+                {
+                    if (!Actions.TryGetValue(eventTrigger, out var actions))
+                    {
+                        actions = new List<CoreAction>();
+                        Actions.Add(eventTrigger, actions);
+                    }
+
+                    actions.Add(action);
+                }
+            }
         }
     }
 }

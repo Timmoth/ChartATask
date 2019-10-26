@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ChartATask.Models;
 
 namespace ChartATask.Core
 {
     internal class ConditionFilter
     {
-        public List<Action> Filter(List<Action> triggeredActions)
+        public List<CoreAction> Filter(List<CoreAction> triggeredActions)
         {
-            var passedActions = new List<Action>();
+            var passedActions = new List<CoreAction>();
 
             //Check that all triggered actions conditions pass
 
