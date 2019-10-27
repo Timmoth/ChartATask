@@ -1,7 +1,6 @@
-﻿namespace ChartATask.Core.Models
+﻿namespace ChartATask.Core.Models.DataPoints
 {
     public interface IDataPoint
     {
-
     }
 }

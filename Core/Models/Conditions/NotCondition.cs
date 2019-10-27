@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ChartATask.Core.Interactors;
+﻿using ChartATask.Core.Interactors;
 
 namespace ChartATask.Core.Models.Conditions
 {
@@ -20,7 +18,7 @@ namespace ChartATask.Core.Models.Conditions
 
         public override string ToString()
         {
-            return $@"Not {{{_condition.ToString()}}}";
+            return $@"Not {{{_condition}}}";
         }
     }
 }

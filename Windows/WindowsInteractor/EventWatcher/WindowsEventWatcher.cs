@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ChartATask.Core.Interactors;
 using ChartATask.Core.Models.Events;
 
-namespace ChartATask.Interactors.Windows
+namespace ChartATask.Interactors.Windows.EventWatcher
 {
     public class WindowsEventWatcher : IEventWatcher
     {
@@ -35,7 +35,6 @@ namespace ChartATask.Interactors.Windows
 
         public void SetListeners(List<IEvent> events)
         {
-
         }
 
         public void Start()

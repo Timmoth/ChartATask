@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ChartATask.Core.Models.DataPoints;
 
 namespace ChartATask.Core.Models
 {

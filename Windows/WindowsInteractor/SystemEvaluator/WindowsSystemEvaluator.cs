@@ -1,14 +1,9 @@
 ﻿using ChartATask.Core.Interactors;
 
-namespace ChartATask.Interactors.Windows
+namespace ChartATask.Interactors.Windows.SystemEvaluator
 {
     public class WindowsSystemEvaluator : ISystemEvaluator
     {
-        public WindowsSystemEvaluator()
-        {
-            
-        }
-
         public void Dispose()
         {
         }

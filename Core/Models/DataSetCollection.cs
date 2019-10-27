@@ -7,13 +7,12 @@ namespace ChartATask.Core.Models
     {
         private readonly List<IDataSet> _dataSets;
 
-        public IEnumerable<IDataSet> DataSets => _dataSets;
-        public IEnumerable<IDataSource> DataSources => _dataSets.Select(dataSet => dataSet.DataSource);
-
         public DataSetCollection(List<IDataSet> dataSets)
         {
             _dataSets = dataSets;
         }
 
+        public IEnumerable<IDataSet> DataSets => _dataSets;
+        public IEnumerable<IDataSource> DataSources => _dataSets.Select(dataSet => dataSet.DataSource);
     }
 }

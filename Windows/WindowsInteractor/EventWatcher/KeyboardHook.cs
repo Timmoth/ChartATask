@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace ChartATask.Interactors.Windows
+namespace ChartATask.Interactors.Windows.EventWatcher
 {
     public delegate void KeyPressed(int keyCode);
 

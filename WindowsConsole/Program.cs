@@ -15,7 +15,6 @@ namespace ChartATask.Presenters.Windows
 
             while (Console.ReadLine()?.ToLower() != "exit")
             {
-
             }
 
             engine.Stop();

@@ -3,29 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using ChartATask.Core.Interactors;
 using ChartATask.Core.Models.Conditions;
+using ChartATask.Core.Models.DataPoints;
 using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Models
 {
     public class KeyPressedDataSource : IDataSource<IntOverTime>
     {
-        public List<Trigger> Triggers { get; }
-        public event EventHandler<IntOverTime> OnNewDataPoint;
-
         public KeyPressedDataSource()
         {
             var allKeys = new List<IEvent>();
-            for(int i = 0; i < 255; i++)
+            for (var i = 0; i < 255; i++)
             {
                 allKeys.Add(new KeyPressedEvent(i));
             }
 
 
-            Triggers = new List<Trigger>()
+            Triggers = new List<Trigger>
             {
-                new Trigger(allKeys, new AlwaysTrue()),
+                new Trigger(allKeys, new AlwaysTrue())
             };
         }
+
+        public List<Trigger> Triggers { get; }
+        public event EventHandler<IntOverTime> OnNewDataPoint;
 
         public void Trigger(IEvent newEvent, ISystemEvaluator evaluator)
         {
@@ -36,7 +37,7 @@ namespace ChartATask.Core.Models
             }
 
             var value = 0;
-            if(newEvent is KeyPressedEvent keyPressEvent)
+            if (newEvent is KeyPressedEvent keyPressEvent)
             {
                 value = keyPressEvent.KeyCode;
             }
@@ -46,7 +47,7 @@ namespace ChartATask.Core.Models
 
         public override string ToString()
         {
-            return $@"Key Pressed Source";
+            return @"Key Pressed Source";
         }
     }
 }

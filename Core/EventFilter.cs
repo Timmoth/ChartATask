@@ -17,6 +17,11 @@ namespace ChartATask.Core
             LoadActions(dataSetCollection.DataSources);
         }
 
+        public void Dispose()
+        {
+            _dataSources.Clear();
+        }
+
         public List<IEvent> GetEvents()
         {
             return _dataSources.Select(entry => entry.Key).ToList();
@@ -33,7 +38,8 @@ namespace ChartATask.Core
                     continue;
                 }
 
-                foreach (var triggeredAction in triggeredDataSources.Where(triggeredAction => !partiallyTriggeredActions.Contains(triggeredAction)))
+                foreach (var triggeredAction in triggeredDataSources.Where(triggeredAction =>
+                    !partiallyTriggeredActions.Contains(triggeredAction)))
                 {
                     partiallyTriggeredActions.Add(triggeredAction);
                     triggeredAction.Trigger(triggeredEvent, evaluator);
@@ -56,11 +62,6 @@ namespace ChartATask.Core
                     dataSourceList.Add(dataSource);
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            _dataSources.Clear();
         }
     }
 }

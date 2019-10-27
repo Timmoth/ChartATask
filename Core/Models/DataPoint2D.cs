@@ -1,15 +1,18 @@
-﻿namespace ChartATask.Core.Models
+﻿using ChartATask.Core.Models.DataPoints;
+
+namespace ChartATask.Core.Models
 {
     public class DataPoint2D<x, y> : IDataPoint
     {
-        public x X { get; }
-        public y Y { get; }
-
         protected DataPoint2D(x X, y Y)
         {
             this.X = X;
             this.Y = Y;
         }
+
+        public x X { get; }
+        public y Y { get; }
+
         public override bool Equals(object obj)
         {
             return obj is DataPoint2D<x, y> dataPoint && dataPoint.X.Equals(X);

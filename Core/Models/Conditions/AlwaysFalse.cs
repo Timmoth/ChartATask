@@ -4,12 +4,6 @@ namespace ChartATask.Core.Models.Conditions
 {
     public class AlwaysFalse : ICondition
     {
-
-        public AlwaysFalse()
-        {
-          
-        }
-
         public bool Check(ISystemEvaluator evaluator)
         {
             return false;

@@ -11,8 +11,8 @@ namespace ChartATask.Core
     {
         private readonly DataSetCollection _dataSetCollection;
         private readonly EventFilter _eventFilter;
-        private readonly ISystemInteractor _systemInteractor;
         private readonly IPresenter _presenter;
+        private readonly ISystemInteractor _systemInteractor;
 
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -23,13 +23,18 @@ namespace ChartATask.Core
             _presenter = presenter;
             _systemInteractor = systemSystemInteractor;
 
-            _dataSetCollection = new DataSetCollection(new List<IDataSet>()
+            _dataSetCollection = new DataSetCollection(new List<IDataSet>
             {
-                new KeyPressDataSet(),
+                new KeyPressDataSet()
             });
 
             _eventFilter = new EventFilter(_dataSetCollection);
             _systemInteractor.EventWatcher.SetListeners(_eventFilter.GetEvents());
+        }
+
+        public void Dispose()
+        {
+            _systemInteractor?.Dispose();
         }
 
         public void Start()
@@ -43,10 +48,6 @@ namespace ChartATask.Core
             _isRunning = false;
             _cancellationTokenSource.CancelAfter(100);
             _systemInteractor.EventWatcher.Stop();
-        }
-        public void Dispose()
-        {
-            _systemInteractor?.Dispose();
         }
 
         private async Task Run()

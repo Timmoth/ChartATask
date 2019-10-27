@@ -8,7 +8,6 @@ namespace ChartATask.Presenters.Windows
     {
         public void Update(DataSetCollection dataSetCollection)
         {
-
             foreach (var dataSet in dataSetCollection.DataSets)
             {
                 Console.WriteLine(dataSet.ToString());
@@ -19,7 +18,6 @@ namespace ChartATask.Presenters.Windows
 
         public void Dispose()
         {
-
         }
 
         public static void ClearLastLine()
