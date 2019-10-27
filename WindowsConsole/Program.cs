@@ -10,11 +10,12 @@ namespace ChartATask.Presenters.Windows
         {
             Console.WriteLine("ChartATask Started");
 
-            var engine = new Engine(new WindowsConsolePresenter(), new WindowsInteractor());
+            var engine = new Engine(new WindowsConsolePresenter(), new WindowsSystemInteractor());
             engine.Start();
 
             while (Console.ReadLine()?.ToLower() != "exit")
             {
+
             }
 
             engine.Stop();

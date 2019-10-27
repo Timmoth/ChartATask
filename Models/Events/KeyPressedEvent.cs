@@ -1,12 +1,12 @@
-﻿namespace ChartATask.Models
+﻿namespace ChartATask.Models.Events
 {
-    public class KeyPressedEvent : IInteractionEvent
+    public class KeyPressedEvent : IEvent
     {
         public readonly int KeyCode;
 
-        public KeyPressedEvent(int _KeyCode)
+        public KeyPressedEvent(int keyCode)
         {
-            KeyCode = _KeyCode;
+            KeyCode = keyCode;
         }
 
         public override string ToString()
@@ -23,9 +23,5 @@
         {
             return ToString().GetHashCode();
         }
-    }
-
-    public interface IInteractionEvent
-    {
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChartATask.Models;
+using ChartATask.Core.Models.Events;
 
-namespace ChartATask.Interactors
+namespace ChartATask.Core.Interactors
 {
-    public interface IInteractor : IDisposable
+    public interface IEventWatcher : IDisposable
     {
         Queue<IEvent> GetEvents();
         void SetListeners(List<IEvent> eventList);

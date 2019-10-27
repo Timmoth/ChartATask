@@ -5,11 +5,4 @@
     <RootNamespace>ChartATask.Core</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Interactor\Interactor.csproj" />
-    <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Persistence\Persistence.csproj" />
-    <ProjectReference Include="..\Presenter\Presenter.csproj" />
-  </ItemGroup>
-
 </Project>

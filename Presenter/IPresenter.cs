@@ -2,6 +2,6 @@
 {
     public interface IPresenter
     {
-        void Update();
+        void Update(DataSetCollection dataSetCollection);
     }
 }

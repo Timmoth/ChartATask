@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChartATask.Models
+namespace ChartATask.Models.Conditions
 {
     public class TimeCondition : ICondition
     {
@@ -13,7 +13,7 @@ namespace ChartATask.Models
             _comparisonOperator = comparisonOperator;
         }
 
-        public bool Passed(IConditionEvaluator evaluator)
+        public bool Check(IEvaluator evaluator)
         {
             switch (_comparisonOperator)
             {

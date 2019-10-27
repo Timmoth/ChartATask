@@ -1,60 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using ChartATask.Models;
+using ChartATask.Core.Interactors;
+using ChartATask.Core.Models;
+using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core
 {
-    internal class EventFilter
+    internal class EventFilter : IDisposable
     {
-        private readonly ActionManager _actionManager;
-        public Dictionary<IInteractionEvent, List<CoreAction>> Actions;
+        private readonly Dictionary<IEvent, List<IDataSource>> _dataSources;
 
-        public EventFilter(ActionManager actionManager)
+        public EventFilter(DataSetCollection dataSetCollection)
         {
-            _actionManager = actionManager;
-
-            Actions = new Dictionary<IInteractionEvent, List<CoreAction>>();
-            LoadActions();
+            _dataSources = new Dictionary<IEvent, List<IDataSource>>();
+            LoadActions(dataSetCollection.DataSources);
         }
 
-        public List<CoreAction> Filter(Queue<IInteractionEvent> events)
+        public List<IEvent> GetEvents()
         {
-            var partiallyTriggeredActions = new HashSet<CoreAction>();
+            return _dataSources.Select(entry => entry.Key).ToList();
+        }
+
+        public void Apply(Queue<IEvent> events, ISystemEvaluator evaluator)
+        {
+            var partiallyTriggeredActions = new HashSet<IDataSource>();
 
             foreach (var triggeredEvent in events)
             {
-                if (!Actions.TryGetValue(triggeredEvent, out var actions))
+                if (!_dataSources.TryGetValue(triggeredEvent, out var triggeredDataSources))
                 {
                     continue;
                 }
 
-                foreach (var triggeredAction in actions)
+                foreach (var triggeredAction in triggeredDataSources.Where(triggeredAction => !partiallyTriggeredActions.Contains(triggeredAction)))
                 {
                     partiallyTriggeredActions.Add(triggeredAction);
+                    triggeredAction.Trigger(triggeredEvent, evaluator);
                 }
             }
-
-            var fullyTriggeredActions = partiallyTriggeredActions
-                .Where(action => action.Triggers.All(events.Contains)).ToList();
-
-            return fullyTriggeredActions;
         }
 
-        private void LoadActions()
+        private void LoadActions(IEnumerable<IDataSource> dataSources)
         {
-            foreach (var action in _actionManager.Actions)
+            foreach (var dataSource in dataSources)
             {
-                foreach (var eventTrigger in action.Triggers)
+                foreach (var triggerEvent in dataSource.Triggers.SelectMany(trigger => trigger.Events))
                 {
-                    if (!Actions.TryGetValue(eventTrigger, out var actions))
+                    if (!_dataSources.TryGetValue(triggerEvent, out var dataSourceList))
                     {
-                        actions = new List<CoreAction>();
-                        Actions.Add(eventTrigger, actions);
+                        dataSourceList = new List<IDataSource>();
+                        _dataSources.Add(triggerEvent, dataSourceList);
                     }
 
-                    actions.Add(action);
+                    dataSourceList.Add(dataSource);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _dataSources.Clear();
         }
     }
 }

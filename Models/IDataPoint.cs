@@ -1,6 +1,7 @@
 ﻿namespace ChartATask.Models
 {
-    public interface IConditionEvaluator
+    public interface IDataPoint
     {
+
     }
 }

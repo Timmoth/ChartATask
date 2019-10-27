@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ChartATask.Models;
+using ChartATask.Core.Interactors;
+using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Interactors.Windows
 {
-    public class WindowsInteractor : IInteractor
+    public class WindowsEventWatcher : IEventWatcher
     {
-        private readonly ConcurrentQueue<IInteractionEvent> _eventQueue;
+        private readonly ConcurrentQueue<IEvent> _eventQueue;
         private readonly Thread _keyboardHookThread;
         private bool _isRunning;
 
-        public WindowsInteractor()
+        public WindowsEventWatcher()
         {
-            _eventQueue = new ConcurrentQueue<IInteractionEvent>();
+            _eventQueue = new ConcurrentQueue<IEvent>();
 
             _keyboardHookThread = new Thread(() =>
             {
@@ -32,8 +33,9 @@ namespace ChartATask.Interactors.Windows
             });
         }
 
-        public void SetListeners(List<CoreAction> actionManagerActions)
+        public void SetListeners(List<IEvent> events)
         {
+
         }
 
         public void Start()
@@ -41,9 +43,9 @@ namespace ChartATask.Interactors.Windows
             _keyboardHookThread?.Start();
         }
 
-        public Queue<IInteractionEvent> GetEvents()
+        public Queue<IEvent> GetEvents()
         {
-            var newEvents = new Queue<IInteractionEvent>();
+            var newEvents = new Queue<IEvent>();
             while (_eventQueue.TryDequeue(out var newEvent))
             {
                 newEvents.Enqueue(newEvent);

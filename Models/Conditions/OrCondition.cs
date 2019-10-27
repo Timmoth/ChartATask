@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ChartATask.Models
+namespace ChartATask.Models.Conditions
 {
     public class OrCondition : ICondition
     {
@@ -12,9 +12,9 @@ namespace ChartATask.Models
             _conditions = conditions;
         }
 
-        public bool Passed(IConditionEvaluator evaluator)
+        public bool Check(IEvaluator evaluator)
         {
-            return _conditions.Any(condition => condition.Passed(evaluator));
+            return _conditions.Any(condition => condition.Check(evaluator));
         }
     }
 }

@@ -1,38 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ChartATask.Interactors;
-using ChartATask.Presenters;
+using ChartATask.Core.Interactors;
+using ChartATask.Core.Models;
 
 namespace ChartATask.Core
 {
     public class Engine : IDisposable
     {
-        private readonly ActionManager _actionManager;
-        private readonly ConditionFilter _conditionFilter;
+        private readonly DataSetCollection _dataSetCollection;
         private readonly EventFilter _eventFilter;
-        private readonly IInteractor _interactor;
+        private readonly ISystemInteractor _systemInteractor;
         private readonly IPresenter _presenter;
 
         private CancellationTokenSource _cancellationTokenSource;
 
         private bool _isRunning;
 
-        public Engine(IPresenter presenter, IInteractor interactor)
+        public Engine(IPresenter presenter, ISystemInteractor systemSystemInteractor)
         {
             _presenter = presenter;
-            _interactor = interactor;
+            _systemInteractor = systemSystemInteractor;
 
-            _actionManager = new ActionManager();
-            _eventFilter = new EventFilter(_actionManager);
-            _conditionFilter = new ConditionFilter();
+            _dataSetCollection = new DataSetCollection(new List<IDataSet>()
+            {
+                new KeyPressDataSet(),
+            });
 
-            _interactor.SetListeners(_actionManager.Actions);
-        }
-
-        public void Dispose()
-        {
-            _interactor?.Dispose();
+            _eventFilter = new EventFilter(_dataSetCollection);
+            _systemInteractor.EventWatcher.SetListeners(_eventFilter.GetEvents());
         }
 
         public void Start()
@@ -45,34 +42,28 @@ namespace ChartATask.Core
         {
             _isRunning = false;
             _cancellationTokenSource.CancelAfter(100);
-            _interactor.Stop();
+            _systemInteractor.EventWatcher.Stop();
+        }
+        public void Dispose()
+        {
+            _systemInteractor?.Dispose();
         }
 
         private async Task Run()
         {
             _isRunning = true;
 
-            await new TaskFactory(_cancellationTokenSource.Token).StartNew(() =>
+            await new TaskFactory(_cancellationTokenSource.Token).StartNew(async () =>
             {
-                _interactor.Start();
+                _systemInteractor.EventWatcher.Start();
 
                 while (_isRunning)
                 {
-                    var events = _interactor.GetEvents();
-                    var triggeredActions = _eventFilter.Filter(events);
-                    var acceptedActions = _conditionFilter.Filter(triggeredActions);
+                    var events = _systemInteractor.EventWatcher.GetEvents();
+                    _eventFilter.Apply(events, _systemInteractor.SystemEvaluator);
+                    _presenter.Update(_dataSetCollection);
 
-                    foreach (var triggeredAction in acceptedActions)
-                    {
-                        Console.WriteLine(triggeredAction.ToString());
-                    }
-
-                    //Execute accepted Actions
-                    //Actions can either:
-                    //add an entry to a chart
-                    //Or
-                    //Modify the system
-                    _presenter.Update();
+                    await Task.Delay(100).ConfigureAwait(false);
                 }
             }, _cancellationTokenSource.Token).ConfigureAwait(false);
         }
