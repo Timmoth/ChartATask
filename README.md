@@ -23,20 +23,12 @@ A lightweight time analysis application.
 
 ### Core (dotnet standard library)
 
-A library containing the core business logic which ties together all of the modules.
-
-### Interactor (dotnet standard library)
-
-A defines the a platform agnostic interface 'Core' uses to interact with platform specific interactors.
-
-### Persistence (dotnet standard library)
-
-A defines the interface 'Core' uses to interact with platform specific persistence technologies.
-
-### ChartATaskConsole (dotnet Core Console App)
-
-A cross platform console version of ChartATask
+A platform agnostic library containing the core business logic and interfaces.
 
 ### WindowsInteractor (dotnet Framework library)
 
-A windows implementation of the interactor interface.
+A windows implementation of the SystemInteractor components
+
+### WindowsConsole (dotnet Framework library)
+
+A Windows Console version of ChartATask
