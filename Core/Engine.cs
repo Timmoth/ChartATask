@@ -25,7 +25,8 @@ namespace ChartATask.Core
 
             _dataSetCollection = new DataSetCollection(new List<IDataSet>
             {
-                new KeyPressDataSet()
+                new KeyPressDataSet(),
+                new AppSessionDataSet()
             });
 
             _eventFilter = new EventFilter(_dataSetCollection);

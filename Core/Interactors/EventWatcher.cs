@@ -6,7 +6,7 @@ using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Interactors
 {
-    public abstract class EventWatcher : IDisposable
+    public abstract class EventWatcher : IWatcher
     {
         private readonly ConcurrentQueue<IEvent> _eventQueue;
         private readonly IKeyboardWatcher _keyboardWatcher;
@@ -24,7 +24,8 @@ namespace ChartATask.Core.Interactors
 
         public void SetListeners(List<IEvent> events)
         {
-
+            _keyboardWatcher?.SetListeners(events);
+            _appWatcher?.SetListeners(events);
         }
 
         public void Start()

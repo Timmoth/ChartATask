@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ChartATask.Core.Interactors;
 using ChartATask.Core.Interactors.EventWatchers;
 using ChartATask.Core.Models.Events;
 
@@ -32,6 +30,11 @@ namespace ChartATask.Interactors.Windows.EventWatcher
 
                 KeyboardHook.End();
             });
+        }
+
+        public void SetListeners(List<IEvent> events)
+        {
+
         }
 
         public void Start()
