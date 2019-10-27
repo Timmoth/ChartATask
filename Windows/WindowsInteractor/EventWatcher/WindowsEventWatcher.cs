@@ -2,7 +2,9 @@
 {
     public class WindowsEventWatcher : Core.Interactors.EventWatcher
     {
-        public WindowsEventWatcher() : base(new WindowsKeyboardWatcher())
+        public WindowsEventWatcher() : base(
+            new WindowsKeyboardWatcher(),
+            new WindowsAppWatcher())
         {
 
         }
