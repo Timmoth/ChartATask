@@ -12,7 +12,7 @@ namespace ChartATask.Interactors.Windows
             SystemEvaluator = new WindowsSystemEvaluator();
         }
 
-        public IEventWatcher EventWatcher { get; }
+        public Core.Interactors.EventWatcher EventWatcher { get; }
         public ISystemEvaluator SystemEvaluator { get; }
 
         public void Dispose()

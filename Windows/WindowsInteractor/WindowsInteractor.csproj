@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventWatcher\KeyboardHook.cs" />
+    <Compile Include="EventWatcher\WindowsKeyboardWatcher.cs" />
     <Compile Include="EventWatcher\WindowsEventWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowsSystemInteractor.cs" />

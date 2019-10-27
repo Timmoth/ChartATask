@@ -4,7 +4,7 @@ namespace ChartATask.Core.Interactors
 {
     public interface ISystemInteractor : IDisposable
     {
-        IEventWatcher EventWatcher { get; }
+        EventWatcher EventWatcher { get; }
         ISystemEvaluator SystemEvaluator { get; }
     }
 }

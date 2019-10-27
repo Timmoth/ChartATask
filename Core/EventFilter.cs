@@ -29,8 +29,6 @@ namespace ChartATask.Core
 
         public void Apply(Queue<IEvent> events, ISystemEvaluator evaluator)
         {
-            var partiallyTriggeredActions = new HashSet<IDataSource>();
-
             foreach (var triggeredEvent in events)
             {
                 if (!_dataSources.TryGetValue(triggeredEvent, out var triggeredDataSources))
@@ -38,10 +36,8 @@ namespace ChartATask.Core
                     continue;
                 }
 
-                foreach (var triggeredAction in triggeredDataSources.Where(triggeredAction =>
-                    !partiallyTriggeredActions.Contains(triggeredAction)))
+                foreach (var triggeredAction in triggeredDataSources)
                 {
-                    partiallyTriggeredActions.Add(triggeredAction);
                     triggeredAction.Trigger(triggeredEvent, evaluator);
                 }
             }
