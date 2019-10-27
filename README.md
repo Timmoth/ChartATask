@@ -1,7 +1,13 @@
 ![alt text](https://raw.githubusercontent.com/Timmoth/ChartATask/master/Chartatask_512.png)
 
 # ChartATask
-Log your time spent on tasks based on user defined triggers.
+A lightweight time analysis application.
+
+- Automate the logging of time spent on different tasks.
+
+- Generate charts which show meaningful usage trends.
+
+- Set daily usage goals and use machine learning to give you a real time prediction of the likely hood you will achieve them.
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/120f83a3612544769ad4ec291d98a105)](https://www.codacy.com/manual/Timmoth/Chartatask?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Timmoth/Chartatask&amp;utm_campaign=Badge_Grade)
 
