@@ -13,8 +13,11 @@ A lightweight time analysis application.
 
 ## Why
 
-I need a way to automate the logging and analysis of time spent working on different projects, and using off the shelf solutions are no way near as fun as paving your own way!
+-  using an off the shelf solution is no way near as fun as paving your own way!
 
+-  In order to give accurate time estimations I need a way to automate the logging and analysis of the time I spend working on different projects.
+
+-  Procrastination is a subconscious process, sometimes I'm aware my attention is slipping away from the tasks I want to focus on. More often than not however by the time I realise what im doing I've totally lost my momentum and reside myself to the YouTube Rabbit hole. It's possible for me to get back on track if I notice myself early on. As such I want a piece of software to show a real time 'Procrastination Meter' to notify me that I'm showing 'dangerous' patterns.
 
 ## Project structure
 
