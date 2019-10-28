@@ -13,12 +13,12 @@ namespace ChartATask.Core.Models
     {
         private DateTime _startTime;
 
-        public AppSessionDataSource(string appName)
+        public AppSessionDataSource(string appName, string appTitle)
         {
             Triggers = new List<Trigger>
             {
-                new Trigger(new List<IEvent> {new AppOpenEvent(appName)}, new AlwaysTrue()),
-                new Trigger(new List<IEvent> {new AppCloseEvent(appName)}, new AlwaysTrue())
+                new Trigger(new List<IEvent> {new AppTitleEvent(appName, appTitle, true)}, new AlwaysTrue()),
+                new Trigger(new List<IEvent> {new AppTitleEvent(appName, appTitle, false)}, new AlwaysTrue())
             };
 
             _startTime = DateTime.MinValue;
@@ -35,11 +35,11 @@ namespace ChartATask.Core.Models
                 return;
             }
 
-            if (newEvent is AppOpenEvent appOpenEvent)
+            if (Triggers[0].Events.Contains(newEvent) && Triggers[1].Condition.Check(evaluator))
             {
                 _startTime = DateTime.Now;
             }
-            else if (newEvent is AppCloseEvent appCloseEvent)
+            else if (Triggers[1].Events.Contains(newEvent) && Triggers[1].Condition.Check(evaluator))
             {
                 if (_startTime != DateTime.MinValue)
                 {

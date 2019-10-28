@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using ChartATask.Core;
+using ChartATask.Core.Models;
 using ChartATask.Interactors.Windows;
 
 namespace ChartATask.Presenters.Windows
@@ -9,8 +11,13 @@ namespace ChartATask.Presenters.Windows
         private static void Main(string[] args)
         {
             Console.WriteLine("ChartATask Started");
+            var dataSetCollection = new DataSetCollection(new List<IDataSet>
+            {
+                new AppSessionDataSet(@"devenv", @"chartatask (Running) - Microsoft Visual Studio (Administrator)"),
+                new AppSessionDataSet(@"firefox", @"GitHub - Mozilla Firefox")
+            });
 
-            var engine = new Engine(new WindowsConsolePresenter(), new WindowsSystemInteractor());
+            var engine = new Engine(new WindowsConsolePresenter(), new WindowsSystemInteractor(), dataSetCollection);
             engine.Start();
 
             while (Console.ReadLine()?.ToLower() != "exit")

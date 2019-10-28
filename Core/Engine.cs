@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ChartATask.Core.Interactors;
@@ -18,17 +18,12 @@ namespace ChartATask.Core
 
         private bool _isRunning;
 
-        public Engine(IPresenter presenter, ISystemInteractor systemSystemInteractor)
+        public Engine(IPresenter presenter, ISystemInteractor systemSystemInteractor,
+            DataSetCollection dataSetCollection)
         {
             _presenter = presenter;
             _systemInteractor = systemSystemInteractor;
-
-            _dataSetCollection = new DataSetCollection(new List<IDataSet>
-            {
-                new KeyPressDataSet(),
-                new AppSessionDataSet()
-            });
-
+            _dataSetCollection = dataSetCollection;
             _eventFilter = new EventFilter(_dataSetCollection);
             _systemInteractor.EventWatcher.SetListeners(_eventFilter.GetEvents());
         }
@@ -63,7 +58,11 @@ namespace ChartATask.Core
                 {
                     var events = _systemInteractor.EventWatcher.GetEvents();
                     _eventFilter.Apply(events, _systemInteractor.SystemEvaluator);
-                    _presenter.Update(_dataSetCollection);
+
+                    if (events.Any())
+                    {
+                        _presenter.Update(_dataSetCollection);
+                    }
 
                     await Task.Delay(100).ConfigureAwait(false);
                 }

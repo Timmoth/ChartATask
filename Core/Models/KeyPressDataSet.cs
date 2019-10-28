@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using ChartATask.Core.Models.DataPoints;
-using ChartATask.Core.Models.Events;
 using ChartATask.Core.Models.Events.KeyboardEvents;
 
 namespace ChartATask.Core.Models
@@ -38,6 +37,7 @@ namespace ChartATask.Core.Models
                     $"DataSet\n{trigger}\nCount: {_dataPoints.Count(point => trigger.Events.Contains(new KeyPressedEvent(point.Y)))}");
             }
 
+            return "";
             return builder.ToString();
         }
     }

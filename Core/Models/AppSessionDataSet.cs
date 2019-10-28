@@ -10,9 +10,9 @@ namespace ChartATask.Core.Models
         private readonly List<DurationOverTime> _dataPoints;
         private readonly AppSessionDataSource _dataSource;
 
-        public AppSessionDataSet()
+        public AppSessionDataSet(string appName, string appTitle)
         {
-            _dataSource = new AppSessionDataSource("firefox");
+            _dataSource = new AppSessionDataSource(appName, appTitle);
             _dataPoints = new List<DurationOverTime>();
 
             _dataSource.OnNewDataPoint += DataSource_OnNewDataPoint;
