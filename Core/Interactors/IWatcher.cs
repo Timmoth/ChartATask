@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Interactors

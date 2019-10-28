@@ -1,4 +1,4 @@
-﻿namespace ChartATask.Core.Models.Events
+﻿namespace ChartATask.Core.Models.Events.AppEvents
 {
     public class AppOpenEvent : IEvent
     {
@@ -11,7 +11,7 @@
 
         public override string ToString()
         {
-            return $@"AppOpenEvent: {Name}";
+            return $"AppOpenEvent: \n\tName: {Name}";
         }
 
         public override bool Equals(object obj)

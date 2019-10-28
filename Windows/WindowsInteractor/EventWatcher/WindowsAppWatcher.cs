@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
-using ChartATask.Core.Interactors.EventWatchers;
+using ChartATask.Core.Interactors.Watchers;
 using ChartATask.Core.Models.Events;
+using ChartATask.Core.Models.Events.AppEvents;
+using HWND = System.IntPtr;
+
 
 namespace ChartATask.Interactors.Windows.EventWatcher
 {
     public class WindowsAppWatcher : IAppWatcher
     {
-        public event EventHandler<IEvent> OnEvent;
-        private readonly List<AppOpenEvent> _appOpenEvents;
         private readonly List<AppCloseEvent> _appCloseEvents;
+        private readonly List<AppOpenEvent> _appOpenEvents;
         private readonly ManagementEventWatcher _processStartEvent;
         private readonly ManagementEventWatcher _processStopEvent;
 
@@ -25,9 +27,10 @@ namespace ChartATask.Interactors.Windows.EventWatcher
 
             _processStopEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStopTrace");
             _processStopEvent.EventArrived += processStopEvent_EventArrived;
-
         }
-        
+
+        public event EventHandler<IEvent> OnEvent;
+
         public void SetListeners(List<IEvent> events)
         {
             _appOpenEvents.AddRange(events.OfType<AppOpenEvent>());
@@ -41,11 +44,9 @@ namespace ChartATask.Interactors.Windows.EventWatcher
                 _processStartEvent?.Start();
                 _processStopEvent?.Start();
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-
             }
-
         }
 
         public void Stop()
@@ -53,33 +54,30 @@ namespace ChartATask.Interactors.Windows.EventWatcher
             _processStartEvent?.Stop();
             _processStopEvent?.Stop();
         }
+
         public void Dispose()
         {
             _processStartEvent?.Dispose();
             _processStopEvent?.Dispose();
         }
-        void processStartEvent_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            string processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            string processID = Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value).ToString();
 
-            var triggeredEvent = _appOpenEvents.FirstOrDefault(openEvent => processName.ToLower().Contains(openEvent.Name));
-            if (triggeredEvent != null)
+        private void processStartEvent_EventArrived(object sender, EventArrivedEventArgs e)
+        {
+            var processName = e.NewEvent.Properties["ProcessName"].Value.ToString().ToLower().Split('.')[0];
+
+            if (_appOpenEvents.Any(openEvent => processName.Equals(openEvent.Name.ToLower())))
             {
-                OnEvent?.Invoke(this, triggeredEvent);
+                OnEvent?.Invoke(this, new AppOpenEvent(processName));
             }
         }
 
-        void processStopEvent_EventArrived(object sender, EventArrivedEventArgs e)
+        private void processStopEvent_EventArrived(object sender, EventArrivedEventArgs e)
         {
-            string processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            string processID = Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value).ToString();
+            var processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
 
-            
-            var triggeredEvent = _appCloseEvents.FirstOrDefault(closeEvent => processName.ToLower().Contains(closeEvent.Name));
-            if (triggeredEvent != null)
+            if (_appCloseEvents.Any(openEvent => processName.Equals(openEvent.Name.ToLower())))
             {
-                OnEvent?.Invoke(this, triggeredEvent);
+                OnEvent?.Invoke(this, new AppCloseEvent(processName));
             }
         }
     }

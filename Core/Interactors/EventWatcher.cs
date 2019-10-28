@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using ChartATask.Core.Interactors.EventWatchers;
+using ChartATask.Core.Interactors.Watchers;
 using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Interactors
 {
     public abstract class EventWatcher : IWatcher
     {
+        private readonly IAppWatcher _appWatcher;
         private readonly ConcurrentQueue<IEvent> _eventQueue;
         private readonly IKeyboardWatcher _keyboardWatcher;
-        private readonly IAppWatcher _appWatcher;
 
         protected EventWatcher(IKeyboardWatcher keyboardWatcher, IAppWatcher appWatcher)
         {
@@ -19,7 +18,7 @@ namespace ChartATask.Core.Interactors
             _keyboardWatcher.OnEvent += OnWatcherEvent;
 
             _appWatcher = appWatcher;
-            _appWatcher.OnEvent += OnWatcherEvent;      
+            _appWatcher.OnEvent += OnWatcherEvent;
         }
 
         public void SetListeners(List<IEvent> events)
@@ -34,17 +33,6 @@ namespace ChartATask.Core.Interactors
             _appWatcher?.Start();
         }
 
-        public Queue<IEvent> GetEvents()
-        {
-            var newEvents = new Queue<IEvent>();
-            while (_eventQueue.TryDequeue(out var newEvent))
-            {
-                newEvents.Enqueue(newEvent);
-            }
-
-            return newEvents;
-        }
-
         public void Stop()
         {
             _keyboardWatcher?.Stop();
@@ -56,6 +44,17 @@ namespace ChartATask.Core.Interactors
             Stop();
             _keyboardWatcher?.Dispose();
             _appWatcher?.Dispose();
+        }
+
+        public Queue<IEvent> GetEvents()
+        {
+            var newEvents = new Queue<IEvent>();
+            while (_eventQueue.TryDequeue(out var newEvent))
+            {
+                newEvents.Enqueue(newEvent);
+            }
+
+            return newEvents;
         }
 
         private void OnWatcherEvent(object sender, IEvent newEvent)

@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ChartATask.Core.Interactors.EventWatchers;
+using ChartATask.Core.Interactors.Watchers;
 using ChartATask.Core.Models.Events;
+using ChartATask.Core.Models.Events.KeyboardEvents;
 
 namespace ChartATask.Interactors.Windows.EventWatcher
 {
     public class WindowsKeyboardWatcher : IKeyboardWatcher
     {
-        public event EventHandler<IEvent> OnEvent;
-
         private readonly Thread _keyboardHookThread;
         private bool _isRunning;
 
@@ -32,9 +31,10 @@ namespace ChartATask.Interactors.Windows.EventWatcher
             });
         }
 
+        public event EventHandler<IEvent> OnEvent;
+
         public void SetListeners(List<IEvent> events)
         {
-
         }
 
         public void Start()

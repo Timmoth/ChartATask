@@ -5,24 +5,27 @@ using ChartATask.Core.Interactors;
 using ChartATask.Core.Models.Conditions;
 using ChartATask.Core.Models.DataPoints;
 using ChartATask.Core.Models.Events;
+using ChartATask.Core.Models.Events.AppEvents;
 
 namespace ChartATask.Core.Models
 {
     public class AppSessionDataSource : IDataSource<DurationOverTime>
     {
         private DateTime _startTime;
-        public List<Trigger> Triggers { get; }
-        public event EventHandler<DurationOverTime> OnNewDataPoint;
+
         public AppSessionDataSource(string appName)
         {
             Triggers = new List<Trigger>
             {
-                new Trigger(new List<IEvent>{new AppOpenEvent(appName.ToLower()) }, new AlwaysTrue()),
-                new Trigger(new List<IEvent>{new AppCloseEvent(appName.ToLower()) }, new AlwaysTrue())
+                new Trigger(new List<IEvent> {new AppOpenEvent(appName)}, new AlwaysTrue()),
+                new Trigger(new List<IEvent> {new AppCloseEvent(appName)}, new AlwaysTrue())
             };
 
             _startTime = DateTime.MinValue;
         }
+
+        public List<Trigger> Triggers { get; }
+        public event EventHandler<DurationOverTime> OnNewDataPoint;
 
         public void Trigger(IEvent newEvent, ISystemEvaluator evaluator)
         {
@@ -35,16 +38,16 @@ namespace ChartATask.Core.Models
             if (newEvent is AppOpenEvent appOpenEvent)
             {
                 _startTime = DateTime.Now;
-
-            }else if (newEvent is AppCloseEvent appCloseEvent)
+            }
+            else if (newEvent is AppCloseEvent appCloseEvent)
             {
-                if(_startTime != DateTime.MinValue)
+                if (_startTime != DateTime.MinValue)
                 {
                     OnNewDataPoint?.Invoke(this, new DurationOverTime(_startTime, DateTime.Now - _startTime));
                 }
+
                 _startTime = DateTime.MinValue;
             }
-
         }
 
         public override string ToString()

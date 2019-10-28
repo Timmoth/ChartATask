@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace ChartATask.Core.Models.Events
+namespace ChartATask.Core.Models.Events.AppEvents
 {
     public class AppSessionEvent : IEvent
     {
+        public readonly DateTime EndTime;
         public readonly string Name;
         public readonly DateTime StartTime;
-        public readonly DateTime EndTime;
-        public TimeSpan Duration => EndTime - StartTime;
 
         public AppSessionEvent(string name, DateTime startTime, DateTime endTime)
         {
@@ -15,6 +14,8 @@ namespace ChartATask.Core.Models.Events
             StartTime = startTime;
             EndTime = endTime;
         }
+
+        public TimeSpan Duration => EndTime - StartTime;
 
         public override string ToString()
         {

@@ -30,7 +30,7 @@ namespace ChartATask.Core.Models
         {
             var builder = new StringBuilder();
 
-            TimeSpan totalSessionDuration = TimeSpan.Zero;
+            var totalSessionDuration = TimeSpan.Zero;
             foreach (var dataPoint in _dataPoints)
             {
                 totalSessionDuration += dataPoint.Y;

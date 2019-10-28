@@ -6,7 +6,6 @@
             new WindowsKeyboardWatcher(),
             new WindowsAppWatcher())
         {
-
         }
     }
 }

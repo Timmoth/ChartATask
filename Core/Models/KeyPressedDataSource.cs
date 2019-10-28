@@ -5,6 +5,7 @@ using ChartATask.Core.Interactors;
 using ChartATask.Core.Models.Conditions;
 using ChartATask.Core.Models.DataPoints;
 using ChartATask.Core.Models.Events;
+using ChartATask.Core.Models.Events.KeyboardEvents;
 
 namespace ChartATask.Core.Models
 {
