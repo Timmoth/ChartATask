@@ -10,7 +10,7 @@ namespace ChartATask.Core.Models.DataPoints
 
         public override string ToString()
         {
-            return $@"{{{X.ToString()},{Y.ToString()}}}";
+            return $@"{X.ToString()},{Y.ToString()}";
         }
     }
 }

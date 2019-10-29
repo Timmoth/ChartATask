@@ -9,10 +9,13 @@ namespace ChartATask.Core.Models
     {
         private readonly List<DurationOverTime> _dataPoints;
         private readonly AppSessionDataSource _dataSource;
-
+        public readonly string AppName;
+        public readonly string AppTitle;
         public AppSessionDataSet(string appName, string appTitle)
         {
-            _dataSource = new AppSessionDataSource(appName, appTitle);
+            AppName = appName;
+            AppTitle = appTitle;
+            _dataSource = new AppSessionDataSource(AppName, AppTitle);
             _dataPoints = new List<DurationOverTime>();
 
             _dataSource.OnNewDataPoint += DataSource_OnNewDataPoint;
@@ -20,6 +23,10 @@ namespace ChartATask.Core.Models
 
         public IDataSource DataSource => _dataSource;
         public IEnumerable<IDataPoint> DataPoints => _dataPoints;
+        public void Add(DurationOverTime dataPoint)
+        {
+            _dataPoints.Add(dataPoint);
+        }
 
         private void DataSource_OnNewDataPoint(object sender, DurationOverTime e)
         {
