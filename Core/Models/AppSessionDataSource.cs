@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChartATask.Core.Models.Conditions;
+using ChartATask.Core.Events;
+using ChartATask.Core.Events.Watchers;
+using ChartATask.Core.Models.Acceptor;
 using ChartATask.Core.Models.DataPoints;
 using ChartATask.Core.Models.Events;
 using ChartATask.Core.Models.Events.AppEvents;
@@ -11,35 +13,51 @@ namespace ChartATask.Core.Models
 {
     public class AppSessionDataSource : IDataSource<DurationOverTime>
     {
-        private DateTime _startTime;
+        private readonly List<Trigger<AppTitleEvent>> _endTriggers;
+        private readonly List<Trigger<AppTitleEvent>> _startTriggers;
 
-        public AppSessionDataSource(string appName, string appTitle)
+        private RequestEvaluator _evaluator;
+        private DateTime _startTime;
+        private List<IWatcher<AppTitleEvent>> _titleWatchers;
+
+        public AppSessionDataSource()
         {
-            Triggers = new List<Trigger>
+            _startTriggers = new List<Trigger<AppTitleEvent>>();
+            _endTriggers = new List<Trigger<AppTitleEvent>>();
+            _startTriggers.Add(new Trigger<AppTitleEvent>(new IEventSocket<AppTitleEvent>[]
             {
-                new Trigger(new List<IEvent> {new AppTitleEvent(appName, appTitle, true)}, new AlwaysTrue()),
-                new Trigger(new List<IEvent> {new AppTitleEvent(appName, appTitle, false)}, new AlwaysTrue())
-            };
+                new AppTitleEventSocket(new StringContains("application"), new StringContains("Calculator"),
+                    new BoolEquality(true))
+            }));
+            _endTriggers.Add(new Trigger<AppTitleEvent>(new IEventSocket<AppTitleEvent>[]
+            {
+                new AppTitleEventSocket(new StringContains("application"), new StringContains("Calculator"),
+                    new BoolEquality(false))
+            }));
 
             _startTime = DateTime.MinValue;
         }
 
-        public List<Trigger> Triggers { get; }
         public event EventHandler<DurationOverTime> OnNewDataPoint;
 
-        public void Trigger(IEvent newEvent, RequestEvaluator evaluator)
+        public void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator)
         {
-            var activatedTriggers = Triggers.Where(trigger => trigger.Events.Contains(newEvent));
-            if (!activatedTriggers.Any(trigger => trigger.Condition.Check(evaluator)))
-            {
-                return;
-            }
+            _evaluator = requestEvaluator;
 
-            if (Triggers[0].Events.Contains(newEvent) && Triggers[1].Condition.Check(evaluator))
+            _titleWatchers = eventWatchers.GetWatcher<AppTitleEvent>().ToList();
+            foreach (var titleWatcher in _titleWatchers)
+            {
+                titleWatcher.OnEvent += TitleWatcher_OnEvent;
+            }
+        }
+
+        private void TitleWatcher_OnEvent(object sender, AppTitleEvent e)
+        {
+            if (_startTriggers.Any(p => p.IsTriggered(e, _evaluator)))
             {
                 _startTime = DateTime.Now;
             }
-            else if (Triggers[1].Events.Contains(newEvent) && Triggers[1].Condition.Check(evaluator))
+            else if (_endTriggers.Any(p => p.IsTriggered(e, _evaluator)))
             {
                 if (_startTime != DateTime.MinValue)
                 {

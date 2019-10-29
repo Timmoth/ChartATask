@@ -37,7 +37,7 @@ namespace ChartATask.Interactors.Windows.Events
                 while (true)
                 {
                     UpdateOpenWindows();
-                    await Task.Delay(200).ConfigureAwait(false);
+                    await Task.Delay(1000).ConfigureAwait(false);
                 }
             }).ConfigureAwait(false);
         }

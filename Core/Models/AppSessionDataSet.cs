@@ -1,54 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using ChartATask.Core.Models.DataPoints;
 
 namespace ChartATask.Core.Models
 {
-    public class AppSessionDataSet : IDataSet
+    public class DataSet<TDataPoint> where TDataPoint : IDataPoint
     {
-        private readonly List<DurationOverTime> _dataPoints;
-        private readonly AppSessionDataSource _dataSource;
-        public readonly string AppName;
-        public readonly string AppTitle;
+        private readonly List<TDataPoint> _dataPoints;
 
-        public AppSessionDataSet(string appName, string appTitle)
+        public DataSet()
         {
-            AppName = appName;
-            AppTitle = appTitle;
-            _dataSource = new AppSessionDataSource(AppName, AppTitle);
-            _dataPoints = new List<DurationOverTime>();
-
-            _dataSource.OnNewDataPoint += DataSource_OnNewDataPoint;
+            _dataPoints = new List<TDataPoint>();
         }
 
-        public IDataSource DataSource => _dataSource;
-        public IEnumerable<IDataPoint> DataPoints => _dataPoints;
+        public IDataSource<TDataPoint> DataSource { get; private set; }
 
-        public void Add(DurationOverTime dataPoint)
+        public IEnumerable<TDataPoint> DataPoints => _dataPoints;
+
+        public void Setup(IDataSource<TDataPoint> dataSource)
+        {
+            DataSource = dataSource;
+            DataSource.OnNewDataPoint += DataSource_OnNewDataPoint;
+        }
+
+        public void Add(TDataPoint dataPoint)
         {
             _dataPoints.Add(dataPoint);
         }
 
-        private void DataSource_OnNewDataPoint(object sender, DurationOverTime e)
+        private void DataSource_OnNewDataPoint(object sender, TDataPoint e)
         {
             _dataPoints.Add(e);
         }
 
         public override string ToString()
         {
-            var builder = new StringBuilder();
-
-            var totalSessionDuration = TimeSpan.Zero;
-            foreach (var dataPoint in _dataPoints)
-            {
-                totalSessionDuration += dataPoint.Y;
-            }
-
-            builder.AppendLine(
-                $"Duration: {totalSessionDuration}");
-
-            return builder.ToString();
+            return string.Join("\n", _dataPoints);
         }
     }
 }

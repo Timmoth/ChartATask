@@ -1,25 +1,26 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using ChartATask.Core.Events.Watchers;
 using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Events
 {
-    public class EventCollector
+    public class EventWatchers
     {
-        private readonly ConcurrentQueue<IEvent> _eventQueue;
         private readonly List<IWatcher> _eventWatchers;
 
-        public EventCollector()
+        public EventWatchers()
         {
-            _eventQueue = new ConcurrentQueue<IEvent>();
             _eventWatchers = new List<IWatcher>();
         }
 
         public void Register<TEvent>(IWatcher<TEvent> eventWatcher) where TEvent : IEvent
         {
             _eventWatchers.Add(eventWatcher);
-            eventWatcher.OnEvent += (s, e) => { _eventQueue.Enqueue(e); };
+        }
+        public IEnumerable<IWatcher<T>> GetWatcher<T>() where T : IEvent
+        {
+            return _eventWatchers.OfType<IWatcher<T>>();
         }
 
         public void Start()
@@ -45,17 +46,6 @@ namespace ChartATask.Core.Events
             {
                 eventWatcher.Dispose();
             }
-        }
-
-        public Queue<IEvent> GetEvents()
-        {
-            var newEvents = new Queue<IEvent>();
-            while (_eventQueue.TryDequeue(out var newEvent))
-            {
-                newEvents.Enqueue(newEvent);
-            }
-
-            return newEvents;
         }
     }
 }

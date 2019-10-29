@@ -1,31 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ChartATask.Core.Models;
 using ChartATask.Core.Models.DataPoints;
 
 namespace ChartATask.Core.Persistence
 {
-    public class CSVPersistence : IPersistence
+    public class CSVPersistence : IPersistence<DurationOverTime>
     {
         public void Dispose()
         {
         }
 
-        public void Save(DataSetCollection dataSetCollection)
+        public void Save(DataSet<DurationOverTime> dataSet)
         {
             using (var streamWriter = new StreamWriter(@"./data.csv"))
             {
-                var dataSet = dataSetCollection.DataSets.ElementAt(0) as AppSessionDataSet;
-
                 if (dataSet == null)
                 {
                     return;
                 }
 
-                streamWriter.WriteLine(dataSet.AppName);
-                streamWriter.WriteLine(dataSet.AppTitle);
                 foreach (var dataSetDataPoint in dataSet.DataPoints)
                 {
                     streamWriter.WriteLine(dataSetDataPoint.ToString());
@@ -33,15 +27,12 @@ namespace ChartATask.Core.Persistence
             }
         }
 
-        public DataSetCollection Load()
+        public DataSet<DurationOverTime> Load()
         {
-            var dataSets = new List<IDataSet>();
+            var dataSet = new DataSet<DurationOverTime>();
+
             using (var reader = new StreamReader(@"./data.csv"))
             {
-                var appName = reader.ReadLine();
-                var appTitle = reader.ReadLine();
-                var dataSet = new AppSessionDataSet(appName, appTitle);
-
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
@@ -52,11 +43,9 @@ namespace ChartATask.Core.Persistence
 
                     dataSet.Add(new DurationOverTime(x, y));
                 }
-
-                dataSets.Add(dataSet);
             }
 
-            return new DataSetCollection(dataSets);
+            return dataSet;
         }
     }
 }

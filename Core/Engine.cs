@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ChartATask.Core.Events;
 using ChartATask.Core.Models;
+using ChartATask.Core.Models.DataPoints;
 using ChartATask.Core.Presenter;
 using ChartATask.Core.Requests;
 
@@ -12,31 +12,31 @@ namespace ChartATask.Core
     public class Engine : IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly DataSetCollection _dataSetCollection;
-        private readonly EventCollector _eventCollector;
-        private readonly EventFilter _eventFilter;
+        private readonly DataSet<DurationOverTime> _dataSet;
+        private readonly EventWatchers _eventWatchers;
         private readonly IPresenter _presenter;
         private readonly RequestEvaluator _requestEvaluator;
         private bool _isRunning;
 
         public Engine(
             IPresenter presenter,
-            EventCollector systemEventCollector,
+            EventWatchers systemEventWatchers,
             RequestEvaluator requestEvaluator,
-            DataSetCollection dataSetCollection)
+            DataSet<DurationOverTime> dataSet)
         {
             _presenter = presenter;
-            _eventCollector = systemEventCollector;
+            _eventWatchers = systemEventWatchers;
             _requestEvaluator = requestEvaluator;
-            _dataSetCollection = dataSetCollection;
-            _eventFilter = new EventFilter(_dataSetCollection);
+            _dataSet = dataSet;
+            var source = new AppSessionDataSource();
+            source.Setup(systemEventWatchers, requestEvaluator);
+            _dataSet.Setup(source);
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
         public void Dispose()
         {
-            _eventFilter?.Dispose();
-            _eventCollector?.Dispose();
+            _eventWatchers?.Dispose();
             _requestEvaluator?.Dispose();
             _cancellationTokenSource.Dispose();
         }
@@ -54,12 +54,12 @@ namespace ChartATask.Core
 
         private async Task Run()
         {
-            if (_eventCollector == null || _requestEvaluator == null)
+            if (_eventWatchers == null || _requestEvaluator == null)
             {
                 throw new NullReferenceException();
             }
 
-            _eventCollector.Start();
+            _eventWatchers.Start();
             _requestEvaluator.Start();
 
             await new TaskFactory(_cancellationTokenSource.Token).StartNew(async () =>
@@ -68,19 +68,13 @@ namespace ChartATask.Core
 
                 while (_isRunning)
                 {
-                    var events = _eventCollector.GetEvents();
-                    _eventFilter.Apply(events, _requestEvaluator);
+                    _presenter.Update(_dataSet);
 
-                    if (events.Any())
-                    {
-                        _presenter.Update(_dataSetCollection);
-                    }
-
-                    await Task.Delay(100).ConfigureAwait(false);
+                    await Task.Delay(1000).ConfigureAwait(false);
                 }
             }, _cancellationTokenSource.Token).ContinueWith(o =>
             {
-                _eventCollector.Stop();
+                _eventWatchers.Stop();
                 _requestEvaluator.Stop();
             }).ConfigureAwait(false);
         }

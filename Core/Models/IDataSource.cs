@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using ChartATask.Core.Events;
 using ChartATask.Core.Models.DataPoints;
-using ChartATask.Core.Models.Events;
 using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models
 {
     public interface IDataSource
     {
-        List<Trigger> Triggers { get; }
-        void Trigger(IEvent newEvent, RequestEvaluator evaluator);
+        void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator);
     }
 
     public interface IDataSource<T> : IDataSource where T : IDataPoint

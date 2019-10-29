@@ -26,7 +26,7 @@ namespace ChartATask.Presenters.Windows
 
                 var dataSetCollection = persistence.Load();
 
-                var eventCollector = new EventCollector();
+                var eventCollector = new EventWatchers();
                 eventCollector.Register(new WindowsKeyboardWatcher());
                 eventCollector.Register(new WindowsRunningAppWatcher());
                 eventCollector.Register(new WindowsAppTitleWatcher());
@@ -41,7 +41,6 @@ namespace ChartATask.Presenters.Windows
 
                 engine.Stop();
                 engine.Dispose();
-
 
                 persistence.Save(dataSetCollection);
                 persistence.Dispose();
