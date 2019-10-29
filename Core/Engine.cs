@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using ChartATask.Core.Events;
 using ChartATask.Core.Models;
 using ChartATask.Core.Models.DataPoints;
+using ChartATask.Core.Persistence;
 using ChartATask.Core.Presenter;
 using ChartATask.Core.Requests;
 
@@ -11,72 +11,66 @@ namespace ChartATask.Core
 {
     public class Engine : IDisposable
     {
-        private readonly CancellationTokenSource _cancellationTokenSource;
-        private readonly DataSet<DurationOverTime> _dataSet;
+        private readonly List<DataSet<DurationOverTime>> _dataSets;
+        private readonly IPersistence<DurationOverTime> _persistence;
         private readonly EventWatchers _eventWatchers;
         private readonly IPresenter _presenter;
         private readonly RequestEvaluator _requestEvaluator;
-        private bool _isRunning;
 
         public Engine(
+            IPersistence<DurationOverTime> persistence,
             IPresenter presenter,
-            EventWatchers systemEventWatchers,
-            RequestEvaluator requestEvaluator,
-            DataSet<DurationOverTime> dataSet)
+            EventWatchers eventWatchers,
+            RequestEvaluator requestEvaluator)
         {
             _presenter = presenter;
-            _eventWatchers = systemEventWatchers;
+            _eventWatchers = eventWatchers;
             _requestEvaluator = requestEvaluator;
-            _dataSet = dataSet;
-            var source = new AppSessionDataSource();
-            source.Setup(systemEventWatchers, requestEvaluator);
-            _dataSet.Setup(source);
-            _cancellationTokenSource = new CancellationTokenSource();
+            _dataSets = new List<DataSet<DurationOverTime>>();
+            _persistence = persistence;
+        }
+
+        public void Start()
+        {
+            _eventWatchers.Start();
+            _requestEvaluator.Start();
+        }
+
+        public void Stop()
+        {
+            _eventWatchers.Stop();
+            _requestEvaluator.Stop();
         }
 
         public void Dispose()
         {
             _eventWatchers?.Dispose();
             _requestEvaluator?.Dispose();
-            _cancellationTokenSource.Dispose();
         }
 
-        public void Start()
+        public void Load(string fileName)
         {
-            Run().ConfigureAwait(false);
+            var dataSet = _persistence.Load(fileName);
+            var source = new AppSessionDataSource();
+            source.Setup(_eventWatchers, _requestEvaluator);
+            dataSet.Setup(source);
+            _dataSets.Add(dataSet);
         }
 
-        public void Stop()
+        public void Save()
         {
-            _isRunning = false;
-            _cancellationTokenSource.CancelAfter(100);
-        }
-
-        private async Task Run()
-        {
-            if (_eventWatchers == null || _requestEvaluator == null)
+            foreach (var dataSet in _dataSets)
             {
-                throw new NullReferenceException();
+                _persistence.Save(dataSet);
             }
+        }
 
-            _eventWatchers.Start();
-            _requestEvaluator.Start();
-
-            await new TaskFactory(_cancellationTokenSource.Token).StartNew(async () =>
+        public void Show()
+        {
+            foreach (var dataSet in _dataSets)
             {
-                _isRunning = true;
-
-                while (_isRunning)
-                {
-                    _presenter.Update(_dataSet);
-
-                    await Task.Delay(1000).ConfigureAwait(false);
-                }
-            }, _cancellationTokenSource.Token).ContinueWith(o =>
-            {
-                _eventWatchers.Stop();
-                _requestEvaluator.Stop();
-            }).ConfigureAwait(false);
+                _presenter.Update(dataSet);
+            }
         }
     }
 }

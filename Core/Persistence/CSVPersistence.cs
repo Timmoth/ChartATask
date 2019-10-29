@@ -5,7 +5,7 @@ using ChartATask.Core.Models.DataPoints;
 
 namespace ChartATask.Core.Persistence
 {
-    public class CSVPersistence : IPersistence<DurationOverTime>
+    public class CsvPersistence : IPersistence<DurationOverTime>
     {
         public void Dispose()
         {
@@ -27,21 +27,27 @@ namespace ChartATask.Core.Persistence
             }
         }
 
-        public DataSet<DurationOverTime> Load()
+        public DataSet<DurationOverTime> Load(string fileName)
         {
             var dataSet = new DataSet<DurationOverTime>();
 
-            using (var reader = new StreamReader(@"./data.csv"))
+            using (var reader = new StreamReader(fileName))
             {
                 while (!reader.EndOfStream)
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
+                    var values = reader.ReadLine()?.Split(',');
 
-                    var x = DateTime.Parse(values[0]);
-                    var y = TimeSpan.Parse(values[1]);
+                    try
+                    {
+                        var x = DateTime.Parse(values[0]);
+                        var y = TimeSpan.Parse(values[1]);
 
-                    dataSet.Add(new DurationOverTime(x, y));
+                        dataSet.Add(new DurationOverTime(x, y));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
                 }
             }
 

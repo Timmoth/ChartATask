@@ -7,6 +7,6 @@ namespace ChartATask.Core.Persistence
     public interface IPersistence<TDataPoint> : IDisposable where TDataPoint : IDataPoint
     {
         void Save(DataSet<TDataPoint> dataSet);
-        DataSet<TDataPoint> Load();
+        DataSet<TDataPoint> Load(string fileName);
     }
 }
