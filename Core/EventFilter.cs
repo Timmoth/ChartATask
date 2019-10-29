@@ -50,7 +50,7 @@
 //        {
 //            foreach (var dataSource in dataSources)
 //            {
-//                foreach (var triggerEvent in dataSource.Triggers.SelectMany(trigger => trigger.EventSockets))
+//                foreach (var triggerEvent in dataSource.Triggers.SelectMany(trigger => trigger._eventSocket))
 //                {
 //                    if (!_dataSources.TryGetValue(triggerEvent, out var dataSourceList))
 //                    {

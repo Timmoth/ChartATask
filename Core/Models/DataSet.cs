@@ -1,25 +1,31 @@
 ﻿using System.Collections.Generic;
+using ChartATask.Core.Events;
 using ChartATask.Core.Models.DataPoints;
+using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models
 {
-    public class DataSet<TDataPoint> where TDataPoint : IDataPoint
+    public interface IDataSet
+    {
+        void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator);
+    }
+    public class DataSet<TDataPoint> : IDataSet where TDataPoint : IDataPoint
     {
         private readonly List<TDataPoint> _dataPoints;
+        private readonly IDataSource<TDataPoint> _dataSource;
 
-        public DataSet()
+        public DataSet(IDataSource<TDataPoint> dataSource)
         {
+            _dataSource = dataSource;
+            _dataSource.OnNewDataPoint += DataSource_OnNewDataPoint;
             _dataPoints = new List<TDataPoint>();
         }
 
-        public IDataSource<TDataPoint> DataSource { get; private set; }
-
         public IEnumerable<TDataPoint> DataPoints => _dataPoints;
 
-        public void Setup(IDataSource<TDataPoint> dataSource)
+        public void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator)
         {
-            DataSource = dataSource;
-            DataSource.OnNewDataPoint += DataSource_OnNewDataPoint;
+            _dataSource.Setup(eventWatchers, requestEvaluator);
         }
 
         public void Add(TDataPoint dataPoint)

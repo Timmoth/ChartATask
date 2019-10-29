@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using ChartATask.Core.Models;
-using ChartATask.Core.Models.DataPoints;
 
 namespace ChartATask.Core.Presenter
 {
     public interface IPresenter : IDisposable
     {
-        void Update(DataSet<DurationOverTime> dataSetCollection);
+        void Update(List<IDataSet> dataSetCollection);
     }
 }

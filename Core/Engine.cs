@@ -11,14 +11,14 @@ namespace ChartATask.Core
 {
     public class Engine : IDisposable
     {
-        private readonly List<DataSet<DurationOverTime>> _dataSets;
-        private readonly IPersistence<DurationOverTime> _persistence;
+        private readonly List<IDataSet> _dataSets;
+        private readonly IPersistence _persistence;
         private readonly EventWatchers _eventWatchers;
         private readonly IPresenter _presenter;
         private readonly RequestEvaluator _requestEvaluator;
 
         public Engine(
-            IPersistence<DurationOverTime> persistence,
+            IPersistence persistence,
             IPresenter presenter,
             EventWatchers eventWatchers,
             RequestEvaluator requestEvaluator)
@@ -26,7 +26,7 @@ namespace ChartATask.Core
             _presenter = presenter;
             _eventWatchers = eventWatchers;
             _requestEvaluator = requestEvaluator;
-            _dataSets = new List<DataSet<DurationOverTime>>();
+            _dataSets = new List<IDataSet>();
             _persistence = persistence;
         }
 
@@ -50,27 +50,21 @@ namespace ChartATask.Core
 
         public void Load(string fileName)
         {
-            var dataSet = _persistence.Load(fileName);
-            var source = new AppSessionDataSource();
-            source.Setup(_eventWatchers, _requestEvaluator);
-            dataSet.Setup(source);
-            _dataSets.Add(dataSet);
+            _dataSets.AddRange(_persistence.Load(fileName));
+            foreach (var dataSet in _dataSets)
+            {
+                dataSet.Setup(_eventWatchers, _requestEvaluator);
+            }
         }
 
         public void Save()
         {
-            foreach (var dataSet in _dataSets)
-            {
-                _persistence.Save(dataSet);
-            }
+            _persistence.Save(_dataSets);
         }
 
         public void Show()
         {
-            foreach (var dataSet in _dataSets)
-            {
-                _presenter.Update(dataSet);
-            }
+            _presenter.Update(_dataSets);
         }
     }
 }

@@ -5,13 +5,9 @@ using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models
 {
-    public interface IDataSource
+    public interface IDataSource<TDataPoint> where TDataPoint : IDataPoint
     {
+        event EventHandler<TDataPoint> OnNewDataPoint;
         void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator);
-    }
-
-    public interface IDataSource<T> : IDataSource where T : IDataPoint
-    {
-        event EventHandler<T> OnNewDataPoint;
     }
 }

@@ -18,7 +18,8 @@ namespace ChartATask.Core.Models.Events.AppEvents
 
         public bool Accepts(AppTitleEvent eventTrigger)
         {
-            return _nameAcceptor.Accepts(eventTrigger.Name) && _titleAcceptor.Accepts(eventTrigger.Title) &&
+            return _nameAcceptor.Accepts(eventTrigger.Name) &&
+                   _titleAcceptor.Accepts(eventTrigger.Title) &&
                    _shownAcceptor.Accepts(eventTrigger.Shown);
         }
     }

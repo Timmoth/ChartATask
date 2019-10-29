@@ -1,35 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ChartATask.Core.Models;
+using ChartATask.Core.Models.Acceptor;
 using ChartATask.Core.Models.DataPoints;
+using ChartATask.Core.Models.Events.AppEvents;
 
 namespace ChartATask.Core.Persistence
 {
-    public class CsvPersistence : IPersistence<DurationOverTime>
+    public class CsvPersistence : IPersistence
     {
         public void Dispose()
         {
         }
 
-        public void Save(DataSet<DurationOverTime> dataSet)
+        public void Save(List<IDataSet> dataSets)
         {
             using (var streamWriter = new StreamWriter(@"./data.csv"))
             {
-                if (dataSet == null)
+                foreach (var dataSet in dataSets.Select(dataSet => dataSet as DataSet<DurationOverTime>).Where(p => p != null))
                 {
-                    return;
-                }
-
-                foreach (var dataSetDataPoint in dataSet.DataPoints)
-                {
-                    streamWriter.WriteLine(dataSetDataPoint.ToString());
+                    foreach (var dataSetDataPoint in dataSet.DataPoints)
+                    {
+                        streamWriter.WriteLine(dataSetDataPoint.ToString());
+                    }
                 }
             }
         }
 
-        public DataSet<DurationOverTime> Load(string fileName)
+        public List<IDataSet> Load(string fileName)
         {
-            var dataSet = new DataSet<DurationOverTime>();
+            var source =
+                new DurationOverTimeDataSource<AppTitleEvent>(
+                    new[]{new Trigger<AppTitleEvent>(
+                        new AppTitleEventSocket(
+                            new StringContains("application"),
+                            new StringContains("Calculator"),
+                            new BoolEquality(true))
+                    )},
+                    new[]{new Trigger<AppTitleEvent>(
+                        new AppTitleEventSocket(
+                            new StringContains("application"),
+                            new StringContains("Calculator"),
+                            new BoolEquality(false))
+                    )});
+
+            var dataSet = new DataSet<DurationOverTime>(source);
 
             using (var reader = new StreamReader(fileName))
             {
@@ -51,7 +68,7 @@ namespace ChartATask.Core.Persistence
                 }
             }
 
-            return dataSet;
+            return new List<IDataSet> {dataSet};
         }
     }
 }

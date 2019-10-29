@@ -1,12 +1,11 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using ChartATask.Core.Models;
-using ChartATask.Core.Models.DataPoints;
 
 namespace ChartATask.Core.Persistence
 {
-    public interface IPersistence<TDataPoint> : IDisposable where TDataPoint : IDataPoint
+    public interface IPersistence
     {
-        void Save(DataSet<TDataPoint> dataSet);
-        DataSet<TDataPoint> Load(string fileName);
+        void Save(List<IDataSet> dataSet);
+        List<IDataSet> Load(string fileName);
     }
 }
