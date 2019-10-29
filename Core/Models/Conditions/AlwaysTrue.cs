@@ -1,10 +1,10 @@
-﻿using ChartATask.Core.Interactors;
+﻿using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models.Conditions
 {
     public class AlwaysTrue : ICondition
     {
-        public bool Check(ISystemEvaluator evaluator)
+        public bool Check(RequestEvaluator evaluator)
         {
             return true;
         }

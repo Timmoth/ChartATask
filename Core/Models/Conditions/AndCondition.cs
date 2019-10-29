@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ChartATask.Core.Interactors;
+using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models.Conditions
 {
@@ -13,7 +13,7 @@ namespace ChartATask.Core.Models.Conditions
             _conditions = conditions;
         }
 
-        public bool Check(ISystemEvaluator evaluator)
+        public bool Check(RequestEvaluator evaluator)
         {
             return _conditions.All(condition => condition.Check(evaluator));
         }

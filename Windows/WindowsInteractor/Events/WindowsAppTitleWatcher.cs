@@ -2,96 +2,49 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
-using ChartATask.Core.Interactors.Watchers;
-using ChartATask.Core.Models.Events;
+using System.Threading;
+using System.Threading.Tasks;
+using ChartATask.Core.Events.Watchers;
 using ChartATask.Core.Models.Events.AppEvents;
-using HWND = System.IntPtr;
 
-namespace ChartATask.Interactors.Windows.EventWatcher
+namespace ChartATask.Interactors.Windows.Events
 {
-    public class WindowsAppWatcher : IAppWatcher
+    public class WindowsAppTitleWatcher : IAppTitleWatcher
     {
-        private readonly List<AppRunEvent> _appRunEvents;
-        private readonly List<AppTitleEvent> _appTitleEvents;
-        private readonly object _mutex = new object();
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
-        private readonly ManagementEventWatcher _processStartEvent;
-        private readonly ManagementEventWatcher _processStopEvent;
         private Dictionary<string, HashSet<string>> _appOpenWindows;
 
-        public WindowsAppWatcher()
+        public WindowsAppTitleWatcher()
         {
-            _appRunEvents = new List<AppRunEvent>();
             _appOpenWindows = new Dictionary<string, HashSet<string>>();
-
-            _processStartEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStartTrace");
-            _processStartEvent.EventArrived += processStartEvent_EventArrived;
-
-            _processStopEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStopTrace");
-            _processStopEvent.EventArrived += processStopEvent_EventArrived;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public event EventHandler<IEvent> OnEvent;
+        public event EventHandler<AppTitleEvent> OnEvent;
 
-        public void SetListeners(List<IEvent> events)
+        public void Dispose()
         {
-            _appRunEvents.AddRange(events.OfType<AppRunEvent>());
+            _cancellationTokenSource.Dispose();
         }
 
         public void Start()
         {
-            try
+            new TaskFactory(_cancellationTokenSource.Token).StartNew(async () =>
             {
-                lock (_mutex)
+                while (true)
                 {
                     UpdateOpenWindows();
+                    await Task.Delay(200).ConfigureAwait(false);
                 }
-
-                _processStartEvent?.Start();
-                _processStopEvent?.Start();
-            }
-            catch (Exception exception)
-            {
-            }
+            }).ConfigureAwait(false);
         }
 
         public void Stop()
         {
-            _processStartEvent?.Stop();
-            _processStopEvent?.Stop();
-        }
-
-        public void Dispose()
-        {
-            _processStartEvent?.Dispose();
-            _processStopEvent?.Dispose();
-        }
-
-        private void processStartEvent_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            var processName = ProcessNameToString(e.NewEvent.Properties["ProcessName"].Value.ToString());
-
-            lock (_mutex)
-            {
-                UpdateOpenWindows();
-            }
-
-            OnEvent?.Invoke(this, new AppRunEvent(processName, true));
-        }
-
-        private void processStopEvent_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            var processName = ProcessNameToString(e.NewEvent.Properties["ProcessName"].Value.ToString());
-
-            lock (_mutex)
-            {
-                UpdateOpenWindows();
-            }
-
-            OnEvent?.Invoke(this, new AppRunEvent(processName, false));
+            _cancellationTokenSource.Cancel();
         }
 
         private void UpdateOpenWindows()
@@ -136,7 +89,7 @@ namespace ChartATask.Interactors.Windows.EventWatcher
             var shellWindow = GetShellWindow();
             var currentAppOpenWindows = new Dictionary<string, HashSet<string>>();
 
-            EnumWindows(delegate(HWND hWnd, int lParam)
+            EnumWindows(delegate(IntPtr hWnd, int lParam)
             {
                 if (hWnd == shellWindow)
                 {
@@ -188,13 +141,13 @@ namespace ChartATask.Interactors.Windows.EventWatcher
         private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
 
         [DllImport("user32.dll")]
-        private static extern int GetWindowText(HWND hWnd, StringBuilder lpString, int nMaxCount);
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
         [DllImport("user32.dll")]
-        private static extern int GetWindowTextLength(HWND hWnd);
+        private static extern int GetWindowTextLength(IntPtr hWnd);
 
         [DllImport("user32.dll")]
-        private static extern bool IsWindowVisible(HWND hWnd);
+        private static extern bool IsWindowVisible(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetShellWindow();
@@ -202,6 +155,6 @@ namespace ChartATask.Interactors.Windows.EventWatcher
         [DllImport("user32.dll", SetLastError = true)]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 
-        private delegate bool EnumWindowsProc(HWND hWnd, int lParam);
+        private delegate bool EnumWindowsProc(IntPtr hWnd, int lParam);
     }
 }

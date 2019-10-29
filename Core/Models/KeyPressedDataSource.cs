@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChartATask.Core.Interactors;
 using ChartATask.Core.Models.Conditions;
 using ChartATask.Core.Models.DataPoints;
 using ChartATask.Core.Models.Events;
 using ChartATask.Core.Models.Events.KeyboardEvents;
+using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models
 {
@@ -29,7 +29,7 @@ namespace ChartATask.Core.Models
         public List<Trigger> Triggers { get; }
         public event EventHandler<IntOverTime> OnNewDataPoint;
 
-        public void Trigger(IEvent newEvent, ISystemEvaluator evaluator)
+        public void Trigger(IEvent newEvent, RequestEvaluator evaluator)
         {
             var activatedTriggers = Triggers.Where(trigger => trigger.Events.Contains(newEvent));
             if (!activatedTriggers.Any(trigger => trigger.Condition.Check(evaluator)))

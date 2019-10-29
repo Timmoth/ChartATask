@@ -1,38 +1,53 @@
 ﻿using System;
+using System.Windows.Forms;
 using ChartATask.Core;
+using ChartATask.Core.Events;
 using ChartATask.Core.Persistence;
-using ChartATask.Interactors.Windows;
+using ChartATask.Core.Requests;
+using ChartATask.Interactors.Windows.Events;
 
 namespace ChartATask.Presenters.Windows
 {
-    internal class Program
+    internal static class Program
     {
-        private static void Main(string[] args)
+        [STAThread]
+        private static void Main()
         {
-            Console.WriteLine("ChartATask Started");
-            var persistence = new CSVPersistence();
+            Application.Run(new ChartATaskConsole());
+        }
 
-            var dataSetCollection = persistence.Load();
-            //var dataSetCollection = new DataSetCollection(new List<IDataSet>
-            //{
-            //    new AppSessionDataSet(@"firefox", @"GitHub - Mozilla Firefox"),
-            //    new AppSessionDataSet(@"devenv", @"chartatask (Running) - Microsoft Visual Studio (Administrator)"),
-            //});
-
-            var engine = new Engine(new WindowsConsolePresenter(), new WindowsSystemInteractor(), dataSetCollection);
-            engine.Start();
-
-            while (Console.ReadLine()?.ToLower() != "exit")
+        internal class ChartATaskConsole : ApplicationContext
+        {
+            public ChartATaskConsole()
             {
+                Console.WriteLine("ChartATask Started");
+
+                var persistence = new CSVPersistence();
+
+                var dataSetCollection = persistence.Load();
+
+                var eventCollector = new EventCollector();
+                eventCollector.Register(new WindowsKeyboardWatcher());
+                eventCollector.Register(new WindowsRunningAppWatcher());
+                eventCollector.Register(new WindowsAppTitleWatcher());
+
+                var engine = new Engine(new WindowsConsolePresenter(), eventCollector, new RequestEvaluator(),
+                    dataSetCollection);
+                engine.Start();
+
+                while (Console.ReadLine()?.ToLower() != "exit")
+                {
+                }
+
+                engine.Stop();
+                engine.Dispose();
+
+
+                persistence.Save(dataSetCollection);
+                persistence.Dispose();
+
+                Console.WriteLine("ChartATask Finished");
             }
-
-            engine.Stop();
-            engine.Dispose();
-
-
-            persistence.Save(dataSetCollection);
-
-            Console.WriteLine("ChartATask Finished");
         }
     }
 }

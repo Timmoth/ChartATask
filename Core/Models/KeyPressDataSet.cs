@@ -37,7 +37,6 @@ namespace ChartATask.Core.Models
                     $"DataSet\n{trigger}\nCount: {_dataPoints.Count(point => trigger.Events.Contains(new KeyPressedEvent(point.Y)))}");
             }
 
-            return "";
             return builder.ToString();
         }
     }

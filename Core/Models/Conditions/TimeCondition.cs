@@ -1,5 +1,5 @@
 ﻿using System;
-using ChartATask.Core.Interactors;
+using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models.Conditions
 {
@@ -14,7 +14,7 @@ namespace ChartATask.Core.Models.Conditions
             _comparisonOperator = comparisonOperator;
         }
 
-        public bool Check(ISystemEvaluator evaluator)
+        public bool Check(RequestEvaluator evaluator)
         {
             switch (_comparisonOperator)
             {

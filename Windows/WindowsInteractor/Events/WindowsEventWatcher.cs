@@ -1,11 +1,12 @@
 ﻿namespace ChartATask.Interactors.Windows.EventWatcher
 {
-    public class WindowsEventWatcher : Core.Interactors.EventWatcher
+    public class WindowsEventCollector : Core.Interactors.EventCollector
     {
-        public WindowsEventWatcher() : base(
+        public WindowsEventCollector() : base(
             new WindowsKeyboardWatcher(),
             new WindowsAppWatcher())
         {
+
         }
     }
 }

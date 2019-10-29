@@ -1,9 +1,9 @@
-﻿using ChartATask.Core.Interactors;
+﻿using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models.Conditions
 {
     public interface ICondition
     {
-        bool Check(ISystemEvaluator evaluator);
+        bool Check(RequestEvaluator evaluator);
     }
 }

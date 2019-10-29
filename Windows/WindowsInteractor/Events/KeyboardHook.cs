@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
-namespace ChartATask.Interactors.Windows.EventWatcher
+namespace ChartATask.Interactors.Windows.Events
 {
     public delegate void KeyPressed(int keyCode);
 
@@ -18,12 +17,10 @@ namespace ChartATask.Interactors.Windows.EventWatcher
         public static void Start()
         {
             _hookId = SetHook(Proc);
-            Application.Run();
         }
 
         public static void End()
         {
-            Application.Exit();
             UnhookWindowsHookEx(_hookId);
         }
 

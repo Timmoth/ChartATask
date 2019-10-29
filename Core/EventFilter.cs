@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChartATask.Core.Interactors;
 using ChartATask.Core.Models;
 using ChartATask.Core.Models.Events;
+using ChartATask.Core.Requests;
 
 namespace ChartATask.Core
 {
@@ -27,7 +27,7 @@ namespace ChartATask.Core
             return _dataSources.Select(entry => entry.Key).ToList();
         }
 
-        public void Apply(Queue<IEvent> events, ISystemEvaluator evaluator)
+        public void Apply(Queue<IEvent> events, RequestEvaluator evaluator)
         {
             foreach (var triggeredEvent in events)
             {

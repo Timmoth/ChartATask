@@ -1,4 +1,4 @@
-﻿using ChartATask.Core.Interactors;
+﻿using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models.Conditions
 {
@@ -11,7 +11,7 @@ namespace ChartATask.Core.Models.Conditions
             _condition = condition;
         }
 
-        public bool Check(ISystemEvaluator evaluator)
+        public bool Check(RequestEvaluator evaluator)
         {
             return !_condition.Check(evaluator);
         }
