@@ -1,7 +1,7 @@
 ﻿using System;
 using ChartATask.Core.Models;
 
-namespace ChartATask.Core
+namespace ChartATask.Core.Persistence
 {
     public interface IPersistence : IDisposable
     {

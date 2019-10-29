@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using ChartATask.Core;
-using ChartATask.Core.Models;
 using ChartATask.Core.Persistence;
 using ChartATask.Interactors.Windows;
 
@@ -26,7 +24,6 @@ namespace ChartATask.Presenters.Windows
 
             while (Console.ReadLine()?.ToLower() != "exit")
             {
-
             }
 
             engine.Stop();

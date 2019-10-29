@@ -11,6 +11,7 @@ namespace ChartATask.Core.Models
         private readonly AppSessionDataSource _dataSource;
         public readonly string AppName;
         public readonly string AppTitle;
+
         public AppSessionDataSet(string appName, string appTitle)
         {
             AppName = appName;
@@ -23,6 +24,7 @@ namespace ChartATask.Core.Models
 
         public IDataSource DataSource => _dataSource;
         public IEnumerable<IDataPoint> DataPoints => _dataPoints;
+
         public void Add(DurationOverTime dataPoint)
         {
             _dataPoints.Add(dataPoint);

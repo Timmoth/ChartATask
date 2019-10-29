@@ -11,7 +11,6 @@ namespace ChartATask.Core.Persistence
     {
         public void Dispose()
         {
-
         }
 
         public void Save(DataSetCollection dataSetCollection)
