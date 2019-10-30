@@ -5,6 +5,7 @@ using System.Linq;
 using ChartATask.Core.Models;
 using ChartATask.Core.Models.Acceptor;
 using ChartATask.Core.Models.DataPoints;
+using ChartATask.Core.Models.Events;
 using ChartATask.Core.Models.Events.AppEvents;
 
 namespace ChartATask.Core.Persistence
@@ -13,10 +14,12 @@ namespace ChartATask.Core.Persistence
     {
         public void Save(List<IDataSet> dataSets)
         {
-            using (var streamWriter = new StreamWriter(@"./data.csv"))
+            var durationOverTimeDataSets = dataSets.Select(dataSet => dataSet as DataSet<DurationOverTime>)
+                .Where(p => p != null).ToList();
+            for (var i = 0; i < durationOverTimeDataSets.Count(); i++)
             {
-                foreach (var dataSet in dataSets.Select(dataSet => dataSet as DataSet<DurationOverTime>)
-                    .Where(p => p != null))
+                var dataSet = durationOverTimeDataSets[i];
+                using (var streamWriter = new StreamWriter($@"./{i}.csv"))
                 {
                     foreach (var dataSetDataPoint in dataSet.DataPoints)
                     {
@@ -26,28 +29,56 @@ namespace ChartATask.Core.Persistence
             }
         }
 
-        public List<IDataSet> Load(string fileName)
+        public List<IDataSet> Load(string directory)
         {
-            var source =
-                new DurationOverTimeDataSource<AppTitleChangedEvent>(
+            var firefoxTitleChangeDataSource =
+                new DurationOverTimeDataSource<AppTitleChanged>(
                     new[]
                     {
-                        new Trigger<AppTitleChangedEvent>(
-                            new AppTitleEventSocket(
-                                new StringContains("application"),
-                                new StringContains("Calculator"))
+                        new Trigger<AppTitleChanged>(
+                            new AppTitleSocket(
+                                new StringContains("FireFox"),
+                                new StringAny())
                         )
                     },
                     new[]
                     {
-                        new Trigger<AppTitleChangedEvent>(
-                            new AppTitleEventSocket(
-                                new StringContains("application"),
-                                new StringContains("Calculator"))
+                        new Trigger<AppTitleChanged>(
+                            new AppTitleSocket(
+                                new StringContains("FireFox"),
+                                new StringAny())
                         )
                     });
 
-            var dataSet = new DataSet<DurationOverTime>(source);
+            var calculatorFocusDataSource =
+                new DurationOverTimeDataSource<AppFocusChanged>(
+                    new[]
+                    {
+                        new Trigger<AppFocusChanged>(
+                            new AppFocusSocket(
+                                new StringContains("Calculator"),
+                                new StringAny())
+                        )
+                    },
+                    new[]
+                    {
+                        new Trigger<AppFocusChanged>(
+                            new AppFocusSocket(
+                                new NotAcceptor<string>(new StringContains("Calculator")),
+                                new StringAny())
+                        )
+                    });
+
+            var fireFoxTabSwitchDataSet = LoadDataSet($@"{directory}0.csv", firefoxTitleChangeDataSource);
+            var calculatorFocusDataSet = LoadDataSet($@"{directory}1.csv", calculatorFocusDataSource);
+
+            return new List<IDataSet> {fireFoxTabSwitchDataSet, calculatorFocusDataSet};
+        }
+
+        private static DataSet<DurationOverTime> LoadDataSet<TEvent>(string fileName,
+            DurationOverTimeDataSource<TEvent> dataSource) where TEvent : IEvent
+        {
+            var dataSet = new DataSet<DurationOverTime>(dataSource);
 
             using (var reader = new StreamReader(fileName))
             {
@@ -69,7 +100,7 @@ namespace ChartATask.Core.Persistence
                 }
             }
 
-            return new List<IDataSet> {dataSet};
+            return dataSet;
         }
 
         public void Dispose()

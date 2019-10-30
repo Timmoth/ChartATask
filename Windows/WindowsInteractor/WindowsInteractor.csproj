@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Watchers\Hooks\EventHook.cs" />
     <Compile Include="Watchers\WindowsAppTitleWatcher.cs" />
-    <Compile Include="Watchers\Hooks\WindowForegroundHook.cs" />
+    <Compile Include="Watchers\WindowsFocusedAppWatcher.cs" />
     <Compile Include="Watchers\Hooks\KeyboardHook.cs" />
     <Compile Include="Watchers\WindowsRunningAppWatcher.cs" />
     <Compile Include="Watchers\WindowsKeyboardWatcher.cs" />

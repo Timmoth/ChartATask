@@ -22,28 +22,34 @@ namespace ChartATask.Presenters.Windows
             {
                 Console.WriteLine("ChartATask Started");
 
-                var eventCollector = new EventWatchers();
-                eventCollector.Register(new WindowsKeyboardWatcher());
-                eventCollector.Register(new WindowsRunningAppWatcher());
-                eventCollector.Register(new WindowsAppTitleWatcher());
+                Run();
 
-                var engine = new Engine(new CsvPersistence(), new WindowsConsolePresenter(), eventCollector,
-                    new RequestEvaluator());
-                engine.Start();
-                engine.Load(@"./data.csv");
-
-                MessageBox.Show("Click OK to close");
-
-                engine.Stop();
-                engine.Save();
-
-                engine.Dispose();
                 Console.WriteLine("ChartATask Finished");
                 Application.Exit();
             }
 
             private static void Run()
             {
+                var eventCollector = new EventWatchers();
+                eventCollector.Register(new WindowsKeyboardWatcher());
+                eventCollector.Register(new WindowsRunningAppWatcher());
+                eventCollector.Register(new WindowsAppTitleWatcher());
+                eventCollector.Register(new WindowsFocusedAppWatcher());
+
+                var engine = new Engine(
+                    new CsvPersistence(),
+                    new WindowsConsolePresenter(),
+                    eventCollector,
+                    new RequestEvaluator());
+
+                engine.Start();
+                engine.Load(@"./");
+
+                MessageBox.Show("Click OK to close");
+
+                engine.Stop();
+                engine.Save();
+                engine.Dispose();
             }
         }
     }

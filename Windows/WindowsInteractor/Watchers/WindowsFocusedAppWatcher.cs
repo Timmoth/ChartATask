@@ -5,23 +5,23 @@ using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsAppTitleWatcher : IWatcher<AppTitleChanged>
+    public class WindowsFocusedAppWatcher : IWatcher<AppFocusChanged>
     {
         private WinEventHook _eventHook;
-        public event EventHandler<AppTitleChanged> OnEvent;
-
-        public void Dispose()
-        {
-            _eventHook?.Dispose();
-        }
+        public event EventHandler<AppFocusChanged> OnEvent;
 
         public void Start()
         {
-            _eventHook = new WinEventHook(WinEventHook.EVENT_OBJECT_NAMECHANGE, 0);
+            _eventHook = new WinEventHook(WinEventHook.EVENT_OBJECT_FOCUS, 0);
             _eventHook.OnHookEvent += OnHookEvent;
         }
 
         public void Stop()
+        {
+            _eventHook?.Dispose();
+        }
+
+        public void Dispose()
         {
             _eventHook?.Dispose();
         }
@@ -41,7 +41,7 @@ namespace ChartATask.Interactors.Windows.Watchers
                 return;
             }
 
-            OnEvent?.Invoke(this, new AppTitleChanged(processName, windowTitle));
+            OnEvent?.Invoke(this, new AppFocusChanged(processName, windowTitle));
         }
     }
 }

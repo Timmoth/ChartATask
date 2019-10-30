@@ -47,9 +47,9 @@ namespace ChartATask.Core
             _requestEvaluator.Stop();
         }
 
-        public void Load(string fileName)
+        public void Load(string directory)
         {
-            _dataSets.AddRange(_persistence.Load(fileName));
+            _dataSets.AddRange(_persistence.Load(directory));
             foreach (var dataSet in _dataSets)
             {
                 dataSet.Setup(_eventWatchers, _requestEvaluator);

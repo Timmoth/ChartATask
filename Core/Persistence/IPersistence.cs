@@ -6,6 +6,6 @@ namespace ChartATask.Core.Persistence
     public interface IPersistence
     {
         void Save(List<IDataSet> dataSet);
-        List<IDataSet> Load(string fileName);
+        List<IDataSet> Load(string directory);
     }
 }

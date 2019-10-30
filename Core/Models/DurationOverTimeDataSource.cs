@@ -38,11 +38,13 @@ namespace ChartATask.Core.Models
         private void ProcessEvent(object sender, TEvent e)
         {
             Console.WriteLine(e.ToString());
+
             if (_startTriggers.Any(p => p.IsTriggered(e, _evaluator)))
             {
                 _startTime = DateTime.Now;
             }
-            else if (_endTriggers.Any(p => p.IsTriggered(e, _evaluator)))
+
+            if (_endTriggers.Any(p => p.IsTriggered(e, _evaluator)))
             {
                 if (_startTime != DateTime.MinValue)
                 {
