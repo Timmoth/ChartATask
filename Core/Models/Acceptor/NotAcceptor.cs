@@ -9,9 +9,9 @@
             _acceptor = acceptor;
         }
 
-        public bool Accepts(TValue value)
+        public bool Accepts(TValue input)
         {
-            return !_acceptor.Accepts(value);
+            return !_acceptor.Accepts(input);
         }
     }
 }

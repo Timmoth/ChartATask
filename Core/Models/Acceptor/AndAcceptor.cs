@@ -12,9 +12,9 @@ namespace ChartATask.Core.Models.Acceptor
             _acceptors = acceptors;
         }
 
-        public bool Accepts(TValue value)
+        public bool Accepts(TValue input)
         {
-            return _acceptors.All(p => p.Accepts(value));
+            return _acceptors.All(p => p.Accepts(input));
         }
     }
 }

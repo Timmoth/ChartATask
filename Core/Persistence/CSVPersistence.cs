@@ -37,16 +37,16 @@ namespace ChartATask.Core.Persistence
                     {
                         new Trigger<AppTitleChanged>(
                             new AppTitleSocket(
-                                new StringContains("FireFox"),
-                                new StringAny())
+                                new RegularExpressionAcceptor("firefox"),
+                                new RegularExpressionAcceptor("GitHub"))
                         )
                     },
                     new[]
                     {
                         new Trigger<AppTitleChanged>(
                             new AppTitleSocket(
-                                new StringContains("FireFox"),
-                                new StringAny())
+                                new RegularExpressionAcceptor("firefox"),
+                                new NotAcceptor<string>( new RegularExpressionAcceptor("GitHub")))
                         )
                     });
 
@@ -56,16 +56,16 @@ namespace ChartATask.Core.Persistence
                     {
                         new Trigger<AppFocusChanged>(
                             new AppFocusSocket(
-                                new StringContains("Calculator"),
-                                new StringAny())
+                                new RegularExpressionAcceptor("firefox"),
+                                new Always(true))
                         )
                     },
                     new[]
                     {
                         new Trigger<AppFocusChanged>(
                             new AppFocusSocket(
-                                new NotAcceptor<string>(new StringContains("Calculator")),
-                                new StringAny())
+                                new NotAcceptor<string>( new RegularExpressionAcceptor("firefox")),
+                                new Always(true))
                         )
                     });
 
@@ -75,7 +75,8 @@ namespace ChartATask.Core.Persistence
             return new List<IDataSet> {fireFoxTabSwitchDataSet, calculatorFocusDataSet};
         }
 
-        private static DataSet<DurationOverTime> LoadDataSet<TEvent>(string fileName,
+        private static DataSet<DurationOverTime> LoadDataSet<TEvent>(
+            string fileName,
             DurationOverTimeDataSource<TEvent> dataSource) where TEvent : IEvent
         {
             var dataSet = new DataSet<DurationOverTime>(dataSource);

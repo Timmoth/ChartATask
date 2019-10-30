@@ -2,6 +2,6 @@
 {
     public interface IAcceptor<in TValue>
     {
-        bool Accepts(TValue value);
+        bool Accepts(TValue input);
     }
 }

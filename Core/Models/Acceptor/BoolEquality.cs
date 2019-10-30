@@ -2,16 +2,16 @@
 {
     public class BoolEquality : IAcceptor<bool>
     {
-        private readonly bool _comparisonValue;
+        private readonly bool _value;
 
-        public BoolEquality(bool comparisonValue)
+        public BoolEquality(bool value)
         {
-            _comparisonValue = comparisonValue;
+            _value = value;
         }
 
-        public bool Accepts(bool value)
+        public bool Accepts(bool input)
         {
-            return _comparisonValue.Equals(value);
+            return _value.Equals(input);
         }
     }
 }

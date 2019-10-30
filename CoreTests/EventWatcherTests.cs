@@ -80,7 +80,7 @@ namespace CoreTests
             var mockEventWatchers = GetMockEventWatchers(count);
             mockEventWatchers.ForEach(m => _eventWatcherManager.Register(m.Object));
             var watchers = _eventWatcherManager.GetWatcher<IEvent>();
-            
+
             CollectionAssert.AreEqual(mockEventWatchers.Select(m => m.Object), watchers);
         }
     }
