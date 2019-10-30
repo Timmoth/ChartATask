@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interactors", "Interactors"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsConsole", "Windows\WindowsConsole\WindowsConsole.csproj", "{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\CoreTests.csproj", "{0C5C77E3-B916-4A67-951C-ABB905E26943}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C5C77E3-B916-4A67-951C-ABB905E26943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C5C77E3-B916-4A67-951C-ABB905E26943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C5C77E3-B916-4A67-951C-ABB905E26943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C5C77E3-B916-4A67-951C-ABB905E26943}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

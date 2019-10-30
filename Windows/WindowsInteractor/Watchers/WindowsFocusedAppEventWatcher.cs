@@ -5,7 +5,7 @@ using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsFocusedAppWatcher : IWatcher<AppFocusChanged>
+    public class WindowsFocusedAppEventWatcher : IEventWatcher<AppFocusChanged>
     {
         private WinEventHook _eventHook;
         public event EventHandler<AppFocusChanged> OnEvent;

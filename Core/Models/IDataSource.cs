@@ -8,6 +8,6 @@ namespace ChartATask.Core.Models
     public interface IDataSource<TDataPoint> where TDataPoint : IDataPoint
     {
         event EventHandler<TDataPoint> OnNewDataPoint;
-        void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator);
+        void Setup(EventWatcherManager eventWatcherManager, RequestEvaluator requestEvaluator);
     }
 }

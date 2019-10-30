@@ -48,11 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Watchers\Hooks\EventHook.cs" />
-    <Compile Include="Watchers\WindowsAppTitleWatcher.cs" />
-    <Compile Include="Watchers\WindowsFocusedAppWatcher.cs" />
+    <Compile Include="Watchers\WindowsAppTitleEventWatcher.cs" />
+    <Compile Include="Watchers\WindowsFocusedAppEventWatcher.cs" />
     <Compile Include="Watchers\Hooks\KeyboardHook.cs" />
-    <Compile Include="Watchers\WindowsRunningAppWatcher.cs" />
-    <Compile Include="Watchers\WindowsKeyboardWatcher.cs" />
+    <Compile Include="Watchers\WindowsRunningAppEventWatcher.cs" />
+    <Compile Include="Watchers\WindowsKeyboardEventWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowsFunctions.cs" />
   </ItemGroup>

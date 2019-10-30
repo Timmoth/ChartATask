@@ -11,7 +11,7 @@ namespace ChartATask.Core
     public class Engine : IDisposable
     {
         private readonly List<IDataSet> _dataSets;
-        private readonly EventWatchers _eventWatchers;
+        private readonly EventWatcherManager _eventWatcherManager;
         private readonly IPersistence _persistence;
         private readonly IPresenter _presenter;
         private readonly RequestEvaluator _requestEvaluator;
@@ -19,11 +19,11 @@ namespace ChartATask.Core
         public Engine(
             IPersistence persistence,
             IPresenter presenter,
-            EventWatchers eventWatchers,
+            EventWatcherManager eventWatcherManager,
             RequestEvaluator requestEvaluator)
         {
             _presenter = presenter;
-            _eventWatchers = eventWatchers;
+            _eventWatcherManager = eventWatcherManager;
             _requestEvaluator = requestEvaluator;
             _dataSets = new List<IDataSet>();
             _persistence = persistence;
@@ -31,19 +31,19 @@ namespace ChartATask.Core
 
         public void Dispose()
         {
-            _eventWatchers?.Dispose();
+            _eventWatcherManager?.Dispose();
             _requestEvaluator?.Dispose();
         }
 
         public void Start()
         {
-            _eventWatchers.Start();
+            _eventWatcherManager.Start();
             _requestEvaluator.Start();
         }
 
         public void Stop()
         {
-            _eventWatchers.Stop();
+            _eventWatcherManager.Stop();
             _requestEvaluator.Stop();
         }
 
@@ -52,7 +52,7 @@ namespace ChartATask.Core
             _dataSets.AddRange(_persistence.Load(directory));
             foreach (var dataSet in _dataSets)
             {
-                dataSet.Setup(_eventWatchers, _requestEvaluator);
+                dataSet.Setup(_eventWatcherManager, _requestEvaluator);
             }
         }
 

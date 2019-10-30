@@ -30,11 +30,11 @@ namespace ChartATask.Presenters.Windows
 
             private static void Run()
             {
-                var eventCollector = new EventWatchers();
-                eventCollector.Register(new WindowsKeyboardWatcher());
-                eventCollector.Register(new WindowsRunningAppWatcher());
-                eventCollector.Register(new WindowsAppTitleWatcher());
-                eventCollector.Register(new WindowsFocusedAppWatcher());
+                var eventCollector = new EventWatcherManager();
+                eventCollector.Register(new WindowsKeyboardEventWatcher());
+                eventCollector.Register(new WindowsRunningAppEventWatcher());
+                eventCollector.Register(new WindowsAppTitleEventWatcher());
+                eventCollector.Register(new WindowsFocusedAppEventWatcher());
 
                 var engine = new Engine(
                     new CsvPersistence(),

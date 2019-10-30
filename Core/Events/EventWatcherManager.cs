@@ -4,23 +4,23 @@ using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Events
 {
-    public class EventWatchers
+    public class EventWatcherManager
     {
-        private readonly List<IWatcher> _eventWatchers;
+        private readonly List<IEventWatcher> _eventWatchers;
 
-        public EventWatchers()
+        public EventWatcherManager()
         {
-            _eventWatchers = new List<IWatcher>();
+            _eventWatchers = new List<IEventWatcher>();
         }
 
-        public void Register<TEvent>(IWatcher<TEvent> eventWatcher) where TEvent : IEvent
+        public void Register<TEvent>(IEventWatcher<TEvent> eventEventWatcher) where TEvent : IEvent
         {
-            _eventWatchers.Add(eventWatcher);
+            _eventWatchers.Add(eventEventWatcher);
         }
 
-        public IEnumerable<IWatcher<T>> GetWatcher<T>() where T : IEvent
+        public IEnumerable<IEventWatcher<T>> GetWatcher<T>() where T : IEvent
         {
-            return _eventWatchers.OfType<IWatcher<T>>();
+            return _eventWatchers.OfType<IEventWatcher<T>>();
         }
 
         public void Start()

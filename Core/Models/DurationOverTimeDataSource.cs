@@ -26,10 +26,10 @@ namespace ChartATask.Core.Models
 
         public event EventHandler<DurationOverTime> OnNewDataPoint;
 
-        public void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator)
+        public void Setup(EventWatcherManager eventWatcherManager, RequestEvaluator requestEvaluator)
         {
             _evaluator = requestEvaluator;
-            foreach (var watcher in eventWatchers.GetWatcher<TEvent>().ToList())
+            foreach (var watcher in eventWatcherManager.GetWatcher<TEvent>().ToList())
             {
                 watcher.OnEvent += ProcessEvent;
             }
@@ -44,15 +44,17 @@ namespace ChartATask.Core.Models
                 _startTime = DateTime.Now;
             }
 
-            if (_endTriggers.Any(p => p.IsTriggered(e, _evaluator)))
+            if (!_endTriggers.Any(p => p.IsTriggered(e, _evaluator)))
             {
-                if (_startTime != DateTime.MinValue)
-                {
-                    OnNewDataPoint?.Invoke(this, new DurationOverTime(_startTime, DateTime.Now - _startTime));
-                }
-
-                _startTime = DateTime.MinValue;
+                return;
             }
+
+            if (_startTime != DateTime.MinValue)
+            {
+                OnNewDataPoint?.Invoke(this, new DurationOverTime(_startTime, DateTime.Now - _startTime));
+            }
+
+            _startTime = DateTime.MinValue;
         }
     }
 }

@@ -3,13 +3,13 @@ using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Events
 {
-    public interface IWatcher : IDisposable
+    public interface IEventWatcher : IDisposable
     {
         void Start();
         void Stop();
     }
 
-    public interface IWatcher<TEvent> : IWatcher where TEvent : IEvent
+    public interface IEventWatcher<TEvent> : IEventWatcher where TEvent : IEvent
     {
         event EventHandler<TEvent> OnEvent;
     }

@@ -5,7 +5,7 @@ using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsAppTitleWatcher : IWatcher<AppTitleChanged>
+    public class WindowsAppTitleEventWatcher : IEventWatcher<AppTitleChanged>
     {
         private WinEventHook _eventHook;
         public event EventHandler<AppTitleChanged> OnEvent;

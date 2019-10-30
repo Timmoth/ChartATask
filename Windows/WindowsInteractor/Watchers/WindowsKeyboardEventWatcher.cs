@@ -5,7 +5,7 @@ using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsKeyboardWatcher : IWatcher<KeyPressedEvent>
+    public class WindowsKeyboardEventWatcher : IEventWatcher<KeyPressedEvent>
     {
         public event EventHandler<KeyPressedEvent> OnEvent;
 

@@ -5,12 +5,12 @@ using ChartATask.Core.Models.Events.AppEvents;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsRunningAppWatcher : IWatcher<AppRunEvent>
+    public class WindowsRunningAppEventWatcher : IEventWatcher<AppRunEvent>
     {
         private readonly ManagementEventWatcher _processStartEvent;
         private readonly ManagementEventWatcher _processStopEvent;
 
-        public WindowsRunningAppWatcher()
+        public WindowsRunningAppEventWatcher()
         {
             _processStartEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStartTrace");
             _processStartEvent.EventArrived += ProcessStarted;

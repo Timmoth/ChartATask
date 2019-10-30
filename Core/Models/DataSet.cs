@@ -7,7 +7,7 @@ namespace ChartATask.Core.Models
 {
     public interface IDataSet
     {
-        void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator);
+        void Setup(EventWatcherManager eventWatcherManager, RequestEvaluator requestEvaluator);
     }
 
     public class DataSet<TDataPoint> : IDataSet where TDataPoint : IDataPoint
@@ -24,9 +24,9 @@ namespace ChartATask.Core.Models
 
         public IEnumerable<TDataPoint> DataPoints => _dataPoints;
 
-        public void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator)
+        public void Setup(EventWatcherManager eventWatcherManager, RequestEvaluator requestEvaluator)
         {
-            _dataSource.Setup(eventWatchers, requestEvaluator);
+            _dataSource.Setup(eventWatcherManager, requestEvaluator);
         }
 
         public void Add(TDataPoint dataPoint)
