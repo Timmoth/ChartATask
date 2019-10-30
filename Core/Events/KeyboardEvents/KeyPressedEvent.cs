@@ -1,4 +1,4 @@
-﻿namespace ChartATask.Core.Models.Events.KeyboardEvents
+﻿namespace ChartATask.Core.Events.KeyboardEvents
 {
     public class KeyPressedEvent : IEvent
     {

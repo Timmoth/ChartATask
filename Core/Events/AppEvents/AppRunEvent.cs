@@ -1,4 +1,4 @@
-﻿namespace ChartATask.Core.Models.Events.AppEvents
+﻿namespace ChartATask.Core.Events.AppEvents
 {
     public class AppRunEvent : IEvent
     {

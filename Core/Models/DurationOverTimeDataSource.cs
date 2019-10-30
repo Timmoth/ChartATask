@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ChartATask.Core.Events;
 using ChartATask.Core.Models.DataPoints;
-using ChartATask.Core.Models.Events;
 using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models
 {
-    public class DurationOverTimeDataSource<TEvent> : IDataSource<DurationOverTime> where TEvent : IEvent
+    public class DurationOverTimeDataSource : IDataSource<DurationOverTime>
     {
-        private readonly IEnumerable<Trigger<TEvent>> _endTriggers;
-        private readonly IEnumerable<Trigger<TEvent>> _startTriggers;
+        private readonly IEnumerable<Trigger> _endTriggers;
+        private readonly IEnumerable<Trigger> _startTriggers;
 
-        private RequestEvaluator _evaluator;
+        private RequestEvaluatorManager _evaluator;
+        private EventWatcherManager _eventWatcherManager;
         private DateTime _startTime;
 
-        public DurationOverTimeDataSource(IEnumerable<Trigger<TEvent>> startTriggers,
-            IEnumerable<Trigger<TEvent>> endTriggers)
+        public DurationOverTimeDataSource(
+            IEnumerable<Trigger> startTriggers,
+            IEnumerable<Trigger> endTriggers)
         {
             _startTriggers = startTriggers;
             _endTriggers = endTriggers;
@@ -26,35 +26,50 @@ namespace ChartATask.Core.Models
 
         public event EventHandler<DurationOverTime> OnNewDataPoint;
 
-        public void Setup(EventWatcherManager eventWatcherManager, RequestEvaluator requestEvaluator)
+        public void Setup(EventWatcherManager eventWatcherManager, RequestEvaluatorManager requestEvaluator)
         {
             _evaluator = requestEvaluator;
-            foreach (var watcher in eventWatcherManager.GetWatcher<TEvent>().ToList())
+            _eventWatcherManager = eventWatcherManager;
+            SetupStartTasks();
+            SetupEndTasks();
+        }
+
+        private void SetupStartTasks()
+        {
+            foreach (var startTrigger in _startTriggers)
             {
-                watcher.OnEvent += ProcessEvent;
+                startTrigger.Setup(_evaluator);
+                var eventWatcher = _eventWatcherManager.GetWatcher(startTrigger.EventSocket.ToString());
+                eventWatcher.OnEvent += (s, e) =>
+                {
+                    if (startTrigger.IsTriggered(e))
+                    {
+                        _startTime = DateTime.Now;
+                    }
+                };
             }
         }
 
-        private void ProcessEvent(object sender, TEvent e)
+        private void SetupEndTasks()
         {
-            Console.WriteLine(e.ToString());
-
-            if (_startTriggers.Any(p => p.IsTriggered(e, _evaluator)))
+            foreach (var endTrigger in _endTriggers)
             {
-                _startTime = DateTime.Now;
-            }
+                endTrigger.Setup(_evaluator);
 
-            if (!_endTriggers.Any(p => p.IsTriggered(e, _evaluator)))
-            {
-                return;
-            }
+                var eventWatcher = _eventWatcherManager.GetWatcher(endTrigger.EventSocket.ToString());
+                eventWatcher.OnEvent += (s, e) =>
+                {
+                    if (!endTrigger.IsTriggered(e) || _startTime == DateTime.MinValue)
+                    {
+                        return;
+                    }
 
-            if (_startTime != DateTime.MinValue)
-            {
-                OnNewDataPoint?.Invoke(this, new DurationOverTime(_startTime, DateTime.Now - _startTime));
+                    var dataPoint = new DurationOverTime(_startTime, DateTime.Now - _startTime);
+                    Console.WriteLine(dataPoint);
+                    OnNewDataPoint?.Invoke(this, dataPoint);
+                    _startTime = DateTime.MinValue;
+                };
             }
-
-            _startTime = DateTime.MinValue;
         }
     }
 }

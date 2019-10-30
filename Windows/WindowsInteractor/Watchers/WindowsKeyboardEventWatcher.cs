@@ -1,13 +1,13 @@
 ﻿using System;
 using ChartATask.Core.Events;
-using ChartATask.Core.Models.Events.KeyboardEvents;
+using ChartATask.Core.Events.KeyboardEvents;
 using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsKeyboardEventWatcher : IEventWatcher<KeyPressedEvent>
+    public class WindowsKeyboardEventWatcher : IEventWatcher
     {
-        public event EventHandler<KeyPressedEvent> OnEvent;
+        public event EventHandler<IEvent> OnEvent;
 
         public void Start()
         {
@@ -19,6 +19,8 @@ namespace ChartATask.Interactors.Windows.Watchers
         {
             KeyboardHook.End();
         }
+
+        public string EventSocketName => "KeyPressedSocket";
 
         public void Dispose()
         {

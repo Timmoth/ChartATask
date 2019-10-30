@@ -1,32 +1,42 @@
-﻿using ChartATask.Core.Models.Conditions;
-using ChartATask.Core.Models.Events;
+﻿using ChartATask.Core.Events;
+using ChartATask.Core.Models.Conditions;
 using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models
 {
-    public class Trigger<TEvent> where TEvent : IEvent
+    public interface ITrigger
+    {
+        IEventSocket EventSocket { get; }
+
+        bool IsTriggered(IEvent firedEvent);
+    }
+
+    public class Trigger : ITrigger
     {
         private readonly ICondition _condition;
-        private readonly IEventSocket<TEvent> _eventSocket;
 
-        public Trigger(IEventSocket<TEvent> eventSocket, ICondition condition)
+        public Trigger(IEventSocket eventSocket, ICondition condition = null)
         {
-            _eventSocket = eventSocket;
+            EventSocket = eventSocket;
             _condition = condition;
         }
 
-        public Trigger(IEventSocket<TEvent> eventSocket) : this(eventSocket, new AlwaysTrue())
-        {
-        }
+        public IEventSocket EventSocket { get; }
 
-        public bool IsTriggered(TEvent firedEvent, RequestEvaluator evaluator)
+        public bool IsTriggered(IEvent firedEvent)
         {
-            return _eventSocket.Accepts(firedEvent) && _condition.Check(evaluator);
+            return EventSocket.Accepts(firedEvent) && _condition.Check();
         }
 
         public override string ToString()
         {
-            return $"Trigger: \n\tCondition:\n\t\t{_condition}\n\tEvents:\n\t\t{string.Join("\n\t\t", _eventSocket)}";
+            return $"Trigger: \n\tCondition:\n\t\t{_condition}\n\tEvents:\n\t\t{string.Join("\n\t\t", EventSocket)}";
+        }
+
+
+        public void Setup(RequestEvaluatorManager requestEvaluator)
+        {
+            _condition.Setup(requestEvaluator);
         }
     }
 }

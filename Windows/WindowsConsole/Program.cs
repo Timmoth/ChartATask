@@ -4,6 +4,7 @@ using ChartATask.Core;
 using ChartATask.Core.Events;
 using ChartATask.Core.Persistence;
 using ChartATask.Core.Requests;
+using ChartATask.Interactors.Windows.Requests;
 using ChartATask.Interactors.Windows.Watchers;
 
 namespace ChartATask.Presenters.Windows
@@ -36,11 +37,14 @@ namespace ChartATask.Presenters.Windows
                 eventCollector.Register(new WindowsAppTitleEventWatcher());
                 eventCollector.Register(new WindowsFocusedAppEventWatcher());
 
+                var requestManager = new RequestEvaluatorManager();
+                requestManager.Register(new WindowsAppRunningRequest());
+
                 var engine = new Engine(
                     new CsvPersistence(),
                     new WindowsConsolePresenter(),
                     eventCollector,
-                    new RequestEvaluator());
+                    requestManager);
 
                 engine.Start();
                 engine.Load(@"./");

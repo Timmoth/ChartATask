@@ -47,6 +47,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Requests\WindowsAppRunningRequest.cs" />
     <Compile Include="Watchers\Hooks\EventHook.cs" />
     <Compile Include="Watchers\WindowsAppTitleEventWatcher.cs" />
     <Compile Include="Watchers\WindowsFocusedAppEventWatcher.cs" />
@@ -62,8 +63,6 @@
       <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Requests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

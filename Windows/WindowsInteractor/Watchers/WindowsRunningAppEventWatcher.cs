@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Management;
 using ChartATask.Core.Events;
-using ChartATask.Core.Models.Events.AppEvents;
+using ChartATask.Core.Events.AppEvents;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsRunningAppEventWatcher : IEventWatcher<AppRunEvent>
+    public class WindowsRunningAppEventWatcher : IEventWatcher
     {
         private readonly ManagementEventWatcher _processStartEvent;
         private readonly ManagementEventWatcher _processStopEvent;
@@ -19,7 +19,7 @@ namespace ChartATask.Interactors.Windows.Watchers
             _processStopEvent.EventArrived += ProcessStopped;
         }
 
-        public event EventHandler<AppRunEvent> OnEvent;
+        public event EventHandler<IEvent> OnEvent;
 
         public void Start()
         {
@@ -47,6 +47,8 @@ namespace ChartATask.Interactors.Windows.Watchers
                 // ignored
             }
         }
+
+        public string EventSocketName => "AppRunningSocket";
 
         public void Dispose()
         {

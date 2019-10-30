@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ChartATask.Core.Events.AppEvents;
 using ChartATask.Core.Models;
 using ChartATask.Core.Models.Acceptor;
+using ChartATask.Core.Models.Conditions;
 using ChartATask.Core.Models.DataPoints;
-using ChartATask.Core.Models.Events;
-using ChartATask.Core.Models.Events.AppEvents;
 
 namespace ChartATask.Core.Persistence
 {
@@ -32,52 +32,34 @@ namespace ChartATask.Core.Persistence
         public List<IDataSet> Load(string directory)
         {
             var firefoxTitleChangeDataSource =
-                new DurationOverTimeDataSource<AppTitleChanged>(
+                new DurationOverTimeDataSource(
                     new[]
                     {
-                        new Trigger<AppTitleChanged>(
+                        new Trigger(
                             new AppTitleSocket(
                                 new RegularExpressionAcceptor("firefox"),
-                                new RegularExpressionAcceptor("GitHub"))
+                                new RegularExpressionAcceptor("GitHub")),
+                            new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     },
                     new[]
                     {
-                        new Trigger<AppTitleChanged>(
+                        new Trigger(
                             new AppTitleSocket(
                                 new RegularExpressionAcceptor("firefox"),
-                                new NotAcceptor<string>( new RegularExpressionAcceptor("GitHub")))
-                        )
-                    });
-
-            var calculatorFocusDataSource =
-                new DurationOverTimeDataSource<AppFocusChanged>(
-                    new[]
-                    {
-                        new Trigger<AppFocusChanged>(
-                            new AppFocusSocket(
-                                new RegularExpressionAcceptor("firefox"),
-                                new Always(true))
-                        )
-                    },
-                    new[]
-                    {
-                        new Trigger<AppFocusChanged>(
-                            new AppFocusSocket(
-                                new NotAcceptor<string>( new RegularExpressionAcceptor("firefox")),
-                                new Always(true))
+                                new NotAcceptor<string>(new RegularExpressionAcceptor("GitHub"))),
+                            new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     });
 
             var fireFoxTabSwitchDataSet = LoadDataSet($@"{directory}0.csv", firefoxTitleChangeDataSource);
-            var calculatorFocusDataSet = LoadDataSet($@"{directory}1.csv", calculatorFocusDataSource);
 
-            return new List<IDataSet> {fireFoxTabSwitchDataSet, calculatorFocusDataSet};
+            return new List<IDataSet> {fireFoxTabSwitchDataSet};
         }
 
-        private static DataSet<DurationOverTime> LoadDataSet<TEvent>(
+        private static DataSet<DurationOverTime> LoadDataSet(
             string fileName,
-            DurationOverTimeDataSource<TEvent> dataSource) where TEvent : IEvent
+            DurationOverTimeDataSource dataSource)
         {
             var dataSet = new DataSet<DurationOverTime>(dataSource);
 

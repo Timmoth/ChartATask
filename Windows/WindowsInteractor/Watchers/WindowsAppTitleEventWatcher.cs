@@ -1,14 +1,14 @@
 ﻿using System;
 using ChartATask.Core.Events;
-using ChartATask.Core.Models.Events.AppEvents;
+using ChartATask.Core.Events.AppEvents;
 using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsAppTitleEventWatcher : IEventWatcher<AppTitleChanged>
+    public class WindowsAppTitleEventWatcher : IEventWatcher
     {
         private WinEventHook _eventHook;
-        public event EventHandler<AppTitleChanged> OnEvent;
+        public event EventHandler<IEvent> OnEvent;
 
         public void Dispose()
         {
@@ -25,6 +25,8 @@ namespace ChartATask.Interactors.Windows.Watchers
         {
             _eventHook?.Dispose();
         }
+
+        public string EventSocketName => "AppTitleSocket";
 
         private void OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
             int idChild, uint dwEventThread, uint dwmsEventTime)

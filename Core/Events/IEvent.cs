@@ -1,4 +1,4 @@
-﻿namespace ChartATask.Core.Models.Events
+﻿namespace ChartATask.Core.Events
 {
     public interface IEvent
     {

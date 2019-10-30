@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Events
 {
@@ -13,14 +12,14 @@ namespace ChartATask.Core.Events
             _eventWatchers = new List<IEventWatcher>();
         }
 
-        public void Register<TEvent>(IEventWatcher<TEvent> eventEventWatcher) where TEvent : IEvent
+        public void Register(IEventWatcher eventEventWatcher)
         {
             _eventWatchers.Add(eventEventWatcher);
         }
 
-        public IEnumerable<IEventWatcher<T>> GetWatcher<T>() where T : IEvent
+        public IEventWatcher GetWatcher(string eventSocketName)
         {
-            return _eventWatchers.OfType<IEventWatcher<T>>();
+            return _eventWatchers.FirstOrDefault(watcher => watcher.EventSocketName == eventSocketName);
         }
 
         public void Start()

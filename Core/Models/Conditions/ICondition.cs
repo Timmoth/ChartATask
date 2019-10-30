@@ -4,6 +4,7 @@ namespace ChartATask.Core.Models.Conditions
 {
     public interface ICondition
     {
-        bool Check(RequestEvaluator evaluator);
+        bool Check();
+        void Setup(RequestEvaluatorManager requestEvaluatorManager);
     }
 }

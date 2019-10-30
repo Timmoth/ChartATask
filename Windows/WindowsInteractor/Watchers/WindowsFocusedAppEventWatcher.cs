@@ -1,14 +1,14 @@
 ﻿using System;
 using ChartATask.Core.Events;
-using ChartATask.Core.Models.Events.AppEvents;
+using ChartATask.Core.Events.AppEvents;
 using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsFocusedAppEventWatcher : IEventWatcher<AppFocusChanged>
+    public class WindowsFocusedAppEventWatcher : IEventWatcher
     {
         private WinEventHook _eventHook;
-        public event EventHandler<AppFocusChanged> OnEvent;
+        public event EventHandler<IEvent> OnEvent;
 
         public void Start()
         {
@@ -20,6 +20,8 @@ namespace ChartATask.Interactors.Windows.Watchers
         {
             _eventHook?.Dispose();
         }
+
+        public string EventSocketName => "AppFocusSocket";
 
         public void Dispose()
         {

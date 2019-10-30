@@ -12,15 +12,16 @@ namespace ChartATask.Core
     {
         private readonly List<IDataSet> _dataSets;
         private readonly EventWatcherManager _eventWatcherManager;
+
         private readonly IPersistence _persistence;
         private readonly IPresenter _presenter;
-        private readonly RequestEvaluator _requestEvaluator;
+        private readonly RequestEvaluatorManager _requestEvaluator;
 
         public Engine(
             IPersistence persistence,
             IPresenter presenter,
             EventWatcherManager eventWatcherManager,
-            RequestEvaluator requestEvaluator)
+            RequestEvaluatorManager requestEvaluator)
         {
             _presenter = presenter;
             _eventWatcherManager = eventWatcherManager;

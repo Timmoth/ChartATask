@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ChartATask.Core.Events;
-using ChartATask.Core.Models.Events;
 using Moq;
 using NUnit.Framework;
 
