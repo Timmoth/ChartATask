@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ChartATask.Core.Events;
 using ChartATask.Core.Models;
 using ChartATask.Core.Persistence;
-using ChartATask.Core.Presenter;
 using ChartATask.Core.Requests;
 
 namespace ChartATask.Core
@@ -12,59 +11,47 @@ namespace ChartATask.Core
     {
         private readonly List<IDataSet> _dataSets;
         private readonly EventWatcherManager _eventWatcherManager;
-
         private readonly IPersistence _persistence;
-        private readonly IPresenter _presenter;
-        private readonly RequestEvaluatorManager _requestEvaluator;
+        private readonly RequestEvaluatorManager _requestEvaluatorManager;
 
         public Engine(
             IPersistence persistence,
-            IPresenter presenter,
             EventWatcherManager eventWatcherManager,
-            RequestEvaluatorManager requestEvaluator)
+            RequestEvaluatorManager requestEvaluatorManager)
         {
-            _presenter = presenter;
-            _eventWatcherManager = eventWatcherManager;
-            _requestEvaluator = requestEvaluator;
             _dataSets = new List<IDataSet>();
+
             _persistence = persistence;
+            _eventWatcherManager = eventWatcherManager;
+            _requestEvaluatorManager = requestEvaluatorManager;
         }
 
         public void Dispose()
         {
+            Stop();
             _eventWatcherManager?.Dispose();
-            _requestEvaluator?.Dispose();
+            _requestEvaluatorManager?.Dispose();
+            _persistence?.Dispose();
         }
 
         public void Start()
         {
-            _eventWatcherManager.Start();
-            _requestEvaluator.Start();
+            Load();
+            _eventWatcherManager?.Start();
+            _requestEvaluatorManager?.Start();
         }
 
         public void Stop()
         {
-            _eventWatcherManager.Stop();
-            _requestEvaluator.Stop();
-        }
-
-        public void Load(string directory)
-        {
-            _dataSets.AddRange(_persistence.Load(directory));
-            foreach (var dataSet in _dataSets)
-            {
-                dataSet.Setup(_eventWatcherManager, _requestEvaluator);
-            }
-        }
-
-        public void Save()
-        {
+            _eventWatcherManager?.Stop();
+            _requestEvaluatorManager?.Stop();
             _persistence.Save(_dataSets);
         }
 
-        public void Show()
+        private void Load()
         {
-            _presenter.Update(_dataSets);
+            _dataSets.AddRange(_persistence.Load());
+            _dataSets.ForEach(dataSet => dataSet.Setup(_eventWatcherManager, _requestEvaluatorManager));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using ChartATask.Core.Events;
-using ChartATask.Core.Events.KeyboardEvents;
+using ChartATask.Core.Events.Keyboard;
 using ChartATask.Interactors.Windows.Watchers.Hooks;
 
 namespace ChartATask.Interactors.Windows.Watchers

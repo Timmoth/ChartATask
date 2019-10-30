@@ -17,7 +17,7 @@ namespace ChartATask.Presenters.Windows
             Application.Run(new ChartATaskConsole());
         }
 
-        internal class ChartATaskConsole : ApplicationContext
+        private class ChartATaskConsole : ApplicationContext
         {
             public ChartATaskConsole()
             {
@@ -41,18 +41,14 @@ namespace ChartATask.Presenters.Windows
                 requestManager.Register(new WindowsAppRunningRequest());
 
                 var engine = new Engine(
-                    new CsvPersistence(),
-                    new WindowsConsolePresenter(),
+                    new CsvPersistence("./"),
                     eventCollector,
                     requestManager);
 
                 engine.Start();
-                engine.Load(@"./");
 
                 MessageBox.Show("Click OK to close");
 
-                engine.Stop();
-                engine.Save();
                 engine.Dispose();
             }
         }

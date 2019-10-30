@@ -1,6 +1,4 @@
-﻿using ChartATask.Core.Models.DataPoints;
-
-namespace ChartATask.Core.Models
+﻿namespace ChartATask.Core.Models.DataPoints
 {
     public class DataPoint2D<x, y> : IDataPoint
     {

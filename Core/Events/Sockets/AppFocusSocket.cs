@@ -1,13 +1,14 @@
-﻿using ChartATask.Core.Models.Acceptor;
+﻿using ChartATask.Core.Events.App;
+using ChartATask.Core.Models.Acceptor;
 
-namespace ChartATask.Core.Events.AppEvents
+namespace ChartATask.Core.Events.Sockets
 {
-    public class AppTitleSocket : IEventSocket
+    public class AppFocusSocket : IEventSocket
     {
         private readonly IAcceptor<string> _nameAcceptor;
         private readonly IAcceptor<string> _titleAcceptor;
 
-        public AppTitleSocket(
+        public AppFocusSocket(
             IAcceptor<string> nameAcceptor,
             IAcceptor<string> titleAcceptor)
         {
@@ -17,14 +18,14 @@ namespace ChartATask.Core.Events.AppEvents
 
         public bool Accepts(IEvent eventTrigger)
         {
-            return eventTrigger is AppTitleChanged appTitleChanged &&
-                   _nameAcceptor.Accepts(appTitleChanged.Name) &&
-                   _titleAcceptor.Accepts(appTitleChanged.Title);
+            return eventTrigger is AppFocusChanged appFocusChanged &&
+                   _nameAcceptor.Accepts(appFocusChanged.Name) &&
+                   _titleAcceptor.Accepts(appFocusChanged.Title);
         }
 
         public override string ToString()
         {
-            return "AppTitleSocket";
+            return "AppFocusSocket";
         }
     }
 }

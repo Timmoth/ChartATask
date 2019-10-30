@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ChartATask.Core.Events.AppEvents;
+using ChartATask.Core.Events.Sockets;
 using ChartATask.Core.Models;
 using ChartATask.Core.Models.Acceptor;
 using ChartATask.Core.Models.Conditions;
@@ -12,7 +12,14 @@ namespace ChartATask.Core.Persistence
 {
     public class CsvPersistence : IPersistence
     {
-        public void Save(List<IDataSet> dataSets)
+        private readonly string _directory;
+
+        public CsvPersistence(string directory)
+        {
+            _directory = directory;
+        }
+
+        public void Save(IEnumerable<IDataSet> dataSets)
         {
             var durationOverTimeDataSets = dataSets.Select(dataSet => dataSet as DataSet<DurationOverTime>)
                 .Where(p => p != null).ToList();
@@ -29,7 +36,7 @@ namespace ChartATask.Core.Persistence
             }
         }
 
-        public List<IDataSet> Load(string directory)
+        public IEnumerable<IDataSet> Load()
         {
             var firefoxTitleChangeDataSource =
                 new DurationOverTimeDataSource(
@@ -52,9 +59,13 @@ namespace ChartATask.Core.Persistence
                         )
                     });
 
-            var fireFoxTabSwitchDataSet = LoadDataSet($@"{directory}0.csv", firefoxTitleChangeDataSource);
+            var fireFoxTabSwitchDataSet = LoadDataSet($@"{_directory}0.csv", firefoxTitleChangeDataSource);
 
             return new List<IDataSet> {fireFoxTabSwitchDataSet};
+        }
+
+        public void Dispose()
+        {
         }
 
         private static DataSet<DurationOverTime> LoadDataSet(
@@ -84,10 +95,6 @@ namespace ChartATask.Core.Persistence
             }
 
             return dataSet;
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

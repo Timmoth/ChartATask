@@ -6,8 +6,6 @@ namespace ChartATask.Core.Models
 {
     public interface ITrigger
     {
-        IEventSocket EventSocket { get; }
-
         bool IsTriggered(IEvent firedEvent);
     }
 

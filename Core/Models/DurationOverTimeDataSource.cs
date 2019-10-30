@@ -39,7 +39,7 @@ namespace ChartATask.Core.Models
             foreach (var startTrigger in _startTriggers)
             {
                 startTrigger.Setup(_evaluator);
-                var eventWatcher = _eventWatcherManager.GetWatcher(startTrigger.EventSocket.ToString());
+                var eventWatcher = _eventWatcherManager.GetWatcher(startTrigger.EventSocket);
                 eventWatcher.OnEvent += (s, e) =>
                 {
                     if (startTrigger.IsTriggered(e))
@@ -55,8 +55,7 @@ namespace ChartATask.Core.Models
             foreach (var endTrigger in _endTriggers)
             {
                 endTrigger.Setup(_evaluator);
-
-                var eventWatcher = _eventWatcherManager.GetWatcher(endTrigger.EventSocket.ToString());
+                var eventWatcher = _eventWatcherManager.GetWatcher(endTrigger.EventSocket);
                 eventWatcher.OnEvent += (s, e) =>
                 {
                     if (!endTrigger.IsTriggered(e) || _startTime == DateTime.MinValue)

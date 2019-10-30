@@ -5,46 +5,38 @@ namespace ChartATask.Core.Events
 {
     public class EventWatcherManager
     {
-        private readonly List<IEventWatcher> _eventWatchers;
+        private readonly Dictionary<string, IEventWatcher> _eventWatchers;
 
         public EventWatcherManager()
         {
-            _eventWatchers = new List<IEventWatcher>();
+            _eventWatchers = new Dictionary<string, IEventWatcher>();
         }
 
         public void Register(IEventWatcher eventEventWatcher)
         {
-            _eventWatchers.Add(eventEventWatcher);
+            _eventWatchers.Add(eventEventWatcher.EventSocketName, eventEventWatcher);
         }
 
-        public IEventWatcher GetWatcher(string eventSocketName)
+        public IEventWatcher GetWatcher(IEventSocket socket)
         {
-            return _eventWatchers.FirstOrDefault(watcher => watcher.EventSocketName == eventSocketName);
+            _eventWatchers.TryGetValue(socket.ToString(), out var watcher);
+            return watcher;
         }
 
         public void Start()
         {
-            foreach (var eventWatcher in _eventWatchers)
-            {
-                eventWatcher.Start();
-            }
+            _eventWatchers.ToList().ForEach(pair => pair.Value.Start());
         }
 
         public void Stop()
         {
-            foreach (var eventWatcher in _eventWatchers)
-            {
-                eventWatcher.Stop();
-            }
+            _eventWatchers.ToList().ForEach(pair => pair.Value.Stop());
         }
 
         public void Dispose()
         {
             Stop();
-            foreach (var eventWatcher in _eventWatchers)
-            {
-                eventWatcher.Dispose();
-            }
+            _eventWatchers.ToList().ForEach(pair => pair.Value.Dispose());
         }
     }
 }
