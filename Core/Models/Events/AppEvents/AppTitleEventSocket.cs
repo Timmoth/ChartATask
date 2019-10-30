@@ -2,25 +2,23 @@
 
 namespace ChartATask.Core.Models.Events.AppEvents
 {
-    public class AppTitleEventSocket : IEventSocket<AppTitleEvent>
+    public class AppTitleEventSocket : IEventSocket<AppTitleChangedEvent>
     {
         private readonly IAcceptor<string> _nameAcceptor;
-        private readonly IAcceptor<bool> _shownAcceptor;
         private readonly IAcceptor<string> _titleAcceptor;
 
-        public AppTitleEventSocket(IAcceptor<string> nameAcceptor, IAcceptor<string> titleAcceptor,
-            IAcceptor<bool> shownAcceptor)
+        public AppTitleEventSocket(
+            IAcceptor<string> nameAcceptor,
+            IAcceptor<string> titleAcceptor)
         {
             _nameAcceptor = nameAcceptor;
             _titleAcceptor = titleAcceptor;
-            _shownAcceptor = shownAcceptor;
         }
 
-        public bool Accepts(AppTitleEvent eventTrigger)
+        public bool Accepts(AppTitleChangedEvent changedEventTrigger)
         {
-            return _nameAcceptor.Accepts(eventTrigger.Name) &&
-                   _titleAcceptor.Accepts(eventTrigger.Title) &&
-                   _shownAcceptor.Accepts(eventTrigger.Shown);
+            return _nameAcceptor.Accepts(changedEventTrigger.Name) &&
+                   _titleAcceptor.Accepts(changedEventTrigger.Title);
         }
     }
 }

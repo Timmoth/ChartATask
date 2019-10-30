@@ -1,13 +1,14 @@
 ﻿using System;
-using ChartATask.Core.Events.Watchers;
+using ChartATask.Core.Events;
 using ChartATask.Core.Models.Events.AppEvents;
+using ChartATask.Interactors.Windows.Watchers.Hooks;
 
-namespace ChartATask.Interactors.Windows.Events.Hooks
+namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsAppTitleWatcher : IAppTitleWatcher
+    public class WindowsAppTitleWatcher : IWatcher<AppTitleChangedEvent>
     {
         private WinEventHook _eventHook;
-        public event EventHandler<AppTitleEvent> OnEvent;
+        public event EventHandler<AppTitleChangedEvent> OnEvent;
 
         public void Dispose()
         {
@@ -17,14 +18,14 @@ namespace ChartATask.Interactors.Windows.Events.Hooks
         public void Start()
         {
             _eventHook = new WinEventHook(WinEventHook.EVENT_OBJECT_NAMECHANGE, 0);
-            _eventHook.OnHookEvent += _eventHook_OnHookEvent;
+            _eventHook.OnHookEvent += OnHookEvent;
         }
 
         public void Stop()
         {
         }
 
-        private void _eventHook_OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
+        private void OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
             int idChild, uint dwEventThread, uint dwmsEventTime)
         {
             var windowTitle = WindowsFunctions.GetWindowTitle(hwnd);
@@ -39,7 +40,7 @@ namespace ChartATask.Interactors.Windows.Events.Hooks
                 return;
             }
 
-            OnEvent?.Invoke(this, new AppTitleEvent(processName, windowTitle, true));
+            OnEvent?.Invoke(this, new AppTitleChangedEvent(processName, windowTitle));
         }
     }
 }

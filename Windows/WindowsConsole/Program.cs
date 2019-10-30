@@ -4,8 +4,7 @@ using ChartATask.Core;
 using ChartATask.Core.Events;
 using ChartATask.Core.Persistence;
 using ChartATask.Core.Requests;
-using ChartATask.Interactors.Windows.Events;
-using ChartATask.Interactors.Windows.Events.Hooks;
+using ChartATask.Interactors.Windows.Watchers;
 
 namespace ChartATask.Presenters.Windows
 {

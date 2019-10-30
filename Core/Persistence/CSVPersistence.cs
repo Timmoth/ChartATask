@@ -29,23 +29,21 @@ namespace ChartATask.Core.Persistence
         public List<IDataSet> Load(string fileName)
         {
             var source =
-                new DurationOverTimeDataSource<AppTitleEvent>(
+                new DurationOverTimeDataSource<AppTitleChangedEvent>(
                     new[]
                     {
-                        new Trigger<AppTitleEvent>(
+                        new Trigger<AppTitleChangedEvent>(
                             new AppTitleEventSocket(
                                 new StringContains("application"),
-                                new StringContains("Calculator"),
-                                new BoolEquality(true))
+                                new StringContains("Calculator"))
                         )
                     },
                     new[]
                     {
-                        new Trigger<AppTitleEvent>(
+                        new Trigger<AppTitleChangedEvent>(
                             new AppTitleEventSocket(
                                 new StringContains("application"),
-                                new StringContains("Calculator"),
-                                new BoolEquality(false))
+                                new StringContains("Calculator"))
                         )
                     });
 

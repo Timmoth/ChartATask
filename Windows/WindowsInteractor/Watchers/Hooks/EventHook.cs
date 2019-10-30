@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ChartATask.Interactors.Windows.Events.Hooks
+namespace ChartATask.Interactors.Windows.Watchers.Hooks
 {
     public delegate void HookEvent(IntPtr hWinEventHook, uint eventType,
         IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);

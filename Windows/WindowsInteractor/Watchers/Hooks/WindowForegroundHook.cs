@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChartATask.Interactors.Windows.Events.Hooks
+namespace ChartATask.Interactors.Windows.Watchers.Hooks
 {
     internal class WindowForegroundHook : IDisposable
     {
@@ -9,7 +9,7 @@ namespace ChartATask.Interactors.Windows.Events.Hooks
         public WindowForegroundHook()
         {
             _eventHook = new WinEventHook(WinEventHook.EVENT_SYSTEM_FOREGROUND, 0);
-            _eventHook.OnHookEvent += _eventHook_OnHookEvent;
+            _eventHook.OnHookEvent += OnHookEvent;
         }
 
         public void Dispose()
@@ -17,7 +17,7 @@ namespace ChartATask.Interactors.Windows.Events.Hooks
             _eventHook?.Dispose();
         }
 
-        private void _eventHook_OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
+        private void OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
             int idChild, uint dwEventThread, uint dwmsEventTime)
         {
             Console.WriteLine("Foreground: " + WindowsFunctions.GetProcessName(hwnd) + " " +

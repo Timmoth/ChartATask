@@ -1,7 +1,7 @@
 ﻿using System;
 using ChartATask.Core.Models.Events;
 
-namespace ChartATask.Core.Events.Watchers
+namespace ChartATask.Core.Events
 {
     public interface IWatcher : IDisposable
     {

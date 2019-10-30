@@ -44,11 +44,6 @@ namespace ChartATask.Interactors.Windows
             return builder.ToString();
         }
 
-        private static string ProcessNameToString(string processName)
-        {
-            return processName.ToLower().Split('.')[0];
-        }
-
         [DllImport("user32.dll")]
         private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
 

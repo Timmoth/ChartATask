@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Management;
-using ChartATask.Core.Events.Watchers;
+using ChartATask.Core.Events;
 using ChartATask.Core.Models.Events.AppEvents;
 
-namespace ChartATask.Interactors.Windows.Events
+namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsRunningAppWatcher : IRunningAppWatcher
+    public class WindowsRunningAppWatcher : IWatcher<AppRunEvent>
     {
         private readonly ManagementEventWatcher _processStartEvent;
         private readonly ManagementEventWatcher _processStopEvent;
@@ -23,20 +23,42 @@ namespace ChartATask.Interactors.Windows.Events
 
         public void Start()
         {
-            _processStartEvent?.Start();
-            _processStopEvent?.Start();
+            try
+            {
+                _processStartEvent?.Start();
+                _processStopEvent?.Start();
+            }
+            catch
+            {
+                // ignored
+                Console.WriteLine("Could not start WMI Event Watcher. Must be run in Administrator mode");
+            }
         }
 
         public void Stop()
         {
-            _processStartEvent?.Stop();
-            _processStopEvent?.Stop();
+            try
+            {
+                _processStartEvent?.Stop();
+                _processStopEvent?.Stop();
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         public void Dispose()
         {
-            _processStartEvent?.Dispose();
-            _processStopEvent?.Dispose();
+            try
+            {
+                _processStartEvent?.Dispose();
+                _processStopEvent?.Dispose();
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void ProcessStarted(object sender, EventArrivedEventArgs e)

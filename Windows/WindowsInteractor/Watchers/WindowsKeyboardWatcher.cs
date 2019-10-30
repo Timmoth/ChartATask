@@ -1,11 +1,11 @@
 ﻿using System;
-using ChartATask.Core.Events.Watchers;
+using ChartATask.Core.Events;
 using ChartATask.Core.Models.Events.KeyboardEvents;
-using ChartATask.Interactors.Windows.Events.Hooks;
+using ChartATask.Interactors.Windows.Watchers.Hooks;
 
-namespace ChartATask.Interactors.Windows.Events
+namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsKeyboardWatcher : IKeyboardWatcher
+    public class WindowsKeyboardWatcher : IWatcher<KeyPressedEvent>
     {
         public event EventHandler<KeyPressedEvent> OnEvent;
 
@@ -23,12 +23,6 @@ namespace ChartATask.Interactors.Windows.Events
         public void Dispose()
         {
             Stop();
-        }
-
-        private void Tracker_OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild,
-            uint dwEventThread, uint dwmsEventTime)
-        {
-            Console.WriteLine(idObject);
         }
 
         private void KeyboardHook_OnKeyPressed(int keyCode)

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace ChartATask.Interactors.Windows.Events.Hooks
+namespace ChartATask.Interactors.Windows.Watchers.Hooks
 {
     public delegate void KeyPressed(int keyCode);
 

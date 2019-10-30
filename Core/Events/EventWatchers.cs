@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ChartATask.Core.Events.Watchers;
 using ChartATask.Core.Models.Events;
 
 namespace ChartATask.Core.Events
