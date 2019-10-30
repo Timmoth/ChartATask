@@ -9,6 +9,7 @@ namespace ChartATask.Core.Models
     {
         void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator);
     }
+
     public class DataSet<TDataPoint> : IDataSet where TDataPoint : IDataPoint
     {
         private readonly List<TDataPoint> _dataPoints;

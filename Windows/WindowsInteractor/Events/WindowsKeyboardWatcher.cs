@@ -1,6 +1,7 @@
 ﻿using System;
 using ChartATask.Core.Events.Watchers;
 using ChartATask.Core.Models.Events.KeyboardEvents;
+using ChartATask.Interactors.Windows.Events.Hooks;
 
 namespace ChartATask.Interactors.Windows.Events
 {
@@ -22,6 +23,12 @@ namespace ChartATask.Interactors.Windows.Events
         public void Dispose()
         {
             Stop();
+        }
+
+        private void Tracker_OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild,
+            uint dwEventThread, uint dwmsEventTime)
+        {
+            Console.WriteLine(idObject);
         }
 
         private void KeyboardHook_OnKeyPressed(int keyCode)

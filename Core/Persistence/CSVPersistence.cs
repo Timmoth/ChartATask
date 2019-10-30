@@ -11,15 +11,12 @@ namespace ChartATask.Core.Persistence
 {
     public class CsvPersistence : IPersistence
     {
-        public void Dispose()
-        {
-        }
-
         public void Save(List<IDataSet> dataSets)
         {
             using (var streamWriter = new StreamWriter(@"./data.csv"))
             {
-                foreach (var dataSet in dataSets.Select(dataSet => dataSet as DataSet<DurationOverTime>).Where(p => p != null))
+                foreach (var dataSet in dataSets.Select(dataSet => dataSet as DataSet<DurationOverTime>)
+                    .Where(p => p != null))
                 {
                     foreach (var dataSetDataPoint in dataSet.DataPoints)
                     {
@@ -33,18 +30,24 @@ namespace ChartATask.Core.Persistence
         {
             var source =
                 new DurationOverTimeDataSource<AppTitleEvent>(
-                    new[]{new Trigger<AppTitleEvent>(
-                        new AppTitleEventSocket(
-                            new StringContains("application"),
-                            new StringContains("Calculator"),
-                            new BoolEquality(true))
-                    )},
-                    new[]{new Trigger<AppTitleEvent>(
-                        new AppTitleEventSocket(
-                            new StringContains("application"),
-                            new StringContains("Calculator"),
-                            new BoolEquality(false))
-                    )});
+                    new[]
+                    {
+                        new Trigger<AppTitleEvent>(
+                            new AppTitleEventSocket(
+                                new StringContains("application"),
+                                new StringContains("Calculator"),
+                                new BoolEquality(true))
+                        )
+                    },
+                    new[]
+                    {
+                        new Trigger<AppTitleEvent>(
+                            new AppTitleEventSocket(
+                                new StringContains("application"),
+                                new StringContains("Calculator"),
+                                new BoolEquality(false))
+                        )
+                    });
 
             var dataSet = new DataSet<DurationOverTime>(source);
 
@@ -69,6 +72,10 @@ namespace ChartATask.Core.Persistence
             }
 
             return new List<IDataSet> {dataSet};
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

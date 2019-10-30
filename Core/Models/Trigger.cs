@@ -6,8 +6,9 @@ namespace ChartATask.Core.Models
 {
     public class Trigger<TEvent> where TEvent : IEvent
     {
-        private readonly IEventSocket<TEvent> _eventSocket;
         private readonly ICondition _condition;
+        private readonly IEventSocket<TEvent> _eventSocket;
+
         public Trigger(IEventSocket<TEvent> eventSocket, ICondition condition)
         {
             _eventSocket = eventSocket;

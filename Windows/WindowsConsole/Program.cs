@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChartATask.Core;
 using ChartATask.Core.Events;
 using ChartATask.Core.Persistence;
 using ChartATask.Core.Requests;
 using ChartATask.Interactors.Windows.Events;
+using ChartATask.Interactors.Windows.Events.Hooks;
 
 namespace ChartATask.Presenters.Windows
 {
@@ -21,14 +21,6 @@ namespace ChartATask.Presenters.Windows
         {
             public ChartATaskConsole()
             {
-                new TaskFactory().StartNew(Run).ContinueWith((o) =>
-                {
-                    Application.Exit();
-                }).ConfigureAwait(false);
-            }
-
-            private static void Run()
-            {
                 Console.WriteLine("ChartATask Started");
 
                 var eventCollector = new EventWatchers();
@@ -36,20 +28,23 @@ namespace ChartATask.Presenters.Windows
                 eventCollector.Register(new WindowsRunningAppWatcher());
                 eventCollector.Register(new WindowsAppTitleWatcher());
 
-                var engine = new Engine(new CsvPersistence(), new WindowsConsolePresenter(), eventCollector, new RequestEvaluator());
+                var engine = new Engine(new CsvPersistence(), new WindowsConsolePresenter(), eventCollector,
+                    new RequestEvaluator());
                 engine.Start();
                 engine.Load(@"./data.csv");
 
-                while (Console.ReadLine()?.ToLower() != "exit")
-                {
-                    engine.Show();
-                }
+                MessageBox.Show("Click OK to close");
 
                 engine.Stop();
                 engine.Save();
 
                 engine.Dispose();
                 Console.WriteLine("ChartATask Finished");
+                Application.Exit();
+            }
+
+            private static void Run()
+            {
             }
         }
     }

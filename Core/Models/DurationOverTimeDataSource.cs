@@ -7,22 +7,24 @@ using ChartATask.Core.Models.Events;
 using ChartATask.Core.Requests;
 
 namespace ChartATask.Core.Models
-{ 
+{
     public class DurationOverTimeDataSource<TEvent> : IDataSource<DurationOverTime> where TEvent : IEvent
     {
-        private readonly IEnumerable<Trigger<TEvent>> _startTriggers;
         private readonly IEnumerable<Trigger<TEvent>> _endTriggers;
+        private readonly IEnumerable<Trigger<TEvent>> _startTriggers;
 
         private RequestEvaluator _evaluator;
         private DateTime _startTime;
-        public event EventHandler<DurationOverTime> OnNewDataPoint;
 
-        public DurationOverTimeDataSource(IEnumerable<Trigger<TEvent>> startTriggers, IEnumerable<Trigger<TEvent>> endTriggers)
+        public DurationOverTimeDataSource(IEnumerable<Trigger<TEvent>> startTriggers,
+            IEnumerable<Trigger<TEvent>> endTriggers)
         {
             _startTriggers = startTriggers;
             _endTriggers = endTriggers;
             _startTime = DateTime.Now;
         }
+
+        public event EventHandler<DurationOverTime> OnNewDataPoint;
 
         public void Setup(EventWatchers eventWatchers, RequestEvaluator requestEvaluator)
         {
@@ -35,6 +37,7 @@ namespace ChartATask.Core.Models
 
         private void ProcessEvent(object sender, TEvent e)
         {
+            Console.WriteLine(e.ToString());
             if (_startTriggers.Any(p => p.IsTriggered(e, _evaluator)))
             {
                 _startTime = DateTime.Now;

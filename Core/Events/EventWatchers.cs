@@ -18,6 +18,7 @@ namespace ChartATask.Core.Events
         {
             _eventWatchers.Add(eventWatcher);
         }
+
         public IEnumerable<IWatcher<T>> GetWatcher<T>() where T : IEvent
         {
             return _eventWatchers.OfType<IWatcher<T>>();

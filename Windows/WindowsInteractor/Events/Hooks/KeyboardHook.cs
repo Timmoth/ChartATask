@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace ChartATask.Interactors.Windows.Events
+namespace ChartATask.Interactors.Windows.Events.Hooks
 {
     public delegate void KeyPressed(int keyCode);
 
@@ -16,7 +16,7 @@ namespace ChartATask.Interactors.Windows.Events
 
         public static void Start()
         {
-            _hookId = SetHook(Proc);
+            _hookId = SetHook(Proc, WhKeyboardLl);
         }
 
         public static void End()
@@ -24,14 +24,14 @@ namespace ChartATask.Interactors.Windows.Events
             UnhookWindowsHookEx(_hookId);
         }
 
-        private static IntPtr SetHook(LowLevelKeyboardProc proc)
+        private static IntPtr SetHook(LowLevelKeyboardProc proc, int hookID)
         {
             using (var curProcess = Process.GetCurrentProcess())
             using (var curModule = curProcess.MainModule)
             {
                 if (curModule != null)
                 {
-                    return SetWindowsHookEx(WhKeyboardLl, proc, GetModuleHandle(curModule.ModuleName), 0);
+                    return SetWindowsHookEx(hookID, proc, GetModuleHandle(curModule.ModuleName), 0);
                 }
             }
 

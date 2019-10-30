@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ChartATask.Core.Events;
 using ChartATask.Core.Models;
-using ChartATask.Core.Models.DataPoints;
 using ChartATask.Core.Persistence;
 using ChartATask.Core.Presenter;
 using ChartATask.Core.Requests;
@@ -12,8 +11,8 @@ namespace ChartATask.Core
     public class Engine : IDisposable
     {
         private readonly List<IDataSet> _dataSets;
-        private readonly IPersistence _persistence;
         private readonly EventWatchers _eventWatchers;
+        private readonly IPersistence _persistence;
         private readonly IPresenter _presenter;
         private readonly RequestEvaluator _requestEvaluator;
 
@@ -30,6 +29,12 @@ namespace ChartATask.Core
             _persistence = persistence;
         }
 
+        public void Dispose()
+        {
+            _eventWatchers?.Dispose();
+            _requestEvaluator?.Dispose();
+        }
+
         public void Start()
         {
             _eventWatchers.Start();
@@ -40,12 +45,6 @@ namespace ChartATask.Core
         {
             _eventWatchers.Stop();
             _requestEvaluator.Stop();
-        }
-
-        public void Dispose()
-        {
-            _eventWatchers?.Dispose();
-            _requestEvaluator?.Dispose();
         }
 
         public void Load(string fileName)
