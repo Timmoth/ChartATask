@@ -45,8 +45,6 @@ namespace ChartATask.Presenters.Windows
                     eventCollector,
                     requestManager);
 
-                engine.Start();
-
                 MessageBox.Show("Click OK to close");
 
                 engine.Dispose();

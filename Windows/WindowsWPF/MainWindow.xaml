@@ -7,10 +7,13 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <DockPanel LastChildFill="True">
+        <ToolBar DockPanel.Dock="Top">
+            <Button Content="{Binding StartStopContent}" Command="{Binding StartStopCommand}"/>
+        </ToolBar>
         <oxy:PlotView
             x:Name="plot1"
             Model="{Binding Model}"
             Background="White" />
-    </Grid>
+    </DockPanel>
 </Window>

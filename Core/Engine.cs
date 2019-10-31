@@ -24,34 +24,34 @@ namespace ChartATask.Core
             _persistence = persistence;
             _eventWatcherManager = eventWatcherManager;
             _requestEvaluatorManager = requestEvaluatorManager;
-        }
 
-        public void Dispose()
-        {
-            Stop();
-            _eventWatcherManager?.Dispose();
-            _requestEvaluatorManager?.Dispose();
-            _persistence?.Dispose();
-        }
 
-        public void Start()
-        {
             Load();
             _eventWatcherManager?.Start();
             _requestEvaluatorManager?.Start();
         }
 
-        public void Stop()
+        public void Dispose()
         {
             _eventWatcherManager?.Stop();
             _requestEvaluatorManager?.Stop();
+
             _persistence.Save(_dataSets);
+
+            _eventWatcherManager?.Dispose();
+            _requestEvaluatorManager?.Dispose();
+            _persistence?.Dispose();
         }
 
         private void Load()
         {
             _dataSets.AddRange(_persistence.Load());
             _dataSets.ForEach(dataSet => dataSet.Setup(_eventWatcherManager, _requestEvaluatorManager));
+        }
+
+        public IEnumerable<IDataSet> GetDataSets()
+        {
+            return _dataSets;
         }
     }
 }
