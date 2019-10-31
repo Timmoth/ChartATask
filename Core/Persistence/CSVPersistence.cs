@@ -43,18 +43,18 @@ namespace ChartATask.Core.Persistence
                     new[]
                     {
                         new Trigger(
-                            new AppTitleSocket(
-                                new RegularExpressionAcceptor("firefox"),
-                                new RegularExpressionAcceptor("GitHub")),
+                            new AppFocusSocket(
+                                new RegularExpressionAcceptor("devenv"),
+                                new RegularExpressionAcceptor("DMV")),
                             new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     },
                     new[]
                     {
                         new Trigger(
-                            new AppTitleSocket(
-                                new RegularExpressionAcceptor("firefox"),
-                                new NotAcceptor<string>(new RegularExpressionAcceptor("GitHub"))),
+                            new AppFocusSocket(
+                                new Always<string>(true), 
+                                new NotAcceptor<string>(new RegularExpressionAcceptor("DMV"))),
                             new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     });
