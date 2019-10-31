@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChartATask.Core.Events;
-using ChartATask.Core.Models;
+using ChartATask.Core.Data;
 using ChartATask.Core.Persistence;
-using ChartATask.Core.Requests;
+using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Requests;
 
 namespace ChartATask.Core
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
 using ChartATask.Core;
-using ChartATask.Core.Events;
 using ChartATask.Core.Persistence;
-using ChartATask.Core.Requests;
+using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Requests;
 using ChartATask.Interactors.Windows.Requests;
 using ChartATask.Interactors.Windows.Watchers;
 

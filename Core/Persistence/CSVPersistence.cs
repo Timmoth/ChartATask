@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ChartATask.Core.Acceptor;
+using ChartATask.Core.Conditions;
+using ChartATask.Core.DataPoints;
 using ChartATask.Core.Events.Sockets;
-using ChartATask.Core.Models;
-using ChartATask.Core.Models.Acceptor;
-using ChartATask.Core.Models.Conditions;
-using ChartATask.Core.Models.DataPoints;
 
 namespace ChartATask.Core.Persistence
 {

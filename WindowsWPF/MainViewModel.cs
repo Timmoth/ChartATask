@@ -1,10 +1,10 @@
-﻿using ChartATask.Core.Models;
-using ChartATask.Core.Models.DataPoints;
-using ChartATask.Core.Persistence;
+﻿using ChartATask.Core.Persistence;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using System.Linq;
+using ChartATask.Core;
+using ChartATask.Core.DataPoints;
 
 namespace WindowsWPF
 {

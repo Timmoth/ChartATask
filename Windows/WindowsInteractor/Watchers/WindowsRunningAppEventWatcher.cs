@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Management;
-using ChartATask.Core.Events;
-using ChartATask.Core.Events.App;
+using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Events.App;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {

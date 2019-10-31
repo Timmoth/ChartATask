@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChartATask.Core.Models;
+using ChartATask.Core;
+using ChartATask.Core.Data;
 using ChartATask.Core.Presenter;
 
 namespace ChartATask.Presenters.Windows

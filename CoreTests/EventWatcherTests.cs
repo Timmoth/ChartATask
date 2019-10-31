@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ChartATask.Core.Events;
+using ChartATask.Core.Triggers.Events;
 using Moq;
 using NUnit.Framework;
 
