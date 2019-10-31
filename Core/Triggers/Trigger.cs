@@ -1,8 +1,8 @@
-﻿using ChartATask.Core.Conditions;
-using ChartATask.Core.Events;
-using ChartATask.Core.Requests;
+﻿using ChartATask.Core.Triggers.Conditions;
+using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Requests;
 
-namespace ChartATask.Core
+namespace ChartATask.Core.Triggers
 {
     public interface ITrigger
     {

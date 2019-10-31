@@ -2,9 +2,9 @@
 
 namespace ChartATask.Core.Data.Points
 {
-    public class IntOverTime : DataPoint2D<DateTime, int>
+    public class SessionCount : DataPoint2D<DateTime, int>
     {
-        public IntOverTime(DateTime x, int y) : base(x, y)
+        public SessionCount(DateTime x, int y) : base(x, y)
         {
         }
 

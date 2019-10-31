@@ -7,15 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInteractor", "Windows\WindowsInteractor\WindowsInteractor.csproj", "{09B540B0-7A56-4AAB-9563-676319C226AD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interactors", "Interactors", "{9482FF2D-B934-4AFB-9E42-B6C54CAA3F4D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsConsole", "Windows\WindowsConsole\WindowsConsole.csproj", "{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\CoreTests.csproj", "{0C5C77E3-B916-4A67-951C-ABB905E26943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreTests", "CoreTests\CoreTests.csproj", "{0C5C77E3-B916-4A67-951C-ABB905E26943}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsWPF", "WindowsWPF\WindowsWPF.csproj", "{062B2B9A-68F6-4268-9797-7BB3422AAF7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsWPF", "Windows\WindowsWPF\WindowsWPF.csproj", "{062B2B9A-68F6-4268-9797-7BB3422AAF7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,7 +46,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{09B540B0-7A56-4AAB-9563-676319C226AD} = {9482FF2D-B934-4AFB-9E42-B6C54CAA3F4D}
+		{09B540B0-7A56-4AAB-9563-676319C226AD} = {D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}
 		{6FA7EAF9-5C17-4EF8-ABD6-7A42295AFAA7} = {D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}
 		{062B2B9A-68F6-4268-9797-7BB3422AAF7D} = {D6A548D2-7E8E-49A5-A90D-C85EEA7A507C}
 	EndGlobalSection

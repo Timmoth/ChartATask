@@ -1,8 +1,8 @@
 ﻿using System;
-using ChartATask.Core.Acceptor;
-using ChartATask.Core.Requests;
+using ChartATask.Core.Triggers.Acceptor;
+using ChartATask.Core.Triggers.Requests;
 
-namespace ChartATask.Core.Conditions
+namespace ChartATask.Core.Triggers.Conditions
 {
     public class SystemTimeCondition : ICondition
     {

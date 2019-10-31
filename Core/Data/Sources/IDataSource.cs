@@ -1,9 +1,9 @@
 ﻿using System;
-using ChartATask.Core.DataPoints;
-using ChartATask.Core.Events;
-using ChartATask.Core.Requests;
+using ChartATask.Core.Data.Points;
+using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Requests;
 
-namespace ChartATask.Core
+namespace ChartATask.Core.Data.Sources
 {
     public interface IDataSource<TDataPoint> where TDataPoint : IDataPoint
     {

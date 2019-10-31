@@ -1,4 +1,4 @@
-﻿namespace ChartATask.Core.Conditions
+﻿namespace ChartATask.Core.Triggers.Conditions
 {
     public enum ComparisonOperator
     {

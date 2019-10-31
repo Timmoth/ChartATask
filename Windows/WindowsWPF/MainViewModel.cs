@@ -1,10 +1,10 @@
-﻿using ChartATask.Core.Persistence;
+﻿using System.Linq;
+using ChartATask.Core.Data;
+using ChartATask.Core.Data.Points;
+using ChartATask.Core.Persistence;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
-using System.Linq;
-using ChartATask.Core;
-using ChartATask.Core.DataPoints;
 
 namespace WindowsWPF
 {
@@ -12,25 +12,12 @@ namespace WindowsWPF
     {
         private PlotModel _model;
 
-        public PlotModel Model
-        {
-            get => this._model;
-
-            set
-            {
-                if (this._model != value)
-                {
-                    this.SetValue(ref this._model, value);
-                }
-            }
-        }
-
 
         public MainViewModel()
         {
             var dataLoader = new CsvPersistence("./");
 
-            var dataSet = dataLoader.Load().ElementAt(0) as DataSet<DurationOverTime>;
+            var dataSet = dataLoader.Load().ElementAt(0) as DataSet<SessionDuration>;
 
             var tmp = new PlotModel
             {
@@ -40,7 +27,7 @@ namespace WindowsWPF
                 PlotMargins = new OxyThickness(50, 0, 0, 40)
             };
 
-            var ls = new LineSeries { Title = "Header" };
+            var ls = new LineSeries {Title = "Header"};
             if (dataSet != null)
             {
                 foreach (var item in dataSet.DataPoints)
@@ -53,9 +40,21 @@ namespace WindowsWPF
 
             tmp.Series.Add(ls);
 
-            tmp.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "TestHeader" });
-            this.Model = tmp;
+            tmp.Axes.Add(new LinearAxis {Position = AxisPosition.Bottom, Title = "TestHeader"});
+            Model = tmp;
+        }
 
+        public PlotModel Model
+        {
+            get => _model;
+
+            set
+            {
+                if (_model != value)
+                {
+                    SetValue(ref _model, value);
+                }
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ChartATask.Core.Acceptor
+﻿namespace ChartATask.Core.Triggers.Acceptor
 {
     public interface IAcceptor<in TValue>
     {

@@ -1,7 +1,7 @@
-﻿using ChartATask.Core.Acceptor;
-using ChartATask.Core.Events.App;
+﻿using ChartATask.Core.Triggers.Acceptor;
+using ChartATask.Core.Triggers.Events.App;
 
-namespace ChartATask.Core.Events.Sockets
+namespace ChartATask.Core.Triggers.Events.Sockets
 {
     public class AppFocusSocket : IEventSocket
     {

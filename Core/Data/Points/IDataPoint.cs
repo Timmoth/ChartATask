@@ -1,4 +1,4 @@
-﻿namespace ChartATask.Core.DataPoints
+﻿namespace ChartATask.Core.Data.Points
 {
     public interface IDataPoint
     {

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using ChartATask.Core.DataPoints;
-using ChartATask.Core.Events;
-using ChartATask.Core.Requests;
+using ChartATask.Core.Data.Points;
+using ChartATask.Core.Data.Sources;
+using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Requests;
 
-namespace ChartATask.Core
+namespace ChartATask.Core.Data
 {
     public interface IDataSet
     {

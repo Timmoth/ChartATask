@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChartATask.Core.DataPoints;
-using ChartATask.Core.Events;
-using ChartATask.Core.Requests;
+using ChartATask.Core.Data.Points;
+using ChartATask.Core.Triggers;
+using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Requests;
 
-namespace ChartATask.Core
+namespace ChartATask.Core.Data.Sources
 {
-    public class DurationOverTimeDataSource : IDataSource<DurationOverTime>
+    public class SessionDurationSource : IDataSource<SessionDuration>
     {
         private readonly IEnumerable<Trigger> _endTriggers;
         private readonly IEnumerable<Trigger> _startTriggers;
@@ -15,7 +16,7 @@ namespace ChartATask.Core
         private EventWatcherManager _eventWatcherManager;
         private DateTime _startTime;
 
-        public DurationOverTimeDataSource(
+        public SessionDurationSource(
             IEnumerable<Trigger> startTriggers,
             IEnumerable<Trigger> endTriggers)
         {
@@ -24,7 +25,7 @@ namespace ChartATask.Core
             _startTime = DateTime.Now;
         }
 
-        public event EventHandler<DurationOverTime> OnNewDataPoint;
+        public event EventHandler<SessionDuration> OnNewDataPoint;
 
         public void Setup(EventWatcherManager eventWatcherManager, RequestEvaluatorManager requestEvaluator)
         {
@@ -63,7 +64,7 @@ namespace ChartATask.Core
                         return;
                     }
 
-                    var dataPoint = new DurationOverTime(_startTime, DateTime.Now - _startTime);
+                    var dataPoint = new SessionDuration(_startTime, DateTime.Now - _startTime);
                     Console.WriteLine(dataPoint);
                     OnNewDataPoint?.Invoke(this, dataPoint);
                     _startTime = DateTime.MinValue;

@@ -5,4 +5,8 @@
     <RootNamespace>ChartATask.Core</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>../Build/Debug/Core</OutputPath>
+  </PropertyGroup>
+
 </Project>

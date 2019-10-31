@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChartATask.Core;
 using ChartATask.Core.Data;
-using ChartATask.Core.Presenter;
 
 namespace ChartATask.Presenters.Windows
 {
-    internal class WindowsConsolePresenter : IPresenter
+    internal class WindowsConsolePresenter
     {
         public void Dispose()
         {

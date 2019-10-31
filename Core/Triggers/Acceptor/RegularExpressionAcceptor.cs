@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ChartATask.Core.Acceptor
+namespace ChartATask.Core.Triggers.Acceptor
 {
     public class RegularExpressionAcceptor : IAcceptor<object>
     {

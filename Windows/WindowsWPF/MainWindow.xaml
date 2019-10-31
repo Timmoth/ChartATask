@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <oxy:PlotView 
-            x:Name="plot1" 
-            Model="{Binding Model}" 
-            Background="White"/>
+        <oxy:PlotView
+            x:Name="plot1"
+            Model="{Binding Model}"
+            Background="White" />
     </Grid>
 </Window>

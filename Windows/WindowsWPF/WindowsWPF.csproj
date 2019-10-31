@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Build\Debug\Windows\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -106,11 +106,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
+    <ProjectReference Include="..\..\Core\Core.csproj">
       <Project>{4e2e8c03-2b0f-48e9-92f8-1a05dfbf47a3}</Project>
       <Name>Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Windows\WindowsInteractor\WindowsInteractor.csproj">
+    <ProjectReference Include="..\WindowsInteractor\WindowsInteractor.csproj">
       <Project>{09b540b0-7a56-4aab-9563-676319c226ad}</Project>
       <Name>WindowsInteractor</Name>
     </ProjectReference>

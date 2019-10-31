@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ChartATask.Core.Acceptor;
-using ChartATask.Core.Conditions;
-using ChartATask.Core.DataPoints;
-using ChartATask.Core.Events.Sockets;
+using ChartATask.Core.Data;
+using ChartATask.Core.Data.Points;
+using ChartATask.Core.Data.Sources;
+using ChartATask.Core.Triggers;
+using ChartATask.Core.Triggers.Acceptor;
+using ChartATask.Core.Triggers.Conditions;
+using ChartATask.Core.Triggers.Events.Sockets;
 
 namespace ChartATask.Core.Persistence
 {
@@ -20,7 +23,7 @@ namespace ChartATask.Core.Persistence
 
         public void Save(IEnumerable<IDataSet> dataSets)
         {
-            var durationOverTimeDataSets = dataSets.Select(dataSet => dataSet as DataSet<DurationOverTime>)
+            var durationOverTimeDataSets = dataSets.Select(dataSet => dataSet as DataSet<SessionDuration>)
                 .Where(p => p != null).ToList();
             for (var i = 0; i < durationOverTimeDataSets.Count(); i++)
             {
@@ -38,13 +41,13 @@ namespace ChartATask.Core.Persistence
         public IEnumerable<IDataSet> Load()
         {
             var firefoxTitleChangeDataSource =
-                new DurationOverTimeDataSource(
+                new SessionDurationSource(
                     new[]
                     {
                         new Trigger(
                             new AppFocusSocket(
-                                new RegularExpressionAcceptor("devenv"),
-                                new RegularExpressionAcceptor("DMV")),
+                                new RegularExpressionAcceptor("Calculator"),
+                                new RegularExpressionAcceptor("Calculator")),
                             new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     },
@@ -52,8 +55,8 @@ namespace ChartATask.Core.Persistence
                     {
                         new Trigger(
                             new AppFocusSocket(
-                                new Always<string>(true), 
-                                new NotAcceptor<string>(new RegularExpressionAcceptor("DMV"))),
+                                new Always<string>(true),
+                                new NotAcceptor<string>(new RegularExpressionAcceptor("Calculator"))),
                             new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     });
@@ -67,11 +70,11 @@ namespace ChartATask.Core.Persistence
         {
         }
 
-        private static DataSet<DurationOverTime> LoadDataSet(
+        private static DataSet<SessionDuration> LoadDataSet(
             string fileName,
-            DurationOverTimeDataSource dataSource)
+            SessionDurationSource dataSource)
         {
-            var dataSet = new DataSet<DurationOverTime>(dataSource);
+            var dataSet = new DataSet<SessionDuration>(dataSource);
 
             using (var reader = new StreamReader(fileName))
             {
@@ -84,7 +87,7 @@ namespace ChartATask.Core.Persistence
                         var x = DateTime.Parse(values[0]);
                         var y = TimeSpan.Parse(values[1]);
 
-                        dataSet.Add(new DurationOverTime(x, y));
+                        dataSet.Add(new SessionDuration(x, y));
                     }
                     catch
                     {

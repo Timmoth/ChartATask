@@ -11,29 +11,32 @@ namespace WindowsWPF
 
         protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue)
         {
-            this.RaisePropertyChanged(propertyName);
+            RaisePropertyChanged(propertyName);
         }
 
         private void RaisePropertyChanged(string propertyName)
         {
-            var propertyChanged = this.PropertyChanged;
-            propertyChanged?.Invoke((object)this, new PropertyChangedEventArgs(propertyName));
+            var propertyChanged = PropertyChanged;
+            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected bool SetValue<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
-            if (object.Equals((object)field, (object)value))
+            if (Equals(field, value))
+            {
                 return false;
-            T obj = field;
+            }
+
+            var obj = field;
             field = value;
-            this.OnPropertyChanged(propertyName, (object)obj, (object)value);
+            OnPropertyChanged(propertyName, obj, value);
             return true;
         }
 
         [Conditional("DEBUG")]
         private void VerifyProperty(string propertyName)
         {
-            this.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
+            GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
         }
     }
 }
