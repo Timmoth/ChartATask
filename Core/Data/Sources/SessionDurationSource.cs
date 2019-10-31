@@ -68,7 +68,6 @@ namespace ChartATask.Core.Data.Sources
 
                     var dataPoint = new SessionDuration(_startTime, DateTime.Now - _startTime);
                     _startTime = DateTime.MinValue;
-                    Console.WriteLine(dataPoint);
                     OnNewDataPoint?.Invoke(this, dataPoint);
                 };
             }

@@ -31,7 +31,7 @@ namespace ChartATask.Interactors.Windows.Watchers
             catch
             {
                 // ignored
-                Console.WriteLine("Could not start WMI Event Watcher. Must be run in Administrator mode");
+             //   Console.WriteLine("Could not start WMI Event Watcher. Must be run in Administrator mode");
             }
         }
 
