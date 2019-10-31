@@ -21,7 +21,7 @@ namespace WindowsWPF
 
             var tmp = new PlotModel
             {
-                Title = "Test",
+                Title = "Session duration",
                 LegendPosition = LegendPosition.RightTop,
                 LegendPlacement = LegendPlacement.Outside,
                 PlotMargins = new OxyThickness(50, 0, 0, 40)
@@ -35,7 +35,8 @@ namespace WindowsWPF
                 .GroupBy(q => new
                 {
                     q.X.Date,
-                    q.X.Hour
+                    q.X.Hour,
+                    q.X.Minute
                 }).Select(pointGroup =>
                     pointGroup.Aggregate((o1, o2) => new SessionDuration(o1.X, o1.Y.Add(o2.Y)))
                 ).ToList().ForEach(point => data.Add(point));
@@ -43,13 +44,15 @@ namespace WindowsWPF
 
             tmp.Series.Add(new LineSeries
             {
-                StrokeThickness = 1,
-                MarkerSize = 3,
+                StrokeThickness = 2,
+                MarkerSize = 2,
                 ItemsSource = data,
                 DataFieldX = "X",
                 DataFieldY = "Y",
                 MarkerStroke = OxyColors.ForestGreen,
-                MarkerType = MarkerType.Plus
+                MarkerType = MarkerType.Circle,
+                InterpolationAlgorithm = new CanonicalSpline(0.05),
+                CanTrackerInterpolatePoints = false
             });
 
             Model = tmp;
