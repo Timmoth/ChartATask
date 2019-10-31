@@ -22,7 +22,7 @@ namespace ChartATask.Core.Data.Sources
         {
             _startTriggers = startTriggers;
             _endTriggers = endTriggers;
-            _startTime = DateTime.Now;
+            _startTime = DateTime.MinValue;
         }
 
         public event EventHandler<SessionDuration> OnNewDataPoint;
@@ -43,10 +43,12 @@ namespace ChartATask.Core.Data.Sources
                 var eventWatcher = _eventWatcherManager.GetWatcher(startTrigger.EventSocket);
                 eventWatcher.OnEvent += (s, e) =>
                 {
-                    if (startTrigger.IsTriggered(e))
+                    if (!startTrigger.IsTriggered(e) || _startTime != DateTime.MinValue)
                     {
-                        _startTime = DateTime.Now;
+                        return;
                     }
+                    
+                    _startTime = DateTime.Now;
                 };
             }
         }
@@ -65,9 +67,9 @@ namespace ChartATask.Core.Data.Sources
                     }
 
                     var dataPoint = new SessionDuration(_startTime, DateTime.Now - _startTime);
+                    _startTime = DateTime.MinValue;
                     Console.WriteLine(dataPoint);
                     OnNewDataPoint?.Invoke(this, dataPoint);
-                    _startTime = DateTime.MinValue;
                 };
             }
         }

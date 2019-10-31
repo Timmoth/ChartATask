@@ -46,8 +46,8 @@ namespace ChartATask.Core.Persistence
                     {
                         new Trigger(
                             new AppFocusSocket(
-                                new RegularExpressionAcceptor("Calculator"),
-                                new RegularExpressionAcceptor("Calculator")),
+                                new RegularExpressionAcceptor("devenv"),
+                                new RegularExpressionAcceptor("Experiment")),
                             new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     },
@@ -56,7 +56,7 @@ namespace ChartATask.Core.Persistence
                         new Trigger(
                             new AppFocusSocket(
                                 new Always<string>(true),
-                                new NotAcceptor<string>(new RegularExpressionAcceptor("Calculator"))),
+                                new NotAcceptor<string>(new RegularExpressionAcceptor("Experiment"))),
                             new SystemTimeCondition(new Always<DateTime>(true))
                         )
                     });
