@@ -47,7 +47,7 @@ namespace ChartATask.Core.Data.Sources
                     {
                         return;
                     }
-                    
+
                     _startTime = DateTime.Now;
                 };
             }

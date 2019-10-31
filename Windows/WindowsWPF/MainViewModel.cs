@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using ChartATask.Core.Data;
 using ChartATask.Core.Data.Points;
 using ChartATask.Core.Persistence;
@@ -11,7 +12,6 @@ namespace WindowsWPF
     public class MainViewModel : Observable
     {
         private PlotModel _model;
-
 
         public MainViewModel()
         {
@@ -26,21 +26,32 @@ namespace WindowsWPF
                 LegendPlacement = LegendPlacement.Outside,
                 PlotMargins = new OxyThickness(50, 0, 0, 40)
             };
+            tmp.Axes.Add(new TimeSpanAxis {StringFormat = "h:mm"});
+            tmp.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom});
 
-            var ls = new LineSeries {Title = "Header"};
-            if (dataSet != null)
-            {
-                foreach (var item in dataSet.DataPoints)
+            var data = new Collection<SessionDuration>();
+
+            dataSet?.DataPoints
+                .GroupBy(q => new
                 {
-                    var x = item.X.Ticks;
-                    var y = item.Y.TotalSeconds;
-                    ls.Points.Add(new DataPoint(x, y));
-                }
-            }
+                    q.X.Date,
+                    q.X.Hour
+                }).Select(pointGroup =>
+                    pointGroup.Aggregate((o1, o2) => new SessionDuration(o1.X, o1.Y.Add(o2.Y)))
+                ).ToList().ForEach(point => data.Add(point));
 
-            tmp.Series.Add(ls);
 
-            tmp.Axes.Add(new LinearAxis {Position = AxisPosition.Bottom, Title = "TestHeader"});
+            tmp.Series.Add(new LineSeries
+            {
+                StrokeThickness = 1,
+                MarkerSize = 3,
+                ItemsSource = data,
+                DataFieldX = "X",
+                DataFieldY = "Y",
+                MarkerStroke = OxyColors.ForestGreen,
+                MarkerType = MarkerType.Plus
+            });
+
             Model = tmp;
         }
 
