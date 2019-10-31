@@ -7,14 +7,13 @@ namespace ChartATask.Core.Triggers.Events
     {
         private readonly Dictionary<string, IEventWatcher> _eventWatchers;
 
-        public EventWatcherManager()
+        public EventWatcherManager(IEnumerable<IEventWatcher> eventWatchers)
         {
             _eventWatchers = new Dictionary<string, IEventWatcher>();
-        }
-
-        public void Register(IEventWatcher eventEventWatcher)
-        {
-            _eventWatchers.Add(eventEventWatcher.EventSocketName, eventEventWatcher);
+            foreach (var eventWatcher in eventWatchers)
+            {
+                _eventWatchers.Add(eventWatcher.EventSocketName, eventWatcher);
+            }
         }
 
         public IEventWatcher GetWatcher(IEventSocket socket)

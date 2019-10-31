@@ -19,7 +19,7 @@ namespace WindowsWPF
 
         public void Execute(object parameter)
         {
-            _action((T)parameter);
+            _action((T) parameter);
         }
 
 #pragma warning disable 67

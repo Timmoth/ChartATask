@@ -7,17 +7,9 @@ namespace ChartATask.Core.Triggers.Requests
     {
         private readonly List<IRequestEvaluator> _requestEvaluators;
 
-        public RequestEvaluatorManager()
+        public RequestEvaluatorManager(IEnumerable<IRequestEvaluator> requestEvaluators)
         {
-            _requestEvaluators = new List<IRequestEvaluator>
-            {
-                new SystemTimeRequestEvaluator()
-            };
-        }
-
-        public void Register(IRequestEvaluator eventEventWatcher)
-        {
-            _requestEvaluators.Add(eventEventWatcher);
+            _requestEvaluators = new List<IRequestEvaluator>(requestEvaluators) {new SystemTimeRequestEvaluator()};
         }
 
         public T GetRequestEvaluator<T>() where T : IRequestEvaluator

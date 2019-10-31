@@ -19,14 +19,16 @@ namespace WindowsWPF
 {
     public class MainViewModel : Observable
     {
-        private PlotModel _model;
+        private List<SessionDuration> _dataPoints;
         private Engine _engine;
-        private bool isRunning;
-        private string _StartStopContent;
+        private bool _isRunning;
+        private PlotModel _model;
+        private ICommand _startStopCommand;
+        private string _startStopContent;
 
         public MainViewModel()
         {
-            isRunning = false;
+            _isRunning = false;
             StartStopContent = "Start";
         }
 
@@ -41,29 +43,28 @@ namespace WindowsWPF
                     SetValue(ref _model, value);
                 }
             }
-        }        
-        
+        }
+
         public string StartStopContent
         {
-            get => _StartStopContent;
+            get => _startStopContent;
 
             set
             {
-                if (_StartStopContent != value)
+                if (_startStopContent != value)
                 {
-                    SetValue(ref _StartStopContent, value);
+                    SetValue(ref _startStopContent, value);
                 }
             }
         }
 
-        private ICommand _StartStopCommand;
         public ICommand StartStopCommand
         {
             get
             {
-                return _StartStopCommand ?? (_StartStopCommand = new DelegateCommand<object>((args) =>
+                return _startStopCommand ?? (_startStopCommand = new DelegateCommand<object>(args =>
                 {
-                    if (isRunning)
+                    if (_isRunning)
                     {
                         _engine?.Dispose();
                         StartStopContent = "Start";
@@ -74,7 +75,7 @@ namespace WindowsWPF
                         StartStopContent = "Stop";
                     }
 
-                    isRunning = !isRunning;
+                    _isRunning = !_isRunning;
                 }));
             }
         }
@@ -82,26 +83,26 @@ namespace WindowsWPF
 
         private void Start()
         {
-            var eventCollector = new EventWatcherManager();
-            eventCollector.Register(new WindowsKeyboardEventWatcher());
-            eventCollector.Register(new WindowsRunningAppEventWatcher());
-            eventCollector.Register(new WindowsAppTitleEventWatcher());
-            eventCollector.Register(new WindowsFocusedAppEventWatcher());
-
-            var requestManager = new RequestEvaluatorManager();
-            requestManager.Register(new WindowsAppRunningRequest());
-
             _engine = new Engine(
                 new CsvPersistence("./"),
-                eventCollector,
-                requestManager);
+                new EventWatcherManager(new IEventWatcher[]
+                {
+                    new WindowsKeyboardEventWatcher(),
+                    new WindowsRunningAppEventWatcher(),
+                    new WindowsAppTitleEventWatcher(),
+                    new WindowsFocusedAppEventWatcher()
+                }),
+                new RequestEvaluatorManager(new[]
+                {
+                    new WindowsAppRunningRequest()
+                }));
 
             CreateChart();
         }
 
         private void CreateChart()
         {
-            var tmp = new PlotModel
+            var tempModel = new PlotModel
             {
                 Title = "Session duration",
                 LegendPosition = LegendPosition.RightTop,
@@ -109,16 +110,19 @@ namespace WindowsWPF
                 PlotMargins = new OxyThickness(50, 0, 0, 40)
             };
 
-            tmp.Axes.Add(new TimeSpanAxis {StringFormat = "mm"});
-            tmp.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom, StringFormat = "ddd hhtt"});
+            tempModel.Axes.Add(new TimeSpanAxis {StringFormat = "mm"});
+            tempModel.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom, StringFormat = "ddd hhtt"});
 
             foreach (var dataSet in _engine.GetDataSets().OfType<DataSet<SessionDuration>>())
             {
-                tmp.Series.Add(new LineSeries
+                dataSet.OnNewDataPoint += DataSet_OnNewDataPoint;
+                _dataPoints = GetDataPoints(dataSet).ToList();
+
+                tempModel.Series.Add(new LineSeries
                 {
                     StrokeThickness = 2,
                     MarkerSize = 2,
-                    ItemsSource = GetDataPoints(dataSet),
+                    ItemsSource = _dataPoints,
                     DataFieldX = "X",
                     DataFieldY = "Y",
                     MarkerStroke = OxyColors.ForestGreen,
@@ -128,7 +132,22 @@ namespace WindowsWPF
                 });
             }
 
-            Model = tmp;
+            Model = tempModel;
+        }
+
+        private void DataSet_OnNewDataPoint(object sender, SessionDuration e)
+        {
+            var lastDataPoint = _dataPoints.Last();
+            if (e.X - lastDataPoint.X >= TimeSpan.FromHours(1))
+            {
+                _dataPoints.Add(new SessionDuration(new DateTime(e.X.Year, e.X.Month, e.X.Day, e.X.Hour, 0, 0), e.Y));
+            }
+            else
+            {
+                _dataPoints[_dataPoints.Count - 1] = new SessionDuration(lastDataPoint.X, lastDataPoint.Y.Add(e.Y));
+            }
+
+            _model.InvalidatePlot(true);
         }
 
         private static IEnumerable<SessionDuration> GetDataPoints(DataSet<SessionDuration> dataSet)
@@ -136,13 +155,17 @@ namespace WindowsWPF
             var data = new Collection<SessionDuration>();
 
             var dataPoints = dataSet.DataPoints
-                .GroupBy(q => new {q.X.Date, q.X.Hour})
+                .GroupBy(dataPoint => new {dataPoint.X.Date, dataPoint.X.Hour})
                 .Select(pointGroup => pointGroup
-                    .Aggregate((o1, o2) => new SessionDuration(o1.X, o1.Y.Add(o2.Y))))
-                .Select(o => new SessionDuration(new DateTime(o.X.Year, o.X.Month, o.X.Day, o.X.Hour, 0, 0), o.Y))
+                    .Aggregate((first, second) => new SessionDuration(first.X, first.Y.Add(second.Y))))
+                .Select(dataPoint =>
+                    new SessionDuration(
+                        new DateTime(dataPoint.X.Year, dataPoint.X.Month, dataPoint.X.Day, dataPoint.X.Hour, 0, 0),
+                        dataPoint.Y))
                 .ToList();
 
             var lastPoint = dataPoints.FirstOrDefault();
+
             if (lastPoint == null)
             {
                 return data;

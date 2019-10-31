@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ChartATask.Core.Data.Points;
 using ChartATask.Core.Data.Sources;
 using ChartATask.Core.Triggers.Events;
@@ -30,6 +31,8 @@ namespace ChartATask.Core.Data
             _dataSource.Setup(eventWatcherManager, requestEvaluator);
         }
 
+        public event EventHandler<TDataPoint> OnNewDataPoint;
+
         public void Add(TDataPoint dataPoint)
         {
             _dataPoints.Add(dataPoint);
@@ -38,6 +41,7 @@ namespace ChartATask.Core.Data
         private void DataSource_OnNewDataPoint(object sender, TDataPoint e)
         {
             _dataPoints.Add(e);
+            OnNewDataPoint?.Invoke(this, e);
         }
 
         public override string ToString()
