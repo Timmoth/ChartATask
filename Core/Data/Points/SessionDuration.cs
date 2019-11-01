@@ -2,9 +2,9 @@
 
 namespace ChartATask.Core.Data.Points
 {
-    public class SessionDuration : DataPoint2D<DateTime, TimeSpan>
+    public class SessionDuration : DataPoint2D<DateTime, DateTime>
     {
-        public SessionDuration(DateTime x, TimeSpan y) : base(x, y)
+        public SessionDuration(DateTime x, DateTime y) : base(x, y)
         {
         }
 

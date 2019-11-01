@@ -19,7 +19,7 @@ namespace WindowsWPF
 {
     public class MainViewModel : Observable
     {
-        private List<SessionDuration> _dataPoints;
+        private List<DoubleOverTime> _dataPoints;
         private Engine _engine;
         private bool _isRunning;
         private PlotModel _model;
@@ -104,14 +104,15 @@ namespace WindowsWPF
         {
             var tempModel = new PlotModel
             {
-                Title = "Session duration",
+                Title = @"% of time on task",
                 LegendPosition = LegendPosition.RightTop,
                 LegendPlacement = LegendPlacement.Outside,
-                PlotMargins = new OxyThickness(50, 0, 0, 40)
+                PlotMargins = new OxyThickness(50,10,10,50),
+                PlotType = PlotType.XY
             };
 
-            tempModel.Axes.Add(new TimeSpanAxis {StringFormat = "mm"});
-            tempModel.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom, StringFormat = "ddd hhtt"});
+            tempModel.Axes.Add(new LinearAxis {Title = "%", AxisDistance = 5});
+            tempModel.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom, StringFormat = "ddd hhtt", Title = "Date / Time", AxisDistance = 5 });
 
             foreach (var dataSet in _engine.GetDataSets().OfType<DataSet<SessionDuration>>())
             {
@@ -128,11 +129,23 @@ namespace WindowsWPF
                     MarkerStroke = OxyColors.ForestGreen,
                     MarkerType = MarkerType.Circle,
                     InterpolationAlgorithm = new CanonicalSpline(0.3),
-                    CanTrackerInterpolatePoints = true
+                    CanTrackerInterpolatePoints = true,
                 });
             }
 
             Model = tempModel;
+        }
+
+        public class DoubleOverTime
+        {
+            public DateTime X { get; set; }
+            public double Y { get; set; }
+
+            public DoubleOverTime(DateTime x, double y)
+            {
+                X = x;
+                Y = y;
+            }
         }
 
         private void DataSet_OnNewDataPoint(object sender, SessionDuration e)
@@ -140,28 +153,28 @@ namespace WindowsWPF
             var lastDataPoint = _dataPoints.Last();
             if (e.X - lastDataPoint.X >= TimeSpan.FromHours(1))
             {
-                _dataPoints.Add(new SessionDuration(new DateTime(e.X.Year, e.X.Month, e.X.Day, e.X.Hour, 0, 0), e.Y));
+                _dataPoints.Add(new DoubleOverTime(new DateTime(e.X.Year, e.X.Month, e.X.Day, e.X.Hour, 0, 0), (e.Y - e.X).TotalMinutes * 1.666));
             }
             else
             {
-                _dataPoints[_dataPoints.Count - 1] = new SessionDuration(lastDataPoint.X, lastDataPoint.Y.Add(e.Y));
+                _dataPoints[_dataPoints.Count - 1] = new DoubleOverTime(lastDataPoint.X, lastDataPoint.Y + (e.Y - e.X).TotalMinutes * 1.666);
             }
 
             _model.InvalidatePlot(true);
         }
 
-        private static IEnumerable<SessionDuration> GetDataPoints(DataSet<SessionDuration> dataSet)
+        private static IEnumerable<DoubleOverTime> GetDataPoints(DataSet<SessionDuration> dataSet)
         {
-            var data = new Collection<SessionDuration>();
+            var data = new Collection<DoubleOverTime>();
 
             var dataPoints = dataSet.DataPoints
                 .GroupBy(dataPoint => new {dataPoint.X.Date, dataPoint.X.Hour})
                 .Select(pointGroup => pointGroup
-                    .Aggregate((first, second) => new SessionDuration(first.X, first.Y.Add(second.Y))))
+                    .Aggregate((first, second) => new SessionDuration(first.X, first.X + ((first.Y - first.X) + (second.Y - second.X)))))
                 .Select(dataPoint =>
-                    new SessionDuration(
+                    new DoubleOverTime(
                         new DateTime(dataPoint.X.Year, dataPoint.X.Month, dataPoint.X.Day, dataPoint.X.Hour, 0, 0),
-                        dataPoint.Y))
+                        (dataPoint.Y - dataPoint.X).TotalMinutes * 1.666))
                 .ToList();
 
             var lastPoint = dataPoints.FirstOrDefault();
@@ -178,7 +191,7 @@ namespace WindowsWPF
                 var currentDataPointDate = lastPoint.X.AddHours(1);
                 while (currentDataPointDate < nextPoint.X)
                 {
-                    data.Add(new SessionDuration(currentDataPointDate, TimeSpan.Zero));
+                    data.Add(new DoubleOverTime(currentDataPointDate, 0));
                     currentDataPointDate = currentDataPointDate.AddHours(1);
                 }
 

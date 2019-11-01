@@ -61,9 +61,9 @@ namespace ChartATask.Core.Persistence
                         )
                     });
 
-            var fireFoxTabSwitchDataSet = LoadDataSet($@"{_directory}0.csv", firefoxTitleChangeDataSource);
+            var dataSet = LoadDataSet($@"{_directory}0.csv", firefoxTitleChangeDataSource);
 
-            return new List<IDataSet> {fireFoxTabSwitchDataSet};
+            return new List<IDataSet> { dataSet };
         }
 
         public void Dispose()
@@ -85,7 +85,7 @@ namespace ChartATask.Core.Persistence
                     try
                     {
                         var x = DateTime.Parse(values[0]);
-                        var y = TimeSpan.Parse(values[1]);
+                        var y = DateTime.Parse(values[1]);
 
                         dataSet.Add(new SessionDuration(x, y));
                     }
@@ -95,6 +95,8 @@ namespace ChartATask.Core.Persistence
                     }
                 }
             }
+
+
 
             return dataSet;
         }
