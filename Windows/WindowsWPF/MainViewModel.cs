@@ -102,16 +102,120 @@ namespace WindowsWPF
 
         private void CreateChart()
         {
+
+            //var model = new PlotModel { Title = "Task heatmap" };
+
+            //// Weekday axis (horizontal)
+            //model.Axes.Add(new CategoryAxis
+            //{
+            //    Position = AxisPosition.Bottom,
+
+            //    // Key used for specifying this axis in the HeatMapSeries
+            //    Key = "Hour",
+
+            //    // Array of Categories (see above), mapped to one of the coordinates of the 2D-data array
+            //    ItemsSource = new[]
+            //    {
+            //        "00",
+            //        "01",
+            //        "02",
+            //        "03",
+            //        "04",
+            //        "05",
+            //        "06",
+            //        "07",
+            //        "08",
+            //        "09",
+            //        "10",
+            //        "11",
+            //        "12",
+            //        "13",
+            //        "14",
+            //        "15",
+            //        "16",
+            //        "17",
+            //        "18",
+            //        "19",
+            //        "20",
+            //        "21",
+            //        "22",
+            //        "23",
+            //    }
+            //});
+
+            //// Cake type axis (vertical)
+            //model.Axes.Add(new CategoryAxis
+            //{
+            //    Position = AxisPosition.Left,
+            //    Key = "Task",
+            //    ItemsSource = new[]
+            //    {
+            //        "ChartATask",
+            //        "TaskPlex",
+            //        "StateNet",
+            //    }
+            //});
+
+            //// Color axis
+            //model.Axes.Add(new LinearColorAxis
+            //{
+            //    Palette = new OxyPalette(new []
+            //    {
+            //        OxyColor.FromRgb(  0,107,179), 
+            //        OxyColor.FromRgb(    0,122,204), 
+            //        OxyColor.FromRgb(       0,138,230), 
+            //        OxyColor.FromRgb(       0,153,255), 
+            //        OxyColor.FromRgb(      26,163,255), 
+            //        OxyColor.FromRgb(       51,173,255), 
+            //        OxyColor.FromRgb(       77,184,255),
+            //        })
+            //});
+
+            //var rand = new Random();
+            //var data = new double[18, 3];
+
+
+            //var datapoints = GetDataPoints(_engine.GetDataSets().OfType<DataSet<SessionDuration>>().First()).Select(o => (int)o.Y);
+
+            //for (int x = 0; x < 3; x++)
+            //{
+            //    for (int y = 0; y < 18; y++)
+            //    {
+            //        data[y, x] = datapoints.ElementAt((x * y) % 18);
+            //    }
+            //}
+
+
+            //var heatMapSeries = new HeatMapSeries
+            //{
+            //    X0 = 0,
+            //    X1 = 24,
+            //    Y0 = 0,
+            //    Y1 = 2,
+            //    XAxisKey = "Hour",
+            //    YAxisKey = "Task",
+            //    RenderMethod = HeatMapRenderMethod.Bitmap,
+            //    LabelFontSize = 0.1, // neccessary to display the label
+            //    Data = data,
+            //    LabelFormatString = "#"
+            //};
+
+            //model.Series.Add(heatMapSeries);
+            //Model = model;
+            //return;
+
+
+
             var tempModel = new PlotModel
             {
-                Title = @"% of time on task",
+                Title = @"Task Activity",
                 LegendPosition = LegendPosition.RightTop,
                 LegendPlacement = LegendPlacement.Outside,
-                PlotMargins = new OxyThickness(50,10,10,50),
+                PlotMargins = new OxyThickness(10,10,10,50),
                 PlotType = PlotType.XY
             };
 
-            tempModel.Axes.Add(new LinearAxis {Title = "%", AxisDistance = 5});
+            tempModel.Axes.Add(new LinearAxis {AxisDistance = 5, IsAxisVisible = false });
             tempModel.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom, StringFormat = "ddd hhtt", Title = "Date / Time", AxisDistance = 5 });
 
             foreach (var dataSet in _engine.GetDataSets().OfType<DataSet<SessionDuration>>())
@@ -130,6 +234,7 @@ namespace WindowsWPF
                     MarkerType = MarkerType.Circle,
                     InterpolationAlgorithm = new CanonicalSpline(0.3),
                     CanTrackerInterpolatePoints = true,
+                    
                 });
             }
 
