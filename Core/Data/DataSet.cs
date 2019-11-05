@@ -7,11 +7,6 @@ using ChartATask.Core.Triggers.Requests;
 
 namespace ChartATask.Core.Data
 {
-    public interface IDataSet
-    {
-        void Setup(EventWatcherManager eventWatcherManager, RequestEvaluatorManager requestEvaluator);
-    }
-
     public class DataSet<TDataPoint> : IDataSet where TDataPoint : IDataPoint
     {
         private readonly List<TDataPoint> _dataPoints;

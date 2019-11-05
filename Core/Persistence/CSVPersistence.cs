@@ -9,6 +9,7 @@ using ChartATask.Core.Triggers;
 using ChartATask.Core.Triggers.Acceptor;
 using ChartATask.Core.Triggers.Conditions;
 using ChartATask.Core.Triggers.Events.Sockets;
+using static System.IO.File;
 
 namespace ChartATask.Core.Persistence
 {
@@ -21,49 +22,85 @@ namespace ChartATask.Core.Persistence
             _directory = directory;
         }
 
-        public void Save(IEnumerable<IDataSet> dataSets)
-        {
-            var durationOverTimeDataSets = dataSets.Select(dataSet => dataSet as DataSet<SessionDuration>)
-                .Where(p => p != null).ToList();
-            for (var i = 0; i < durationOverTimeDataSets.Count(); i++)
-            {
-                var dataSet = durationOverTimeDataSets[i];
-                using (var streamWriter = new StreamWriter($@"./{i}.csv"))
-                {
-                    foreach (var dataSetDataPoint in dataSet.DataPoints)
-                    {
-                        streamWriter.WriteLine(dataSetDataPoint.ToString());
-                    }
-                }
-            }
-        }
-
         public IEnumerable<IDataSet> Load()
         {
-            var firefoxTitleChangeDataSource =
-                new SessionDurationSource(
-                    new[]
-                    {
-                        new Trigger(
-                            new AppFocusSocket(
-                                new RegularExpressionAcceptor("devenv"),
-                                new RegularExpressionAcceptor("Experiment")),
-                            new SystemTimeCondition(new Always<DateTime>(true))
-                        )
-                    },
-                    new[]
-                    {
-                        new Trigger(
-                            new AppFocusSocket(
-                                new Always<string>(true),
-                                new NotAcceptor<string>(new RegularExpressionAcceptor("Experiment"))),
-                            new SystemTimeCondition(new Always<DateTime>(true))
-                        )
-                    });
+            var dataSources = new List<SessionDurationSource>()
+            {
+                new SessionDurationSource(),
+            //    new FilteredSessionDurationSource(
+            //        new[]
+            //        {
+            //            new Trigger(
+            //                new AppFocusSocket(
+            //                    new RegularExpressionAcceptor("devenv"),
+            //                    new RegularExpressionAcceptor("Experiment")),
+            //                new SystemTimeCondition(new Always<DateTime>(true))
+            //            )
+            //        },
+            //        new[]
+            //        {
+            //            new Trigger(
+            //                new AppFocusSocket(
+            //                    new Always<string>(true),
+            //                    new NotAcceptor<string>(new RegularExpressionAcceptor("Experiment"))),
+            //                new SystemTimeCondition(new Always<DateTime>(true))
+            //            )
+            //        }),
+            //        new FilteredSessionDurationSource(
+            //        new[]
+            //        {
+            //            new Trigger(
+            //                new AppFocusSocket(
+            //                    new RegularExpressionAcceptor("devenv"),
+            //                    new RegularExpressionAcceptor("DMV")),
+            //                new SystemTimeCondition(new Always<DateTime>(true))
+            //            )
+            //        },
+            //        new[]
+            //        {
+            //            new Trigger(
+            //                new AppFocusSocket(
+            //                    new Always<string>(true),
+            //                    new NotAcceptor<string>(new RegularExpressionAcceptor("DMV"))),
+            //                new SystemTimeCondition(new Always<DateTime>(true))
+            //            )
+            //        }),
+            //new FilteredSessionDurationSource(
+            //        new[]
+            //        {
+            //            new Trigger(
+            //                new AppFocusSocket(
+            //                    new RegularExpressionAcceptor("devenv"),
+            //                    new RegularExpressionAcceptor("chartatask")),
+            //                new SystemTimeCondition(new Always<DateTime>(true))
+            //            )
+            //        },
+            //        new[]
+            //        {
+            //            new Trigger(
+            //                new AppFocusSocket(
+            //                    new Always<string>(true),
+            //                    new NotAcceptor<string>(new RegularExpressionAcceptor("chartatask"))),
+            //                new SystemTimeCondition(new Always<DateTime>(true))
+            //            )
+            //        }),
+            };
 
-            var dataSet = LoadDataSet($@"{_directory}0.csv", firefoxTitleChangeDataSource);
+            var dataSets = new List<IDataSet>();
 
-            return new List<IDataSet> { dataSet };
+            for(var i = 0; i < dataSources.Count; i++)
+            {
+                try
+                {
+                    dataSets.Add(LoadDataSet($@"{_directory}{i}.csv", dataSources[i]));
+                }
+                catch
+                {
+                    //Could not load data set
+                }
+            }
+
+            return dataSets;
         }
 
         public void Dispose()
@@ -76,7 +113,7 @@ namespace ChartATask.Core.Persistence
         {
             var dataSet = new DataSet<SessionDuration>(dataSource);
 
-            using (var reader = new StreamReader(fileName))
+            using (var reader = GetStreamReader(fileName))
             {
                 while (!reader.EndOfStream)
                 {
@@ -84,10 +121,12 @@ namespace ChartATask.Core.Persistence
 
                     try
                     {
-                        var x = DateTime.Parse(values[0]);
-                        var y = DateTime.Parse(values[1]);
+                        var name = values[0];
+                        var title = values[1];   
+                        var x = DateTime.Parse(values[2]);
+                        var y = DateTime.Parse(values[3]);
 
-                        dataSet.Add(new SessionDuration(x, y));
+                        dataSet.Add(new SessionDuration(name, title,x, y));
                     }
                     catch
                     {
@@ -96,9 +135,44 @@ namespace ChartATask.Core.Persistence
                 }
             }
 
-
-
             return dataSet;
+        }
+        public void Save(IEnumerable<IDataSet> dataSets)
+        {
+            var durationOverTimeDataSets = dataSets
+                .Select(dataSet => dataSet as DataSet<SessionDuration>)
+                .Where(p => p != null)
+                .ToList();
+
+            for (var i = 0; i < durationOverTimeDataSets.Count(); i++)
+            {
+                try
+                {
+                    var dataSet = durationOverTimeDataSets[i];
+                    using (var streamWriter = GetStreamWriter($@"./{i}.csv"))
+                    {
+                        foreach (var dataSetDataPoint in dataSet.DataPoints)
+                        {
+                            streamWriter.WriteLine(dataSetDataPoint.ToString());
+                        }
+                    }
+                }catch
+                {
+                    //Could not save data set
+                }
+               
+            }
+        }
+
+
+        private static StreamReader GetStreamReader(string filename)
+        {
+            return Exists(filename) ? new StreamReader(filename) : new StreamReader(Create(filename));
+        }       
+        
+        private static StreamWriter GetStreamWriter(string filename)
+        {
+            return Exists(filename) ? new StreamWriter(filename) : new StreamWriter(Create(filename));
         }
     }
 }

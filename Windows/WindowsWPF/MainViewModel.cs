@@ -19,7 +19,7 @@ namespace WindowsWPF
 {
     public class MainViewModel : Observable
     {
-        private List<DoubleOverTime> _dataPoints;
+        private List<List<DoubleOverTime>> _dataSetList;
         private Engine _engine;
         private bool _isRunning;
         private PlotModel _model;
@@ -102,109 +102,7 @@ namespace WindowsWPF
 
         private void CreateChart()
         {
-
-            //var model = new PlotModel { Title = "Task heatmap" };
-
-            //// Weekday axis (horizontal)
-            //model.Axes.Add(new CategoryAxis
-            //{
-            //    Position = AxisPosition.Bottom,
-
-            //    // Key used for specifying this axis in the HeatMapSeries
-            //    Key = "Hour",
-
-            //    // Array of Categories (see above), mapped to one of the coordinates of the 2D-data array
-            //    ItemsSource = new[]
-            //    {
-            //        "00",
-            //        "01",
-            //        "02",
-            //        "03",
-            //        "04",
-            //        "05",
-            //        "06",
-            //        "07",
-            //        "08",
-            //        "09",
-            //        "10",
-            //        "11",
-            //        "12",
-            //        "13",
-            //        "14",
-            //        "15",
-            //        "16",
-            //        "17",
-            //        "18",
-            //        "19",
-            //        "20",
-            //        "21",
-            //        "22",
-            //        "23",
-            //    }
-            //});
-
-            //// Cake type axis (vertical)
-            //model.Axes.Add(new CategoryAxis
-            //{
-            //    Position = AxisPosition.Left,
-            //    Key = "Task",
-            //    ItemsSource = new[]
-            //    {
-            //        "ChartATask",
-            //        "TaskPlex",
-            //        "StateNet",
-            //    }
-            //});
-
-            //// Color axis
-            //model.Axes.Add(new LinearColorAxis
-            //{
-            //    Palette = new OxyPalette(new []
-            //    {
-            //        OxyColor.FromRgb(  0,107,179), 
-            //        OxyColor.FromRgb(    0,122,204), 
-            //        OxyColor.FromRgb(       0,138,230), 
-            //        OxyColor.FromRgb(       0,153,255), 
-            //        OxyColor.FromRgb(      26,163,255), 
-            //        OxyColor.FromRgb(       51,173,255), 
-            //        OxyColor.FromRgb(       77,184,255),
-            //        })
-            //});
-
-            //var rand = new Random();
-            //var data = new double[18, 3];
-
-
-            //var datapoints = GetDataPoints(_engine.GetDataSets().OfType<DataSet<SessionDuration>>().First()).Select(o => (int)o.Y);
-
-            //for (int x = 0; x < 3; x++)
-            //{
-            //    for (int y = 0; y < 18; y++)
-            //    {
-            //        data[y, x] = datapoints.ElementAt((x * y) % 18);
-            //    }
-            //}
-
-
-            //var heatMapSeries = new HeatMapSeries
-            //{
-            //    X0 = 0,
-            //    X1 = 24,
-            //    Y0 = 0,
-            //    Y1 = 2,
-            //    XAxisKey = "Hour",
-            //    YAxisKey = "Task",
-            //    RenderMethod = HeatMapRenderMethod.Bitmap,
-            //    LabelFontSize = 0.1, // neccessary to display the label
-            //    Data = data,
-            //    LabelFormatString = "#"
-            //};
-
-            //model.Series.Add(heatMapSeries);
-            //Model = model;
-            //return;
-
-
+            _dataSetList = new List<List<DoubleOverTime>>();
 
             var tempModel = new PlotModel
             {
@@ -215,27 +113,57 @@ namespace WindowsWPF
                 PlotType = PlotType.XY
             };
 
+            Random r = new Random();
+
             tempModel.Axes.Add(new LinearAxis {AxisDistance = 5, IsAxisVisible = false });
             tempModel.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom, StringFormat = "ddd hhtt", Title = "Date / Time", AxisDistance = 5 });
 
             foreach (var dataSet in _engine.GetDataSets().OfType<DataSet<SessionDuration>>())
             {
-                dataSet.OnNewDataPoint += DataSet_OnNewDataPoint;
-                _dataPoints = GetDataPoints(dataSet).ToList();
-
-                tempModel.Series.Add(new LineSeries
+                foreach (var groupedDataSets in GetDataSets(dataSet).ToList())
                 {
-                    StrokeThickness = 2,
-                    MarkerSize = 2,
-                    ItemsSource = _dataPoints,
-                    DataFieldX = "X",
-                    DataFieldY = "Y",
-                    MarkerStroke = OxyColors.ForestGreen,
-                    MarkerType = MarkerType.Circle,
-                    InterpolationAlgorithm = new CanonicalSpline(0.3),
-                    CanTrackerInterpolatePoints = true,
-                    
-                });
+                    //dataSet.OnNewDataPoint += (s, e) =>
+                    //{
+                    //    if (newDataSet.Count == 0)
+                    //    {
+                    //        return;
+                    //    }
+
+                    //    var lastDataPoint = newDataSet.Last();
+                    //    if (e.X - lastDataPoint.X >= TimeSpan.FromHours(1))
+                    //    {
+                    //        newDataSet.Add(new DoubleOverTime(new DateTime(e.X.Year, e.X.Month, e.X.Day, e.X.Hour, 0, 0),
+                    //            (e.Y - e.X).TotalMinutes * 1.666));
+                    //    }
+                    //    else
+                    //    {
+                    //        newDataSet[newDataSet.Count - 1] = new DoubleOverTime(lastDataPoint.X,
+                    //            lastDataPoint.Y + (e.Y - e.X).TotalMinutes * 1.666);
+                    //    }
+
+                    //    _model.InvalidatePlot(true);
+                    //};
+
+                    var randomBytes = new byte[3];
+                    r.NextBytes(randomBytes);
+
+                    tempModel.Series.Add(new LineSeries
+                    {
+                        StrokeThickness = 2,
+                        MarkerSize = 2,
+                        ItemsSource = groupedDataSets.Item3.ToList(),
+                        Title = groupedDataSets.Item1 + " " + groupedDataSets.Item2,
+                        DataFieldX = "X",
+                        DataFieldY = "Y",
+                        Color = OxyColor.FromRgb(randomBytes[0], randomBytes[1], randomBytes[2]),
+                        MarkerStroke = OxyColor.FromRgb(randomBytes[0], randomBytes[1], randomBytes[2]),
+                        MarkerType = MarkerType.Circle,
+                        InterpolationAlgorithm = new CanonicalSpline(0.1),
+                        CanTrackerInterpolatePoints = true,
+
+                    });
+                    _dataSetList.Add(groupedDataSets.Item3.ToList());
+                }
             }
 
             Model = tempModel;
@@ -253,36 +181,33 @@ namespace WindowsWPF
             }
         }
 
-        private void DataSet_OnNewDataPoint(object sender, SessionDuration e)
+        private IEnumerable<(string, string, IEnumerable<DoubleOverTime>)> GetDataSets(DataSet<SessionDuration> dataSet)
         {
-            var lastDataPoint = _dataPoints.Last();
-            if (e.X - lastDataPoint.X >= TimeSpan.FromHours(1))
-            {
-                _dataPoints.Add(new DoubleOverTime(new DateTime(e.X.Year, e.X.Month, e.X.Day, e.X.Hour, 0, 0), (e.Y - e.X).TotalMinutes * 1.666));
-            }
-            else
-            {
-                _dataPoints[_dataPoints.Count - 1] = new DoubleOverTime(lastDataPoint.X, lastDataPoint.Y + (e.Y - e.X).TotalMinutes * 1.666);
-            }
-
-            _model.InvalidatePlot(true);
+            return dataSet.DataPoints
+                .GroupBy(point => (point.Name, point.Title))
+                .Select(groupedDataPoints => 
+                    (groupedDataPoints.Key.Name, 
+                        groupedDataPoints.Key.Title,
+                            GetDataPoints(groupedDataPoints)));
         }
 
-        private static IEnumerable<DoubleOverTime> GetDataPoints(DataSet<SessionDuration> dataSet)
+        private static IEnumerable<DoubleOverTime> GetDataPoints(IEnumerable<SessionDuration> dataPoints)
         {
             var data = new Collection<DoubleOverTime>();
 
-            var dataPoints = dataSet.DataPoints
+            var hourlyPercentagePoints = dataPoints
                 .GroupBy(dataPoint => new {dataPoint.X.Date, dataPoint.X.Hour})
                 .Select(pointGroup => pointGroup
-                    .Aggregate((first, second) => new SessionDuration(first.X, first.X + ((first.Y - first.X) + (second.Y - second.X)))))
+                    .Aggregate((first, second) => new SessionDuration(first.Name, first.Title, first.X, first.X + ((first.Y - first.X) + (second.Y - second.X)))))
                 .Select(dataPoint =>
                     new DoubleOverTime(
                         new DateTime(dataPoint.X.Year, dataPoint.X.Month, dataPoint.X.Day, dataPoint.X.Hour, 0, 0),
                         (dataPoint.Y - dataPoint.X).TotalMinutes * 1.666))
                 .ToList();
 
-            var lastPoint = dataPoints.FirstOrDefault();
+
+
+            var lastPoint = hourlyPercentagePoints.FirstOrDefault();
 
             if (lastPoint == null)
             {
@@ -290,9 +215,9 @@ namespace WindowsWPF
             }
 
             data.Add(lastPoint);
-            for (var i = 1; i < dataPoints.Count; i++)
+            for (var i = 1; i < hourlyPercentagePoints.Count; i++)
             {
-                var nextPoint = dataPoints.ElementAt(i);
+                var nextPoint = hourlyPercentagePoints.ElementAt(i);
                 var currentDataPointDate = lastPoint.X.AddHours(1);
                 while (currentDataPointDate < nextPoint.X)
                 {

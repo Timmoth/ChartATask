@@ -1,27 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using ChartATask.Core.Data.Points;
-using ChartATask.Core.Triggers;
+using ChartATask.Core.Triggers.Acceptor;
 using ChartATask.Core.Triggers.Events;
+using ChartATask.Core.Triggers.Events.App;
+using ChartATask.Core.Triggers.Events.Sockets;
 using ChartATask.Core.Triggers.Requests;
 
 namespace ChartATask.Core.Data.Sources
 {
     public class SessionDurationSource : IDataSource<SessionDuration>
     {
-        private readonly IEnumerable<Trigger> _endTriggers;
-        private readonly IEnumerable<Trigger> _startTriggers;
-
+        private IEventWatcher _focusChangeWatcher;
+        private IEventWatcher _titleChangeWatcher;
         private RequestEvaluatorManager _evaluator;
         private EventWatcherManager _eventWatcherManager;
+        private string _name;
+        private string _title;
         private DateTime _startTime;
 
-        public SessionDurationSource(
-            IEnumerable<Trigger> startTriggers,
-            IEnumerable<Trigger> endTriggers)
+        public SessionDurationSource()
         {
-            _startTriggers = startTriggers;
-            _endTriggers = endTriggers;
             _startTime = DateTime.MinValue;
         }
 
@@ -31,46 +29,38 @@ namespace ChartATask.Core.Data.Sources
         {
             _evaluator = requestEvaluator;
             _eventWatcherManager = eventWatcherManager;
-            SetupStartTasks();
-            SetupEndTasks();
+            _focusChangeWatcher = _eventWatcherManager.GetWatcher(new AppFocusSocket(new Always<string>(true), new Always<string>(true)));
+            _titleChangeWatcher = _eventWatcherManager.GetWatcher(new AppTitleSocket(new Always<string>(true), new Always<string>(true)));
+            _focusChangeWatcher.OnEvent += _focusChangeWatcher_OnEvent;
+            _titleChangeWatcher.OnEvent += _titleChangeWatcher_OnEvent; ;
         }
 
-        private void SetupStartTasks()
+        private void _titleChangeWatcher_OnEvent(object sender, IEvent e)
         {
-            foreach (var startTrigger in _startTriggers)
+            if (e is AppTitleChanged appTitleChanged && appTitleChanged.Name == _name)
             {
-                startTrigger.Setup(_evaluator);
-                var eventWatcher = _eventWatcherManager.GetWatcher(startTrigger.EventSocket);
-                eventWatcher.OnEvent += (s, e) =>
-                {
-                    if (!startTrigger.IsTriggered(e) || _startTime != DateTime.MinValue)
-                    {
-                        return;
-                    }
-
-                    _startTime = DateTime.Now;
-                };
+                TryAddDataPoint(appTitleChanged.Name, appTitleChanged.Title);
             }
         }
 
-        private void SetupEndTasks()
+        private void _focusChangeWatcher_OnEvent(object sender, IEvent e)
         {
-            foreach (var endTrigger in _endTriggers)
+            if (e is AppFocusChanged appFocusChanged)
             {
-                endTrigger.Setup(_evaluator);
-                var eventWatcher = _eventWatcherManager.GetWatcher(endTrigger.EventSocket);
-                eventWatcher.OnEvent += (s, e) =>
-                {
-                    if (!endTrigger.IsTriggered(e) || _startTime == DateTime.MinValue)
-                    {
-                        return;
-                    }
-
-                    var dataPoint = new SessionDuration(_startTime, DateTime.Now);
-                    _startTime = DateTime.MinValue;
-                    OnNewDataPoint?.Invoke(this, dataPoint);
-                };
+                TryAddDataPoint(appFocusChanged.Name, appFocusChanged.Title);
             }
+        }
+
+        private void TryAddDataPoint(string name, string title)
+        {
+            if (!string.IsNullOrEmpty(_name) && _name != name && _title != title)
+            {
+                OnNewDataPoint?.Invoke(this, new SessionDuration(_name, _title, _startTime, DateTime.Now));
+            }
+
+            _name = name;
+            _title = title;
+            _startTime = DateTime.Now;
         }
     }
 }
