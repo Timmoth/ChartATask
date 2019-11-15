@@ -1,6 +1,6 @@
-﻿using System;
-using ChartATask.Core.Triggers.Acceptor;
+﻿using ChartATask.Core.Triggers.Acceptor;
 using ChartATask.Core.Triggers.Requests;
+using System;
 
 namespace ChartATask.Core.Triggers.Conditions
 {

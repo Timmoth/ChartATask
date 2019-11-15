@@ -2,8 +2,8 @@
 {
     public class AppTitleChanged : IEvent
     {
-        public readonly string Name;
-        public readonly string Title;
+        public string Name { get; }
+        public string Title { get; }
 
         public AppTitleChanged(string name, string title)
         {
@@ -18,7 +18,9 @@
 
         public override bool Equals(object obj)
         {
-            return obj is AppTitleChanged other && other.Name == Name && other.Title == Title;
+            return obj is AppTitleChanged other &&
+                string.Compare(other.Name, Name) == 0 &&
+                string.Compare(other.Title, Title) == 0;
         }
 
         public override int GetHashCode()

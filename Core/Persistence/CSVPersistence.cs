@@ -1,14 +1,10 @@
-﻿using System;
+﻿using ChartATask.Core.Data;
+using ChartATask.Core.Data.Points;
+using ChartATask.Core.Data.Sources;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ChartATask.Core.Data;
-using ChartATask.Core.Data.Points;
-using ChartATask.Core.Data.Sources;
-using ChartATask.Core.Triggers;
-using ChartATask.Core.Triggers.Acceptor;
-using ChartATask.Core.Triggers.Conditions;
-using ChartATask.Core.Triggers.Events.Sockets;
 using static System.IO.File;
 
 namespace ChartATask.Core.Persistence
@@ -88,7 +84,7 @@ namespace ChartATask.Core.Persistence
 
             var dataSets = new List<IDataSet>();
 
-            for(var i = 0; i < dataSources.Count; i++)
+            for (var i = 0; i < dataSources.Count; i++)
             {
                 try
                 {
@@ -122,11 +118,11 @@ namespace ChartATask.Core.Persistence
                     try
                     {
                         var name = values[0];
-                        var title = values[1];   
+                        var title = values[1];
                         var x = DateTime.Parse(values[2]);
                         var y = DateTime.Parse(values[3]);
 
-                        dataSet.Add(new SessionDuration(name, title,x, y));
+                        dataSet.Add(new SessionDuration(name, title, x, y));
                     }
                     catch
                     {
@@ -156,11 +152,12 @@ namespace ChartATask.Core.Persistence
                             streamWriter.WriteLine(dataSetDataPoint.ToString());
                         }
                     }
-                }catch
+                }
+                catch
                 {
                     //Could not save data set
                 }
-               
+
             }
         }
 
@@ -168,8 +165,8 @@ namespace ChartATask.Core.Persistence
         private static StreamReader GetStreamReader(string filename)
         {
             return Exists(filename) ? new StreamReader(filename) : new StreamReader(Create(filename));
-        }       
-        
+        }
+
         private static StreamWriter GetStreamWriter(string filename)
         {
             return Exists(filename) ? new StreamWriter(filename) : new StreamWriter(Create(filename));

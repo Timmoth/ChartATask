@@ -4,11 +4,6 @@ using ChartATask.Core.Triggers.Requests;
 
 namespace ChartATask.Core.Triggers
 {
-    public interface ITrigger
-    {
-        bool IsTriggered(IEvent firedEvent);
-    }
-
     public class Trigger : ITrigger
     {
         private readonly ICondition _condition;

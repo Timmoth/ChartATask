@@ -2,8 +2,8 @@
 {
     public class AppRunEvent : IEvent
     {
-        public readonly string Name;
-        public readonly bool Running;
+        public string Name { get; }
+        public bool Running { get; }
 
         public AppRunEvent(string name, bool running)
         {
@@ -18,7 +18,7 @@
 
         public override bool Equals(object obj)
         {
-            return obj is AppRunEvent other && other.Name == Name && other.Running == Running;
+            return obj is AppRunEvent other && string.Compare(other.Name, Name) == 0 && other.Running == Running;
         }
 
         public override int GetHashCode()

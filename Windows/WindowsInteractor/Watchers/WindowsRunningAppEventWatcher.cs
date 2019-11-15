@@ -1,16 +1,17 @@
-﻿using System;
-using System.Management;
-using ChartATask.Core.Triggers.Events;
+﻿using ChartATask.Core.Triggers.Events;
 using ChartATask.Core.Triggers.Events.App;
+using System;
+using System.Globalization;
+using System.Management;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsRunningAppEventWatcher : IEventWatcher
+    public class WindowsRunningAppEventWatcher : EventWatcher
     {
         private readonly ManagementEventWatcher _processStartEvent;
         private readonly ManagementEventWatcher _processStopEvent;
 
-        public WindowsRunningAppEventWatcher()
+        public WindowsRunningAppEventWatcher() : base("AppRunningSocket")
         {
             _processStartEvent = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStartTrace");
             _processStartEvent.EventArrived += ProcessStarted;
@@ -19,9 +20,7 @@ namespace ChartATask.Interactors.Windows.Watchers
             _processStopEvent.EventArrived += ProcessStopped;
         }
 
-        public event EventHandler<IEvent> OnEvent;
-
-        public void Start()
+        public override void Start()
         {
             try
             {
@@ -31,11 +30,10 @@ namespace ChartATask.Interactors.Windows.Watchers
             catch
             {
                 // ignored
-             //   Console.WriteLine("Could not start WMI Event Watcher. Must be run in Administrator mode");
             }
         }
 
-        public void Stop()
+        public override void Stop()
         {
             try
             {
@@ -48,9 +46,7 @@ namespace ChartATask.Interactors.Windows.Watchers
             }
         }
 
-        public string EventSocketName => "AppRunningSocket";
-
-        public void Dispose()
+        public override void Dispose()
         {
             try
             {
@@ -66,18 +62,18 @@ namespace ChartATask.Interactors.Windows.Watchers
         private void ProcessStarted(object sender, EventArrivedEventArgs e)
         {
             var processName = ProcessNameToString(e.NewEvent.Properties["ProcessName"].Value.ToString());
-            OnEvent?.Invoke(this, new AppRunEvent(processName, true));
+            Fire(new AppRunEvent(processName, true));
         }
 
         private void ProcessStopped(object sender, EventArrivedEventArgs e)
         {
             var processName = ProcessNameToString(e.NewEvent.Properties["ProcessName"].Value.ToString());
-            OnEvent?.Invoke(this, new AppRunEvent(processName, false));
+            Fire(new AppRunEvent(processName, false));
         }
 
         private static string ProcessNameToString(string processName)
         {
-            return processName.ToLower().Split('.')[0];
+            return processName.ToLower(CultureInfo.InvariantCulture).Split('.')[0];
         }
     }
 }

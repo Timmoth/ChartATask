@@ -2,7 +2,7 @@
 {
     public class KeyPressedEvent : IEvent
     {
-        public readonly int KeyCode;
+        public int KeyCode { get; }
 
         public KeyPressedEvent(int keyCode)
         {
@@ -11,7 +11,7 @@
 
         public override string ToString()
         {
-            return $@"KeyPressed {KeyCode}";
+            return $"KeyPressed {KeyCode}";
         }
 
         public override bool Equals(object obj)

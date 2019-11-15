@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ChartATask.Core.Data.Points;
+﻿using ChartATask.Core.Data.Points;
 using ChartATask.Core.Triggers;
 using ChartATask.Core.Triggers.Events;
 using ChartATask.Core.Triggers.Requests;
+using System;
+using System.Collections.Generic;
 
 namespace ChartATask.Core.Data.Sources
 {
@@ -66,7 +66,7 @@ namespace ChartATask.Core.Data.Sources
                         return;
                     }
 
-                    var dataPoint = new SessionDuration("","",_startTime, DateTime.Now);
+                    var dataPoint = new SessionDuration(string.Empty, string.Empty, _startTime, DateTime.Now);
                     _startTime = DateTime.MinValue;
                     OnNewDataPoint?.Invoke(this, dataPoint);
                 };

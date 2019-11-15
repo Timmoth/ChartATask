@@ -4,9 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace ChartATask.Interactors.Windows.Watchers.Hooks
 {
-    public delegate void KeyPressed(int keyCode);
-
-    internal class KeyboardHook
+    internal static class KeyboardHook
     {
         private const int WhKeyboardLl = 13;
         private const int WmKeydown = 0x0100;
@@ -40,7 +38,7 @@ namespace ChartATask.Interactors.Windows.Watchers.Hooks
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == (IntPtr) WmKeydown)
+            if (nCode >= 0 && wParam == (IntPtr)WmKeydown)
             {
                 OnKeyPressed?.Invoke(Marshal.ReadInt32(lParam));
             }

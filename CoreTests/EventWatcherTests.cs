@@ -1,26 +1,24 @@
-using System.Collections.Generic;
-using System.Linq;
 using ChartATask.Core.Triggers.Events;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CoreTests
 {
     public class EventWatcherTests
     {
-        private EventWatcherManager _eventWatcherManager;
-
         [SetUp]
         public void Setup()
         {
         }
 
-        private static List<Mock<IEventWatcher>> GetMockEventWatchers(int count)
+        private static List<Mock<EventWatcher>> GetMockEventWatchers(int count)
         {
-            var mockEventWatcherList = new List<Mock<IEventWatcher>>();
+            var mockEventWatcherList = new List<Mock<EventWatcher>>();
             for (var i = 0; i < count; i++)
             {
-                var mockEventWatcher = new Mock<IEventWatcher>(MockBehavior.Loose);
+                var mockEventWatcher = new Mock<EventWatcher>(MockBehavior.Loose);
                 mockEventWatcherList.Add(mockEventWatcher);
             }
 
@@ -33,7 +31,7 @@ namespace CoreTests
         public void StartWatchers(int count)
         {
             var mockEventWatchers = GetMockEventWatchers(count);
-            _eventWatcherManager = new EventWatcherManager(mockEventWatchers.Select(o => o.Object));
+            var _eventWatcherManager = new EventWatcherManager(mockEventWatchers.Select(o => o.Object));
 
             _eventWatcherManager.Start();
 
@@ -47,7 +45,7 @@ namespace CoreTests
         {
             var mockEventWatchers = GetMockEventWatchers(count);
 
-            _eventWatcherManager = new EventWatcherManager(mockEventWatchers.Select(o => o.Object));
+            var _eventWatcherManager = new EventWatcherManager(mockEventWatchers.Select(o => o.Object));
 
 
             _eventWatcherManager.Stop();
@@ -62,26 +60,13 @@ namespace CoreTests
         {
             var mockEventWatchers = GetMockEventWatchers(count);
 
-            _eventWatcherManager = new EventWatcherManager(mockEventWatchers.Select(o => o.Object));
+            var _eventWatcherManager = new EventWatcherManager(mockEventWatchers.Select(o => o.Object));
 
 
             _eventWatcherManager.Dispose();
 
             mockEventWatchers.ForEach(m => m.Verify(obj => obj.Dispose(), Times.Once));
             mockEventWatchers.ForEach(m => m.Verify(obj => obj.Stop(), Times.Once));
-        }
-
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        public void GetWatcher(int count)
-        {
-            var mockEventWatchers = GetMockEventWatchers(count);
-            _eventWatcherManager = new EventWatcherManager(mockEventWatchers.Select(o => o.Object));
-
-            //     var watchers = _eventWatcherManager.GetWatcher(new Mock<IEventSocket>);
-
-            //    CollectionAssert.AreEqual(mockEventWatchers.Select(m => m.Object), watchers);
         }
     }
 }

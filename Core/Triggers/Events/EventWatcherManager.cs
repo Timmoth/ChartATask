@@ -5,18 +5,18 @@ namespace ChartATask.Core.Triggers.Events
 {
     public class EventWatcherManager
     {
-        private readonly Dictionary<string, IEventWatcher> _eventWatchers;
+        private readonly Dictionary<string, EventWatcher> _eventWatchers;
 
-        public EventWatcherManager(IEnumerable<IEventWatcher> eventWatchers)
+        public EventWatcherManager(IEnumerable<EventWatcher> eventWatchers)
         {
-            _eventWatchers = new Dictionary<string, IEventWatcher>();
+            _eventWatchers = new Dictionary<string, EventWatcher>();
             foreach (var eventWatcher in eventWatchers)
             {
                 _eventWatchers.Add(eventWatcher.EventSocketName, eventWatcher);
             }
         }
 
-        public IEventWatcher GetWatcher(IEventSocket socket)
+        public EventWatcher GetWatcher(IEventSocket socket)
         {
             _eventWatchers.TryGetValue(socket.ToString(), out var watcher);
             return watcher;

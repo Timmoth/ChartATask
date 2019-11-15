@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using ChartATask.Core;
+﻿using ChartATask.Core;
 using ChartATask.Core.Persistence;
 using ChartATask.Core.Triggers.Events;
 using ChartATask.Core.Triggers.Requests;
 using ChartATask.Interactors.Windows.Requests;
 using ChartATask.Interactors.Windows.Watchers;
+using System;
+using System.Windows.Forms;
 
 namespace ChartATask.Presenters.Windows
 {
@@ -29,7 +29,7 @@ namespace ChartATask.Presenters.Windows
             {
                 var engine = new Engine(
                     new CsvPersistence("./"),
-                    new EventWatcherManager(new IEventWatcher[]
+                    new EventWatcherManager(new EventWatcher[]
                     {
                         new WindowsKeyboardEventWatcher(),
                         new WindowsRunningAppEventWatcher(),

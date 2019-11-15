@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
+﻿using ChartATask.Core.Triggers.Requests;
+using System.Diagnostics;
 using System.Linq;
-using ChartATask.Core.Triggers.Requests;
 
 namespace ChartATask.Interactors.Windows.Requests
 {

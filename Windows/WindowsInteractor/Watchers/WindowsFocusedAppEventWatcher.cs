@@ -1,29 +1,29 @@
-﻿using System;
-using ChartATask.Core.Triggers.Events;
+﻿using ChartATask.Core.Triggers.Events;
 using ChartATask.Core.Triggers.Events.App;
 using ChartATask.Interactors.Windows.Watchers.Hooks;
+using System;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsFocusedAppEventWatcher : IEventWatcher
+    public class WindowsFocusedAppEventWatcher : EventWatcher
     {
         private WinEventHook _eventHook;
-        public event EventHandler<IEvent> OnEvent;
+        public WindowsFocusedAppEventWatcher() : base("AppFocusSocket")
+        {
 
-        public void Start()
+        }
+        public override void Start()
         {
             _eventHook = new WinEventHook(WinEventHook.EVENT_OBJECT_FOCUS, 0);
             _eventHook.OnHookEvent += OnHookEvent;
         }
 
-        public void Stop()
+        public override void Stop()
         {
             _eventHook?.Dispose();
         }
 
-        public string EventSocketName => "AppFocusSocket";
-
-        public void Dispose()
+        public override void Dispose()
         {
             _eventHook?.Dispose();
         }
@@ -43,7 +43,7 @@ namespace ChartATask.Interactors.Windows.Watchers
                 return;
             }
 
-            OnEvent?.Invoke(this, new AppFocusChanged(processName, windowTitle));
+            Fire(new AppFocusChanged(processName, windowTitle));
         }
     }
 }

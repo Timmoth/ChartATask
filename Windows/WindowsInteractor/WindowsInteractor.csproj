@@ -48,7 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Requests\WindowsAppRunningRequest.cs" />
-    <Compile Include="Watchers\Hooks\EventHook.cs" />
+    <Compile Include="Watchers\Hooks\KeyPressed.cs" />
+    <Compile Include="Watchers\Hooks\WinEventHook.cs" />
+    <Compile Include="Watchers\Hooks\HookEvent.cs" />
     <Compile Include="Watchers\WindowsAppTitleEventWatcher.cs" />
     <Compile Include="Watchers\WindowsFocusedAppEventWatcher.cs" />
     <Compile Include="Watchers\Hooks\KeyboardHook.cs" />

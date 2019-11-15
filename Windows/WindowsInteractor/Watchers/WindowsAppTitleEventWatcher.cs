@@ -1,32 +1,34 @@
-﻿using System;
-using ChartATask.Core.Triggers.Events;
+﻿using ChartATask.Core.Triggers.Events;
 using ChartATask.Core.Triggers.Events.App;
 using ChartATask.Interactors.Windows.Watchers.Hooks;
+using System;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsAppTitleEventWatcher : IEventWatcher
+    public class WindowsAppTitleEventWatcher : EventWatcher
     {
         private WinEventHook _eventHook;
-        public event EventHandler<IEvent> OnEvent;
 
-        public void Start()
+        public WindowsAppTitleEventWatcher() : base("AppTitleSocket")
+        {
+
+        }
+
+        public override void Start()
         {
             _eventHook = new WinEventHook(WinEventHook.EVENT_OBJECT_NAMECHANGE, 0);
             _eventHook.OnHookEvent += OnHookEvent;
         }
 
-        public void Stop()
+        public override void Stop()
         {
             _eventHook?.Dispose();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _eventHook?.Dispose();
         }
-
-        public string EventSocketName => "AppTitleSocket";
 
         private void OnHookEvent(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
             int idChild, uint dwEventThread, uint dwmsEventTime)
@@ -43,7 +45,7 @@ namespace ChartATask.Interactors.Windows.Watchers
                 return;
             }
 
-            OnEvent?.Invoke(this, new AppTitleChanged(processName, windowTitle));
+            Fire(new AppTitleChanged(processName, windowTitle));
         }
     }
 }

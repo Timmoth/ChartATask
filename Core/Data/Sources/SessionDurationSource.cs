@@ -1,17 +1,17 @@
-﻿using System;
-using ChartATask.Core.Data.Points;
+﻿using ChartATask.Core.Data.Points;
 using ChartATask.Core.Triggers.Acceptor;
 using ChartATask.Core.Triggers.Events;
 using ChartATask.Core.Triggers.Events.App;
 using ChartATask.Core.Triggers.Events.Sockets;
 using ChartATask.Core.Triggers.Requests;
+using System;
 
 namespace ChartATask.Core.Data.Sources
 {
     public class SessionDurationSource : IDataSource<SessionDuration>
     {
-        private IEventWatcher _focusChangeWatcher;
-        private IEventWatcher _titleChangeWatcher;
+        private EventWatcher _focusChangeWatcher;
+        private EventWatcher _titleChangeWatcher;
         private RequestEvaluatorManager _evaluator;
         private EventWatcherManager _eventWatcherManager;
         private string _name;
@@ -37,7 +37,7 @@ namespace ChartATask.Core.Data.Sources
 
         private void _titleChangeWatcher_OnEvent(object sender, IEvent e)
         {
-            if (e is AppTitleChanged appTitleChanged && appTitleChanged.Name == _name)
+            if (e is AppTitleChanged appTitleChanged && string.Compare(appTitleChanged.Name, _name) == 0)
             {
                 TryAddDataPoint(appTitleChanged.Name, appTitleChanged.Title);
             }
@@ -53,7 +53,9 @@ namespace ChartATask.Core.Data.Sources
 
         private void TryAddDataPoint(string name, string title)
         {
-            if (!string.IsNullOrEmpty(_name) && _name != name && _title != title)
+            if (!string.IsNullOrEmpty(_name) &&
+                string.Compare(_name, name) != 0 &&
+                string.Compare(_title, title) != 0)
             {
                 OnNewDataPoint?.Invoke(this, new SessionDuration(_name, _title, _startTime, DateTime.Now));
             }

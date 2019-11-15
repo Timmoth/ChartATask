@@ -6,14 +6,17 @@ namespace ChartATask.Core.Triggers.Requests
     {
         public void Dispose()
         {
+            //No need to dispose
         }
 
         public void Start()
         {
+            //No Start needed, Always running
         }
 
         public void Stop()
         {
+            //No Stop needed, Always running
         }
 
         public DateTime Evaluate(SystemTimeRequest request)

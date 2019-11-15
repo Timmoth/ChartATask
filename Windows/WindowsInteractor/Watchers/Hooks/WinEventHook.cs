@@ -3,16 +3,13 @@ using System.Runtime.InteropServices;
 
 namespace ChartATask.Interactors.Windows.Watchers.Hooks
 {
-    public delegate void HookEvent(IntPtr hWinEventHook, uint eventType,
-        IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
-
     internal class WinEventHook : IDisposable
     {
         public static readonly uint EVENT_OBJECT_FOCUS = 0x8005;
         public static readonly uint EVENT_OBJECT_CREATE = 0x8000;
         public static readonly uint EVENT_SYSTEM_FOREGROUND = 3;
         public static readonly uint EVENT_OBJECT_NAMECHANGE = 0x800C;
-        public static readonly uint WINEVENT_OUTOFCONTEXT = 0;
+        public static readonly uint WINEVENT_OUTOFCONTEXT;
         private readonly WinEventDelegate _callback;
 
         private readonly IntPtr _hookId;

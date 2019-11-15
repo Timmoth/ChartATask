@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ChartATask.Core.Triggers.Requests
 {
-    public class RequestEvaluatorManager
+    public class RequestEvaluatorManager : IDisposable
     {
         private readonly List<IRequestEvaluator> _requestEvaluators;
 
         public RequestEvaluatorManager(IEnumerable<IRequestEvaluator> requestEvaluators)
         {
-            _requestEvaluators = new List<IRequestEvaluator>(requestEvaluators) {new SystemTimeRequestEvaluator()};
+            _requestEvaluators = new List<IRequestEvaluator>(requestEvaluators) { new SystemTimeRequestEvaluator() };
         }
 
         public T GetRequestEvaluator<T>() where T : IRequestEvaluator

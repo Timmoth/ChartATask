@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ChartATask.Core.Data;
+using System;
 using System.Collections.Generic;
-using ChartATask.Core.Data;
 
 namespace ChartATask.Core.Persistence
 {

@@ -9,10 +9,7 @@ namespace WindowsWPF
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue)
-        {
-            RaisePropertyChanged(propertyName);
-        }
+        protected virtual void OnPropertyChanged(string propertyName, object oldValue, object newValue) => RaisePropertyChanged(propertyName);
 
         private void RaisePropertyChanged(string propertyName)
         {
@@ -34,9 +31,6 @@ namespace WindowsWPF
         }
 
         [Conditional("DEBUG")]
-        private void VerifyProperty(string propertyName)
-        {
-            GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
-        }
+        private void VerifyProperty(string propertyName) => GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
     }
 }

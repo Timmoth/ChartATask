@@ -12,7 +12,7 @@ namespace ChartATask.Interactors.Windows
             GetWindowThreadProcessId(hWnd, out var processId);
             try
             {
-                return Process.GetProcessById((int) processId).ProcessName;
+                return Process.GetProcessById((int)processId).ProcessName;
             }
             catch
             {

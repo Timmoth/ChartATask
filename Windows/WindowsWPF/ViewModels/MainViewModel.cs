@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Input;
-using ChartATask.Core;
+﻿using ChartATask.Core;
 using ChartATask.Core.Data;
 using ChartATask.Core.Data.Points;
 using ChartATask.Core.Persistence;
@@ -14,6 +9,11 @@ using ChartATask.Interactors.Windows.Watchers;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
 
 namespace WindowsWPF
 {
@@ -51,41 +51,35 @@ namespace WindowsWPF
 
             set
             {
-                if (_startStopContent != value)
+                if (string.Compare(_startStopContent, value) != 0)
                 {
                     SetValue(ref _startStopContent, value);
                 }
             }
         }
 
-        public ICommand StartStopCommand
-        {
-            get
-            {
-                return _startStopCommand ?? (_startStopCommand = new DelegateCommand<object>(args =>
-                {
-                    if (_isRunning)
-                    {
-                        _engine?.Dispose();
-                        StartStopContent = "Start";
-                    }
-                    else
-                    {
-                        Start();
-                        StartStopContent = "Stop";
-                    }
+        public ICommand StartStopCommand => _startStopCommand ?? (_startStopCommand = new DelegateCommand<object>(args =>
+                                                          {
+                                                              if (_isRunning)
+                                                              {
+                                                                  _engine?.Dispose();
+                                                                  StartStopContent = "Start";
+                                                              }
+                                                              else
+                                                              {
+                                                                  Start();
+                                                                  StartStopContent = "Stop";
+                                                              }
 
-                    _isRunning = !_isRunning;
-                }));
-            }
-        }
+                                                              _isRunning = !_isRunning;
+                                                          }));
 
 
         private void Start()
         {
             _engine = new Engine(
                 new CsvPersistence("./"),
-                new EventWatcherManager(new IEventWatcher[]
+                new EventWatcherManager(new EventWatcher[]
                 {
                     new WindowsKeyboardEventWatcher(),
                     new WindowsRunningAppEventWatcher(),
@@ -109,14 +103,14 @@ namespace WindowsWPF
                 Title = @"Task Activity",
                 LegendPosition = LegendPosition.RightTop,
                 LegendPlacement = LegendPlacement.Outside,
-                PlotMargins = new OxyThickness(10,10,10,50),
+                PlotMargins = new OxyThickness(10, 10, 10, 50),
                 PlotType = PlotType.XY
             };
 
-            Random r = new Random();
+            var r = new Random();
 
-            tempModel.Axes.Add(new LinearAxis {AxisDistance = 5, IsAxisVisible = false });
-            tempModel.Axes.Add(new DateTimeAxis {Position = AxisPosition.Bottom, StringFormat = "ddd hhtt", Title = "Date / Time", AxisDistance = 5 });
+            tempModel.Axes.Add(new LinearAxis { AxisDistance = 5, IsAxisVisible = false });
+            tempModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "ddd hhtt", Title = "Date / Time", AxisDistance = 5 });
 
             foreach (var dataSet in _engine.GetDataSets().OfType<DataSet<SessionDuration>>())
             {
@@ -152,7 +146,7 @@ namespace WindowsWPF
                         StrokeThickness = 2,
                         MarkerSize = 2,
                         ItemsSource = groupedDataSets.Item3.ToList(),
-                        Title = groupedDataSets.Item1 + " " + groupedDataSets.Item2,
+                        Title = $"{groupedDataSets.Item1} {groupedDataSets.Item2}",
                         DataFieldX = "X",
                         DataFieldY = "Y",
                         Color = OxyColor.FromRgb(randomBytes[0], randomBytes[1], randomBytes[2]),
@@ -181,22 +175,19 @@ namespace WindowsWPF
             }
         }
 
-        private IEnumerable<(string, string, IEnumerable<DoubleOverTime>)> GetDataSets(DataSet<SessionDuration> dataSet)
-        {
-            return dataSet.DataPoints
+        private IEnumerable<(string, string, IEnumerable<DoubleOverTime>)> GetDataSets(DataSet<SessionDuration> dataSet) => dataSet.DataPoints
                 .GroupBy(point => (point.Name, point.Title))
-                .Select(groupedDataPoints => 
-                    (groupedDataPoints.Key.Name, 
+                .Select(groupedDataPoints =>
+                    (groupedDataPoints.Key.Name,
                         groupedDataPoints.Key.Title,
                             GetDataPoints(groupedDataPoints)));
-        }
 
         private static IEnumerable<DoubleOverTime> GetDataPoints(IEnumerable<SessionDuration> dataPoints)
         {
             var data = new Collection<DoubleOverTime>();
 
             var hourlyPercentagePoints = dataPoints
-                .GroupBy(dataPoint => new {dataPoint.X.Date, dataPoint.X.Hour})
+                .GroupBy(dataPoint => new { dataPoint.X.Date, dataPoint.X.Hour })
                 .Select(pointGroup => pointGroup
                     .Aggregate((first, second) => new SessionDuration(first.Name, first.Title, first.X, first.X + ((first.Y - first.X) + (second.Y - second.X)))))
                 .Select(dataPoint =>

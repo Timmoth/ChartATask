@@ -1,35 +1,35 @@
-﻿using System;
-using ChartATask.Core.Triggers.Events;
+﻿using ChartATask.Core.Triggers.Events;
 using ChartATask.Core.Triggers.Events.Keyboard;
 using ChartATask.Interactors.Windows.Watchers.Hooks;
+using System;
 
 namespace ChartATask.Interactors.Windows.Watchers
 {
-    public class WindowsKeyboardEventWatcher : IEventWatcher
+    public class WindowsKeyboardEventWatcher : EventWatcher
     {
-        public event EventHandler<IEvent> OnEvent;
+        public WindowsKeyboardEventWatcher() : base("KeyPressedSocket")
+        {
 
-        public void Start()
+        }
+        public override void Start()
         {
             KeyboardHook.Start();
             KeyboardHook.OnKeyPressed += KeyboardHook_OnKeyPressed;
         }
 
-        public void Stop()
+        public override void Stop()
         {
             KeyboardHook.End();
         }
 
-        public string EventSocketName => "KeyPressedSocket";
-
-        public void Dispose()
+        public override void Dispose()
         {
             Stop();
         }
 
         private void KeyboardHook_OnKeyPressed(int keyCode)
         {
-            OnEvent?.Invoke(this, new KeyPressedEvent(keyCode));
+            Fire(new KeyPressedEvent(keyCode));
         }
     }
 }
